@@ -6,12 +6,7 @@ import { useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar, Briefcase, Sparkles } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 },
-};
+import { fadeInUp, scaleInWithDelay, slideInLeftWithDelay } from "@/lib/animations";
 
 interface ExperienceItem {
   company: string;
@@ -106,7 +101,7 @@ export default function Experience() {
         },
         {
           title: "Frontend Engineer",
-          period: "Jan 2021 – Jan 2023",
+          period: "Nov 2020 – Jan 2021",
         },
       ],
     },
@@ -236,13 +231,7 @@ export default function Experience() {
                     {exp.skills.map((skill, i) => (
                       <motion.div
                         key={`skill-${index}-${i}-${skill.toLowerCase().replace(/\s+/g, "-")}`}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={
-                          isCompaniesInView
-                            ? { opacity: 1, scale: 1 }
-                            : { opacity: 0, scale: 0.8 }
-                        }
-                        transition={{ delay: index * 0.1 + i * 0.05 }}
+                        {...scaleInWithDelay(index * 0.1 + i * 0.05)}
                         role="listitem"
                       >
                         <Badge
@@ -265,13 +254,7 @@ export default function Experience() {
                       ? "border-primary"
                       : "border-muted"
                   }`}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={
-                    isCompaniesInView
-                      ? { opacity: 1, x: 0 }
-                      : { opacity: 0, x: -20 }
-                  }
-                  transition={{ delay: index * 0.1 + posIndex * 0.05 }}
+                  {...slideInLeftWithDelay(index * 0.1 + posIndex * 0.05)}
                   role="listitem"
                 >
                   <div

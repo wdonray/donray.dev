@@ -18,12 +18,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { SectionHeader } from "@/components/ui/section-header";
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 },
-};
+import { fadeInUp, scaleInWithDelay } from "@/lib/animations";
 
 export default function Skills() {
   const ref = useRef(null);
@@ -115,13 +110,7 @@ export default function Skills() {
                     return (
                       <motion.div
                         key={skill}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={
-                          isInView
-                            ? { opacity: 1, scale: 1 }
-                            : { opacity: 0, scale: 0.8 }
-                        }
-                        transition={{ delay: index * 0.1 + skillIndex * 0.05 }}
+                        {...scaleInWithDelay(index * 0.1 + skillIndex * 0.05)}
                       >
                         <Badge
                           variant="secondary"
@@ -137,13 +126,7 @@ export default function Skills() {
                   return (
                     <motion.div
                       key={skill.name}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={
-                        isInView
-                          ? { opacity: 1, scale: 1 }
-                          : { opacity: 0, scale: 0.8 }
-                      }
-                      transition={{ delay: index * 0.1 + skillIndex * 0.05 }}
+                      {...scaleInWithDelay(index * 0.1 + skillIndex * 0.05)}
                     >
                       <Badge
                         variant="secondary"

@@ -10,12 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
-
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 },
-};
+import { fadeInUpWithDelay, imageScale } from "@/lib/animations";
 
 export default function Hero() {
   return (
@@ -25,7 +20,7 @@ export default function Hero() {
           <motion.h1
             id="hero-heading"
             className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
-            {...fadeInUp}
+            {...fadeInUpWithDelay(0)}
           >
             Hi, I&apos;m{" "}
             <TooltipProvider>
@@ -48,16 +43,14 @@ export default function Hero() {
 
           <motion.h2
             className="text-2xl md:text-3xl text-muted-foreground"
-            {...fadeInUp}
-            transition={{ delay: 0.2 }}
+            {...fadeInUpWithDelay(0.2)}
           >
             Senior Frontend Engineer
           </motion.h2>
 
           <motion.p
             className="text-lg text-muted-foreground max-w-[600px]"
-            {...fadeInUp}
-            transition={{ delay: 0.4 }}
+            {...fadeInUpWithDelay(0.4)}
           >
             Crafting exceptional digital experiences through clean code and
             innovative design for over{" "}
@@ -66,8 +59,7 @@ export default function Hero() {
 
           <motion.div
             className="flex flex-col sm:flex-row gap-4"
-            {...fadeInUp}
-            transition={{ delay: 0.6 }}
+            {...fadeInUpWithDelay(0.6)}
           >
             <Button
               size="lg"
@@ -98,9 +90,8 @@ export default function Hero() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
+          {...imageScale}
+          transition={{ delay: 0.8 }}
           className="block relative w-[300px] h-[300px] md:w-[450px] md:h-[450px]"
         >
           <Image
@@ -109,6 +100,8 @@ export default function Hero() {
             fill
             className="object-cover rounded-full shadow-lg hover:scale-105 transition-all duration-300"
             priority
+            quality={100}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </motion.div>
       </div>
