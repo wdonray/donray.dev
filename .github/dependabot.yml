@@ -1,0 +1,23 @@
+version: 2
+registries:
+  christfirst-github-packages: # Define access for a private registry
+    type: npm-registry
+    url: https://npm.pkg.github.com
+    token: ${{secrets.PACKAGES_AUTH_TOKEN}}
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    registries:
+      - christfirst-github-packages
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+    groups:
+      all-deps:
+        patterns:
+          - "*"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

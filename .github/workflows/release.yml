@@ -1,0 +1,18 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs: {}
+  release:
+    types: [released]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    name: Build for release
+    uses: christfirst/pico/.github/workflows/build.yml@main
+    secrets:
+      PACKAGES_AUTH_TOKEN: ${{ secrets.PACKAGES_AUTH_TOKEN }}
