@@ -13,6 +13,6 @@ permissions:
 jobs:
   build:
     name: Build for release
-    uses: christfirst/donray.dev/.github/workflows/build.yml@main
+    uses: wdonray/donray.dev/.github/workflows/build.yml@main
     secrets:
       PACKAGES_AUTH_TOKEN: ${{ secrets.PACKAGES_AUTH_TOKEN }}
