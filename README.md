@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Donray Williams - Portfolio Website
 
-## Getting Started
+A modern, responsive portfolio website built with Next.js, TypeScript, and Tailwind CSS. This portfolio showcases my professional experience, projects, and skills with a focus on frontend development.
 
-First, run the development server:
+## 🌟 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Modern Design**: Clean and professional layout with smooth animations
+- **Responsive**: Fully responsive design that works on all devices
+- **Dark Mode**: Built-in dark/light mode support
+- **Accessibility**: WCAG compliant with proper ARIA labels and semantic HTML
+- **Performance**: Optimized for speed with Next.js and static generation
+- **Animations**: Smooth scroll animations using Framer Motion
+- **Components**: Built with shadcn/ui for consistent design
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 14
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **Deployment**: Vercel
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18.17 or later
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/wdonray/donray.dev.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd donray.dev
+   ```
+
+3. Install dependencies:
+
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+4. Start the development server:
+
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 📁 Project Structure
+
+```
+src/
+├── app/                 # Next.js app directory
+├── components/         # React components
+│   ├── ui/            # shadcn/ui components
+│   ├── header.tsx     # Navigation header
+│   ├── hero.tsx       # Hero section
+│   ├── experience.tsx # Experience section
+│   ├── projects.tsx   # Projects section
+│   ├── skills.tsx     # Skills section
+│   └── footer.tsx     # Footer component
+├── lib/               # Utility functions
+└── styles/            # Global styles
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎨 Customization
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Theme
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The website uses a custom theme with primary colors and dark mode support. You can modify the theme in `tailwind.config.js`.
 
-## Learn More
+### Content
 
-To learn more about Next.js, take a look at the following resources:
+Update the content in the respective component files:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `src/components/hero.tsx` - Hero section content
+- `src/components/experience.tsx` - Experience timeline
+- `src/components/projects.tsx` - Project showcase
+- `src/components/skills.tsx` - Skills and expertise
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📱 Responsive Design
 
-## Deploy on Vercel
+The website is fully responsive with breakpoints for:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Mobile: < 768px
+- Tablet: 768px - 1024px
+- Desktop: > 1024px
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🚀 Deployment
+
+The website is deployed on Vercel. To deploy your own version:
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Deploy with the following settings:
+   - Framework Preset: Next.js
+   - Build Command: `next build`
+   - Output Directory: `.next`
+
+## 🤝 Contact
+
+- LinkedIn: [Donray Williams](https://www.linkedin.com/in/donrayxwilliams/)
+- GitHub: [wdonray](https://github.com/wdonray)
+- Website: [donray.dev](https://donray.dev)
