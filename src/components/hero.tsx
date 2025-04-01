@@ -19,13 +19,13 @@ export default function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="min-h-screen flex items-center"
+      className="min-h-screen flex items-center px-4 sm:px-6 lg:px-8"
     >
-      <div className="flex flex-col md:flex-row gap-16 md:gap-10 items-center justify-between w-full">
-        <div className="space-y-6 text-center md:text-left" id="hero-content">
+      <div className="flex flex-col md:flex-row gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center justify-between w-full max-w-[2000px] mx-auto">
+        <div className="space-y-4 sm:space-y-5 md:space-y-6 text-center md:text-left" id="hero-content">
           <motion.h1
             id="hero-heading"
-            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+            className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold tracking-tight"
             {...fadeInUpWithDelay(0)}
           >
             Hi, I&apos;m{" "}
@@ -48,14 +48,14 @@ export default function Hero() {
           </motion.h1>
 
           <motion.h2
-            className="text-2xl md:text-3xl text-muted-foreground"
+            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-muted-foreground"
             {...fadeInUpWithDelay(0.2)}
           >
             Senior Frontend Engineer
           </motion.h2>
 
           <motion.p
-            className="text-lg text-muted-foreground max-w-[600px]"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-[600px]"
             {...fadeInUpWithDelay(0.4)}
           >
             Crafting exceptional digital experiences through clean code and
@@ -64,12 +64,12 @@ export default function Hero() {
           </motion.p>
 
           <motion.div
-            className="flex flex-col md:flex-row gap-4"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-[250px] mx-auto md:mx-0"
             {...fadeInUpWithDelay(0.6)}
           >
             <Button
               size="lg"
-              className="cursor-pointer"
+              className="cursor-pointer text-sm sm:text-base"
               aria-label="View Resume"
               asChild
             >
@@ -85,7 +85,7 @@ export default function Hero() {
             <Button
               size="lg"
               variant="outline"
-              className="cursor-pointer"
+              className="cursor-pointer text-sm sm:text-base"
               asChild
             >
               <a
@@ -102,7 +102,7 @@ export default function Hero() {
         <motion.div
           {...imageScale}
           transition={{ delay: 0.8 }}
-          className="block relative w-[200px] md:w-[450px] aspect-square"
+          className="block relative w-[200px] sm:w-[250px] md:w-[350px] lg:w-[450px] xl:w-[550px] 2xl:w-[650px] aspect-square"
           id="hero-image"
         >
           <Image
@@ -112,7 +112,7 @@ export default function Hero() {
             className="object-cover rounded-full shadow-lg hover:scale-105 transition-all duration-300"
             priority
             quality={100}
-            sizes="(max-width: 768px) 300px, 450px"
+            sizes="(max-width: 640px) 200px, (max-width: 768px) 250px, (max-width: 1024px) 350px, (max-width: 1280px) 450px, (max-width: 1536px) 550px, 650px"
           />
         </motion.div>
       </div>

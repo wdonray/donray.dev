@@ -43,7 +43,7 @@ export default function RootLayout({
           >
             <div>
               <Header />
-              <main>{children}</main>
+              <main className="max-w-[2000px] mx-auto">{children}</main>
               <Footer />
             </div>
           </ThemeProvider>
