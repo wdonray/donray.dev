@@ -72,6 +72,14 @@ export default function Header() {
           </Link>
 
           <Link
+            href="#projects"
+            className="text-sm hover:text-primary transition-colors"
+            aria-label="View projects section"
+          >
+            Projects
+          </Link>
+
+          <Link
             href="#experience"
             className="text-sm hover:text-primary transition-colors"
             aria-label="View experience section"
@@ -79,13 +87,6 @@ export default function Header() {
             Experience
           </Link>
 
-          <Link
-            href="#projects"
-            className="text-sm hover:text-primary transition-colors"
-            aria-label="View projects section"
-          >
-            Projects
-          </Link>
           <ModeToggle />
         </nav>
 

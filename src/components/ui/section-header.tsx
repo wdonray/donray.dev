@@ -11,7 +11,9 @@ export function SectionHeader({ id, title, isInView }: SectionHeaderProps) {
     <div className="space-y-2">
       <motion.div
         initial={{ opacity: 0, width: 0 }}
-        animate={isInView ? { opacity: 1, width: 40 } : { opacity: 0, width: 0 }}
+        animate={
+          isInView ? { opacity: 1, width: 40 } : { opacity: 0, width: 0 }
+        }
         transition={{ duration: 0.5 }}
         className="h-1 bg-primary rounded-full"
         aria-hidden="true"
@@ -27,4 +29,4 @@ export function SectionHeader({ id, title, isInView }: SectionHeaderProps) {
       </motion.h2>
     </div>
   );
-} 
+}

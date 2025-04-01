@@ -6,7 +6,11 @@ import { useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar, Briefcase, Sparkles } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
-import { fadeInUp, scaleInWithDelay, slideInLeftWithDelay } from "@/lib/animations";
+import {
+  fadeInUp,
+  scaleInWithDelay,
+  slideInLeftWithDelay,
+} from "@/lib/animations";
 
 interface ExperienceItem {
   company: string;
@@ -62,7 +66,14 @@ export default function Experience() {
       company: "Cyclei",
       location: "San Francisco Bay Area",
       type: "Freelance",
-      skills: ["Vue", "JavaScript", "TypeScript", "CSS", "HTML", "Responsive Design"],
+      skills: [
+        "Vue",
+        "JavaScript",
+        "TypeScript",
+        "CSS",
+        "HTML",
+        "Responsive Design",
+      ],
       positions: [
         {
           title: "Founding Frontend Engineer",
@@ -86,14 +97,7 @@ export default function Experience() {
       company: "Stuller, Inc.",
       location: "Lafayette, Louisiana, United States",
       type: "Full-time",
-      skills: [
-        "React",
-        "Vue",
-        "CMS",
-        "JavaScript",
-        "CSS",
-        "HTML",
-      ],
+      skills: ["React", "Vue", "CMS", "JavaScript", "CSS", "HTML"],
       positions: [
         {
           title: "Frontend Engineer II",

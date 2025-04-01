@@ -38,7 +38,14 @@ export default function Projects() {
       description:
         "Struggling to find the perfect domain name? Let us help! Our platform makes discovering ultra-short domain names easy for your brand or startup. We act as a smart search engine, curating the best available options and connecting you with trusted marketplaces for high-value, concise domains.",
       url: "https://www.pico.domains/",
-      technologies: ["Nuxt.js", "CSS", "HTML5", "TypeScript", "Vite", "Custom Internal Libraries"],
+      technologies: [
+        "Nuxt.js",
+        "CSS",
+        "HTML5",
+        "TypeScript",
+        "Vite",
+        "Custom Internal Libraries",
+      ],
       image: "/pico-domains.png",
       imageAlt: "Screenshot of pico.domains website",
     },
@@ -81,7 +88,10 @@ export default function Projects() {
                 role="listitem"
               >
                 <Card className="group h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true" />
+                  <div
+                    className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    aria-hidden="true"
+                  />
                   <CardHeader className="relative">
                     <div className="flex items-start gap-4">
                       <div className="flex-1">
