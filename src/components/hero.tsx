@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Download, Mail } from "lucide-react";
+import { ExternalLink, Mail } from "lucide-react";
 import Image from "next/image";
 import {
   Tooltip,
@@ -13,10 +13,12 @@ import { motion } from "framer-motion";
 import { fadeInUpWithDelay, imageScale } from "@/lib/animations";
 
 export default function Hero() {
+  const yearsSince2019 = new Date().getFullYear() - 2019;
+
   return (
     <section id="hero" aria-labelledby="hero-heading">
       <div className="max-w-[2000px] mx-auto w-full h-[700px] flex flex-col md:flex-row gap-16 md:gap-10 items-center justify-between">
-        <div className="space-y-6 text-center md:text-left">
+        <div className="space-y-6 text-center md:text-left" id="hero-content">
           <motion.h1
             id="hero-heading"
             className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight"
@@ -54,7 +56,7 @@ export default function Hero() {
           >
             Crafting exceptional digital experiences through clean code and
             innovative design for over{" "}
-            <span className="font-bold">5+ years</span>.
+            <span className="font-bold">{yearsSince2019}+ years</span>.
           </motion.p>
 
           <motion.div
@@ -64,12 +66,16 @@ export default function Hero() {
             <Button
               size="lg"
               className="cursor-pointer"
-              aria-label="Download CV"
+              aria-label="View Resume"
               asChild
             >
-              <a href="/DonrayWilliamsResume.pdf" download>
-                <Download className="size-4" aria-hidden="true" />
-                Download CV
+              <a
+                href="https://donray-public.s3.us-east-1.amazonaws.com/Donray+Williams+Frontend+Engineer.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="size-4" aria-hidden="true" />
+                View Resume
               </a>
             </Button>
             <Button
@@ -93,6 +99,7 @@ export default function Hero() {
           {...imageScale}
           transition={{ delay: 0.8 }}
           className="block relative w-[300px] min-w-[300px] h-[300px] min-h-[300px] md:w-[450px] md:h-[450px]"
+          id="hero-image"
         >
           <Image
             src="/headshot.webp"
