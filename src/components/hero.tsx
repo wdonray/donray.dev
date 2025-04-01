@@ -92,7 +92,7 @@ export default function Hero() {
         <motion.div
           {...imageScale}
           transition={{ delay: 0.8 }}
-          className="block relative w-[300px] min-w-[300px] h-[300px] min-h-[300px] md:w-[450px] md:h-[450px] md:min-w-[450px] md:min-h-[450px]"
+          className="block relative w-[300px] min-w-[300px] h-[300px] min-h-[300px] md:w-[450px] md:h-[450px]"
         >
           <Image
             src="/headshot.webp"
