@@ -21,11 +21,11 @@ const Experience = dynamic(() => import("@/components/experience"), {
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col gap-24 px-4 md:px-16 pt-24">
+    <div className="flex flex-col gap-24 px-4 md:px-16">
       <Hero />
       <Skills />
       <Projects />
       <Experience />
-    </main>
+    </div>
   );
 }

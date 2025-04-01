@@ -16,8 +16,12 @@ export default function Hero() {
   const yearsSince2019 = new Date().getFullYear() - 2019;
 
   return (
-    <section id="hero" aria-labelledby="hero-heading">
-      <div className="max-w-[2000px] mx-auto w-full h-[700px] flex flex-col md:flex-row gap-16 md:gap-10 items-center justify-between">
+    <section
+      id="hero"
+      aria-labelledby="hero-heading"
+      className="min-h-screen flex items-center"
+    >
+      <div className="flex flex-col md:flex-row gap-16 md:gap-10 items-center justify-between w-full">
         <div className="space-y-6 text-center md:text-left" id="hero-content">
           <motion.h1
             id="hero-heading"
@@ -60,7 +64,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.div
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col md:flex-row gap-4"
             {...fadeInUpWithDelay(0.6)}
           >
             <Button
@@ -98,7 +102,7 @@ export default function Hero() {
         <motion.div
           {...imageScale}
           transition={{ delay: 0.8 }}
-          className="block relative w-[300px] min-w-[300px] h-[300px] min-h-[300px] md:w-[450px] md:h-[450px]"
+          className="block relative w-[200px] md:w-[450px] aspect-square"
           id="hero-image"
         >
           <Image
@@ -108,7 +112,7 @@ export default function Hero() {
             className="object-cover rounded-full shadow-lg hover:scale-105 transition-all duration-300"
             priority
             quality={100}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 768px) 300px, 450px"
           />
         </motion.div>
       </div>
