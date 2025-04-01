@@ -45,3 +45,4 @@ context.md
 
 # vscode
 .vscode
+.env.local
