@@ -29,7 +29,7 @@ export default function Footer() {
       role="contentinfo"
     >
       <div className="w-full px-4 md:px-8 py-4">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex flex-row items-center justify-between gap-4">
           <div className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Donray Williams
           </div>

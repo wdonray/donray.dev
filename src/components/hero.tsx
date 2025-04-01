@@ -15,7 +15,7 @@ import { fadeInUpWithDelay, imageScale } from "@/lib/animations";
 export default function Hero() {
   return (
     <section id="hero" aria-labelledby="hero-heading">
-      <div className="max-w-[2000px] mx-auto w-full h-[700px] flex flex-col md:flex-row gap-10 items-center justify-between">
+      <div className="max-w-[2000px] mx-auto w-full h-[700px] flex flex-col md:flex-row gap-16 md:gap-10 items-center justify-between">
         <div className="space-y-6 text-center md:text-left">
           <motion.h1
             id="hero-heading"
@@ -92,7 +92,7 @@ export default function Hero() {
         <motion.div
           {...imageScale}
           transition={{ delay: 0.8 }}
-          className="block relative w-[300px] h-[300px] md:w-[450px] md:h-[450px]"
+          className="block relative w-[300px] min-w-[300px] h-[300px] min-h-[300px] md:w-[450px] md:h-[450px] md:min-w-[450px] md:min-h-[450px]"
         >
           <Image
             src="/headshot.webp"

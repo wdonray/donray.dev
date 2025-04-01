@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { Menu, Code2, Briefcase, Rocket } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import {
   Sheet,
@@ -109,19 +109,31 @@ export default function Header() {
                 aria-label="Mobile navigation"
               >
                 <SheetClose asChild>
-                  <Link href="#skills" className="text-xl font-bold">
+                  <Link
+                    href="#skills"
+                    className="flex items-center gap-3 text-xl font-bold hover:text-primary transition-colors"
+                  >
+                    <Code2 className="size-5" aria-hidden="true" />
                     Skills
                   </Link>
                 </SheetClose>
 
                 <SheetClose asChild>
-                  <Link href="#projects" className="text-xl font-bold">
+                  <Link
+                    href="#projects"
+                    className="flex items-center gap-3 text-xl font-bold hover:text-primary transition-colors"
+                  >
+                    <Rocket className="size-5" aria-hidden="true" />
                     Projects
                   </Link>
                 </SheetClose>
 
                 <SheetClose asChild>
-                  <Link href="#experience" className="text-xl font-bold">
+                  <Link
+                    href="#experience"
+                    className="flex items-center gap-3 text-xl font-bold hover:text-primary transition-colors"
+                  >
+                    <Briefcase className="size-5" aria-hidden="true" />
                     Experience
                   </Link>
                 </SheetClose>
