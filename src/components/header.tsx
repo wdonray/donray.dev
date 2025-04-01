@@ -62,6 +62,7 @@ export default function Header() {
         <nav
           className="hidden md:flex items-center gap-6"
           aria-label="Main navigation"
+          id="main-nav"
         >
           <Link
             href="#skills"
@@ -90,7 +91,7 @@ export default function Header() {
           <ModeToggle />
         </nav>
 
-        <div className="flex items-center gap-4 md:hidden">
+        <div className="flex items-center gap-4 md:hidden" id="mobile-menu">
           <ModeToggle />
           <Sheet>
             <SheetTrigger asChild>
@@ -101,7 +102,7 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="bottom" className="w-full h-[80vh]">
               <SheetHeader>
-                <SheetTitle>Navigation Menu</SheetTitle>
+                <SheetTitle>donray.dev</SheetTitle>
               </SheetHeader>
               <nav
                 className="flex flex-col gap-4 mt-6 px-4"
@@ -114,14 +115,14 @@ export default function Header() {
                 </SheetClose>
 
                 <SheetClose asChild>
-                  <Link href="#experience" className="text-xl font-bold">
-                    Experience
+                  <Link href="#projects" className="text-xl font-bold">
+                    Projects
                   </Link>
                 </SheetClose>
 
                 <SheetClose asChild>
-                  <Link href="#projects" className="text-xl font-bold">
-                    Projects
+                  <Link href="#experience" className="text-xl font-bold">
+                    Experience
                   </Link>
                 </SheetClose>
               </nav>
