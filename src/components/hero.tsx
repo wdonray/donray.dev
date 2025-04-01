@@ -25,7 +25,7 @@ export default function Hero() {
         <div className="space-y-4 sm:space-y-5 md:space-y-6 text-center md:text-left" id="hero-content">
           <motion.h1
             id="hero-heading"
-            className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold tracking-tight"
+            className="text-3xl sm:text-4xl lg:text-5xl 2xl:text-8xl font-bold tracking-tight"
             {...fadeInUpWithDelay(0)}
           >
             Hi, I&apos;m{" "}
