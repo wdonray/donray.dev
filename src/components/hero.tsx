@@ -16,18 +16,8 @@ export default function Hero() {
   const yearsSince2019 = new Date().getFullYear() - 2019;
 
   const h1Size = "text-3xl sm:text-5xl lg:text-6xl 2xl:text-7xl";
-
-  const sizes = ["sm", "base", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl"];
-
-  const h2Size = `${h1Size.replace(/text-(\w+)/g, (_, size) => {
-    const currentIndex = sizes.indexOf(size);
-    return `text-${sizes[Math.max(0, currentIndex - 1)]}`;
-  })}`;
-
-  const pSize = `${h1Size.replace(/text-(\w+)/g, (_, size) => {
-    const currentIndex = sizes.indexOf(size);
-    return `text-${sizes[Math.max(0, currentIndex - 3)]}`;
-  })}`;
+  const h2Size = "text-2xl sm:text-4xl lg:text-5xl 2xl:text-6xl";
+  const pSize = "text-base sm:text-lg lg:text-xl 2xl:text-2xl";
 
   return (
     <section
