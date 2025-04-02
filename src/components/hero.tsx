@@ -15,6 +15,20 @@ import { fadeInUpWithDelay, imageScale } from "@/lib/animations";
 export default function Hero() {
   const yearsSince2019 = new Date().getFullYear() - 2019;
 
+  const h1Size = "text-3xl sm:text-5xl lg:text-6xl 2xl:text-7xl";
+
+  const sizes = ["sm", "base", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl"];
+
+  const h2Size = `${h1Size.replace(/text-(\w+)/g, (_, size) => {
+    const currentIndex = sizes.indexOf(size);
+    return `text-${sizes[Math.max(0, currentIndex - 1)]}`;
+  })}`;
+
+  const pSize = `${h1Size.replace(/text-(\w+)/g, (_, size) => {
+    const currentIndex = sizes.indexOf(size);
+    return `text-${sizes[Math.max(0, currentIndex - 3)]}`;
+  })}`;
+
   return (
     <section
       id="hero"
@@ -25,7 +39,7 @@ export default function Hero() {
         <div className="space-y-4 sm:space-y-5 md:space-y-6 text-center md:text-left" id="hero-content">
           <motion.h1
             id="hero-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl 2xl:text-8xl font-bold tracking-tight"
+            className={`${h1Size} font-bold tracking-tight`}
             {...fadeInUpWithDelay(0)}
           >
             Hi, I&apos;m{" "}
@@ -48,14 +62,14 @@ export default function Hero() {
           </motion.h1>
 
           <motion.h2
-            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-muted-foreground"
+            className={`${h2Size} text-muted-foreground`}
             {...fadeInUpWithDelay(0.2)}
           >
             Senior Frontend Engineer
           </motion.h2>
 
           <motion.p
-            className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-[600px]"
+            className={`${pSize} text-muted-foreground`}
             {...fadeInUpWithDelay(0.4)}
           >
             Crafting exceptional digital experiences through clean code and
