@@ -53,10 +53,17 @@ export default function Header() {
       <div className="px-4 md:px-8 h-16 flex items-center justify-between max-w-[2000px] mx-auto">
         <Link
           href="#hero"
-          className="text-xl font-bold cursor-pointer hover:text-primary transition-colors"
+          className="text-xl font-bold cursor-pointer hover:text-primary transition-colors flex items-center gap-2"
           aria-label="Scroll to top"
         >
           donray.dev
+          <span 
+            className="wave-emoji text-2xl"
+            role="img" 
+            aria-label="Waving hand"
+          >
+            👋🏽
+          </span>
         </Link>
 
         <nav

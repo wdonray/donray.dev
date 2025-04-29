@@ -45,10 +45,7 @@ export default function Hero() {
                   <p>Pronounced: Don·RAY Wil·ymz</p>
                 </TooltipContent>
               </Tooltip>
-            </TooltipProvider>{" "}
-            <span className="wave-emoji" role="img" aria-label="Waving hand">
-              👋🏽
-            </span>
+            </TooltipProvider>
           </motion.h1>
 
           <motion.h2
