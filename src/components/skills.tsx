@@ -26,55 +26,65 @@ export default function Skills() {
 
   const skills = [
     {
-      category: "Frontend Frameworks",
+      category: "Frontend Development",
       items: [
         { name: "React", icon: Atom },
         { name: "Next.js", icon: Code2 },
         { name: "Vue", icon: Globe },
         "Nuxt.js",
+        "TypeScript",
+        "Vite",
       ],
     },
     {
-      category: "Styling & Layout",
+      category: "UI/UX Development",
       items: [
         { name: "Tailwind CSS", icon: Layout },
-        "CSS",
-        "HTML",
+        "CSS/SASS",
+        "HTML5",
         "Responsive Design",
+        "Component Libraries",
+        "Storybook",
       ],
     },
     {
-      category: "Testing Types",
+      category: "Quality Assurance",
       items: [
         { name: "Unit Testing", icon: TestTube },
         "E2E Testing",
         "Integration Testing",
+        "Test Automation",
+        "Component Testing",
       ],
     },
     {
-      category: "Testing Tools",
+      category: "Testing Frameworks",
       items: [
         { name: "Cypress", icon: Database },
         "Vitest",
         "Playwright",
         "Jest",
+        "React Testing Library",
       ],
     },
     {
-      category: "Design Principles",
+      category: "Web Standards",
       items: [
         { name: "Accessibility", icon: Accessibility },
-        "UI/UX Design",
-        "Responsive Design",
+        "Semantic HTML",
+        "Performance Optimization",
+        "Cross-browser Compatibility",
       ],
     },
     {
-      category: "Development Tools",
+      category: "Development Ecosystem",
       items: [
         { name: "TypeScript", icon: Type },
         { name: "JavaScript", icon: Code },
         { name: "Git", icon: GitBranch },
         "VS Code",
+        "Package Management",
+        "Build Tools",
       ],
     },
   ];
@@ -91,7 +101,7 @@ export default function Skills() {
           {skills.map((skillGroup, index) => (
             <motion.div
               key={skillGroup.category}
-              className="space-y-4"
+              className="space-y-4 h-full flex flex-col"
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
               variants={fadeInUp}
@@ -101,7 +111,7 @@ export default function Skills() {
                 {skillGroup.category}
               </h3>
               <div
-                className="flex flex-wrap gap-2"
+                className="flex flex-wrap gap-2 flex-grow"
                 role="list"
                 aria-label={`${skillGroup.category} skills`}
               >
@@ -140,7 +150,7 @@ export default function Skills() {
                   );
                 })}
               </div>
-              <Separator className="my-4 bg-muted/50" aria-hidden="true" />
+              <Separator className="mt-auto bg-muted/50" aria-hidden="true" />
             </motion.div>
           ))}
         </div>

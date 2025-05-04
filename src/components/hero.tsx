@@ -59,9 +59,7 @@ export default function Hero() {
             className={`${pSize} text-muted-foreground`}
             {...fadeInUpWithDelay(0.4)}
           >
-            Crafting exceptional digital experiences through clean code and
-            innovative design for over{" "}
-            <span className="font-bold">{yearsSince2019}+ years</span>.
+            I craft fast, accessible, and beautiful web experiences that users love. With <span className="font-bold">{yearsSince2019}+ years</span> of experience, I help teams transform ideas into polished products through clean code and thoughtful design.
           </motion.p>
 
           <motion.div

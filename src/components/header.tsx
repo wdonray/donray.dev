@@ -43,7 +43,7 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 border-b border-x border-border ${
+      className={`fixed top-0 left-0 right-0 z-50 border-b border-border ${
         scrolled
           ? "bg-background/80 backdrop-blur-sm shadow-sm"
           : "bg-background"

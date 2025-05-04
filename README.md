@@ -2,6 +2,16 @@
 
 A modern, responsive portfolio website built with Next.js, TypeScript, and Tailwind CSS. This portfolio showcases my professional experience, projects, and skills with a focus on frontend development.
 
+## 📸 Site Preview
+
+<div align="center">
+  <h3>Desktop View</h3>
+  <img src="./public/site-preview.png" alt="Desktop Preview" width="800" />
+  
+  <h3>Mobile View</h3>
+  <img src="./public/site-preview-mobile.png" alt="Mobile Preview" width="300" />
+</div>
+
 ## 🌟 Features
 
 - **Modern Design**: Clean and professional layout with smooth animations
