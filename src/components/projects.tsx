@@ -70,7 +70,7 @@ export default function Projects() {
       title: "Hide Zero Cards",
       subtitle: "Educational Place Value Tool",
       description:
-        "A digital educational tool designed for fourth-grade students to learn place value concepts through interactive, draggable number cards. Students can visualize how large numbers are composed of individual place value components, with color-coded cards and hands-on manipulation.",
+        "A digital educational tool I made specifically for my wife, who is a fourth-grade teacher, to help her students learn place value concepts through interactive, draggable number cards. Students can visualize how large numbers are composed of individual place value components, with color-coded cards and hands-on manipulation.",
       url: "https://main.dmh49rcj7joyy.amplifyapp.com",
       technologies: [
         "Next.js",
