@@ -80,6 +80,8 @@ export default function Projects() {
         "Radix UI",
         "Lucide React",
       ],
+      image: "/hide-zero-cards.png",
+      imageAlt: "Screenshot of Hide Zero Cards website",
       type: "website",
     },
     {
