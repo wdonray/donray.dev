@@ -41,7 +41,7 @@ export default function Projects() {
       title: "pico.domains",
       subtitle: "Ultra-Short Domain Search Engine",
       description:
-        "Find the perfect ultra-short domain for your brand or startup. pico.domains is a smart search engine that curates the best available concise domains and connects you with trusted marketplaces—making your next great domain just a click away.",
+        "Smart search engine for ultra-short domains. Curates available concise domains and connects with trusted marketplaces.",
       url: "https://www.pico.domains/",
       technologies: [
         "Nuxt.js",
@@ -59,7 +59,7 @@ export default function Projects() {
       title: "Cyclei",
       subtitle: "Sustainability Made Simple",
       description:
-        "Cyclei makes sustainability simple by offering curbside collection for reusable containers alongside your regular trash and recycling. Our service helps increase adoption and return rates for reusable packaging—making it easier for everyone to go green.",
+        "Curbside collection for reusable containers alongside regular waste. Increases adoption and return rates for sustainable packaging.",
       url: "https://app.cyclei.eco/",
       technologies: ["Vue3", "CSS", "HTML5", "TypeScript", "Vite", "GraphQL"],
       image: "/cyclei.png",
@@ -70,7 +70,7 @@ export default function Projects() {
       title: "Hide Zero Cards",
       subtitle: "Educational Place Value Tool",
       description:
-        "A digital educational tool I made specifically for my wife, who is a fourth-grade teacher, to help her students learn place value concepts through interactive, draggable number cards. Students can visualize how large numbers are composed of individual place value components, with color-coded cards and hands-on manipulation.",
+        "Interactive educational tool for fourth-grade students. Features draggable number cards with color-coded place value components.",
       url: "https://main.dmh49rcj7joyy.amplifyapp.com",
       technologies: [
         "Next.js",
@@ -87,7 +87,7 @@ export default function Projects() {
       title: "donray.dev",
       subtitle: "My Digital Home",
       description:
-        "Welcome to my personal site! Built with Next.js and Tailwind CSS, this site is my digital home for sharing projects, skills, and ideas. Explore my work and see what I'm building next.",
+        "Personal portfolio site showcasing projects and skills. Built with modern web technologies for optimal performance.",
       technologies: ["Next.js", "Tailwind CSS", "TypeScript", "Framer Motion"],
       image: "/headshot.webp",
       imageAlt: "Screenshot of Donray.dev website",
@@ -98,7 +98,7 @@ export default function Projects() {
       title: "genesis",
       subtitle: "UI Component Library for Vue.js",
       description:
-        "A comprehensive Vue 3 component library that makes building accessible, modern web apps a breeze. Powering pico.domains and other projects, Genesis provides a rich set of reusable components—from buttons to modals—all built with accessibility and responsive design in mind. Build polished interfaces faster with Genesis.",
+        "Comprehensive Vue 3 component library for building accessible web apps. Provides reusable components with responsive design.",
       technologies: [
         "Vue 3",
         "Vite",
@@ -113,7 +113,7 @@ export default function Projects() {
       title: "doctrine",
       subtitle: "Unified Project Configuration Suite",
       description:
-        "A powerful configuration toolkit that simplifies modern web development. Doctrine standardizes setup for essential tools like ESLint, Stylelint, and Vite, ensuring consistent code quality across projects. Used by Genesis and pico.domains, it's the foundation for maintaining high development standards.",
+        "Configuration toolkit for modern web development. Standardizes ESLint, Stylelint, and Vite setup across projects.",
       technologies: [
         "Node.js",
         "ESLint",
