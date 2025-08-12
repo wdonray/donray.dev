@@ -71,7 +71,7 @@ export default function Projects() {
       subtitle: "Educational Place Value Tool",
       description:
         "Interactive educational tool for fourth-grade students. Features draggable number cards with color-coded place value components.",
-      url: "https://main.dmh49rcj7joyy.amplifyapp.com",
+      url: "https://hidezerocards.org",
       technologies: [
         "Next.js",
         "React",
