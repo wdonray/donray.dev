@@ -22,7 +22,7 @@ jobs:
           echo "newversion=minor" >> $GITHUB_ENV
         if: "startsWith(github.event.head_commit.message, 'feat:')"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           token: ${{ secrets.PACKAGES_AUTH_TOKEN }}
       - run: git config --global user.name "${GITHUB_ACTOR}"
