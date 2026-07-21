@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
+import { Github, Linkedin } from "./ui/brand-icons";
 import { Button } from "./ui/button";
 
 const socialLinks = [

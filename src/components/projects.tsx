@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { Github } from "@/components/ui/brand-icons";
 import { SectionHeader } from "@/components/ui/section-header";
 import { SectionSubHeader } from "@/components/ui/section-subheader";
 import Image from "next/image";
