@@ -52,9 +52,9 @@ export default function Header() {
     >
       <div className="px-4 md:px-8 h-16 flex items-center justify-between max-w-[2000px] mx-auto">
         <Link
-          href="#hero"
+          href="/#hero"
           className="text-xl font-bold cursor-pointer hover:text-primary transition-colors flex items-center gap-2"
-          aria-label="Scroll to top"
+          aria-label="Go to homepage"
         >
           donray.dev
           <span 
@@ -72,7 +72,7 @@ export default function Header() {
           id="main-nav"
         >
           <Link
-            href="#skills"
+            href="/#skills"
             className="text-sm hover:text-primary transition-colors"
             aria-label="View skills section"
           >
@@ -80,7 +80,7 @@ export default function Header() {
           </Link>
 
           <Link
-            href="#projects"
+            href="/#projects"
             className="text-sm hover:text-primary transition-colors"
             aria-label="View projects section"
           >
@@ -88,7 +88,7 @@ export default function Header() {
           </Link>
 
           <Link
-            href="#experience"
+            href="/#experience"
             className="text-sm hover:text-primary transition-colors"
             aria-label="View experience section"
           >
@@ -117,7 +117,7 @@ export default function Header() {
               >
                 <SheetClose asChild>
                   <Link
-                    href="#skills"
+                    href="/#skills"
                     className="flex items-center gap-3 text-xl font-bold hover:text-primary transition-colors"
                   >
                     <Code2 className="size-5" aria-hidden="true" />
@@ -127,7 +127,7 @@ export default function Header() {
 
                 <SheetClose asChild>
                   <Link
-                    href="#projects"
+                    href="/#projects"
                     className="flex items-center gap-3 text-xl font-bold hover:text-primary transition-colors"
                   >
                     <Rocket className="size-5" aria-hidden="true" />
@@ -137,7 +137,7 @@ export default function Header() {
 
                 <SheetClose asChild>
                   <Link
-                    href="#experience"
+                    href="/#experience"
                     className="flex items-center gap-3 text-xl font-bold hover:text-primary transition-colors"
                   >
                     <Briefcase className="size-5" aria-hidden="true" />
