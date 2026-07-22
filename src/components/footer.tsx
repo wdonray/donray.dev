@@ -26,7 +26,7 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer
-      className="border-t z-50 border-border mt-6 sticky bottom-0 bg-background"
+      className="border-t border-border mt-16 bg-background"
       role="contentinfo"
     >
       <div className="w-full px-4 md:px-8 py-4">
@@ -41,7 +41,7 @@ export default function Footer() {
                   key={social.name}
                   variant="outline"
                   size="icon"
-                  className="cursor-pointer"
+                  className="cursor-pointer size-11"
                   asChild
                 >
                   <Link

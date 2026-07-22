@@ -2,8 +2,9 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Menu, Code2, Briefcase, Rocket } from "lucide-react";
+import { Menu, Code2, Briefcase, Rocket, Mail } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
+import { Github, Linkedin } from "./ui/brand-icons";
 import {
   Sheet,
   SheetClose,
@@ -13,6 +14,33 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "./ui/button";
+
+const contactLinks = [
+  {
+    name: "Email",
+    url: "mailto:donrayxwilliams@gmail.com",
+    icon: Mail,
+    external: false,
+  },
+  {
+    name: "GitHub",
+    url: "https://github.com/wdonray",
+    icon: Github,
+    external: true,
+  },
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/in/donrayxwilliams/",
+    icon: Linkedin,
+    external: true,
+  },
+];
+
+const navLinks = [
+  { href: "/#skills", label: "Skills", icon: Code2 },
+  { href: "/#projects", label: "Projects", icon: Rocket },
+  { href: "/#experience", label: "Experience", icon: Briefcase },
+];
 
 export default function Header() {
   const [scrolled, setScrolled] = React.useState(false);
@@ -50,16 +78,16 @@ export default function Header() {
       }`}
       role="banner"
     >
-      <div className="px-4 md:px-8 h-16 flex items-center justify-between max-w-[2000px] mx-auto">
+      <div className="px-6 lg:px-8 h-16 flex items-center justify-between max-w-7xl mx-auto">
         <Link
           href="/#hero"
-          className="text-xl font-bold cursor-pointer hover:text-primary transition-colors flex items-center gap-2"
+          className="text-xl font-bold cursor-pointer hover:text-khaki transition-colors flex items-center gap-2"
           aria-label="Go to homepage"
         >
           donray.dev
-          <span 
+          <span
             className="wave-emoji text-2xl"
-            role="img" 
+            role="img"
             aria-label="Waving hand"
           >
             👋🏽
@@ -67,42 +95,61 @@ export default function Header() {
         </Link>
 
         <nav
-          className="hidden md:flex items-center gap-6"
+          className="hidden md:flex items-center gap-1"
           aria-label="Main navigation"
           id="main-nav"
         >
-          <Link
-            href="/#skills"
-            className="text-sm hover:text-primary transition-colors"
-            aria-label="View skills section"
-          >
-            Skills
-          </Link>
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm px-3 py-2.5 rounded-md hover:text-khaki hover:bg-accent transition-colors"
+              aria-label={`View ${link.label.toLowerCase()} section`}
+            >
+              {link.label}
+            </Link>
+          ))}
 
-          <Link
-            href="/#projects"
-            className="text-sm hover:text-primary transition-colors"
-            aria-label="View projects section"
-          >
-            Projects
-          </Link>
+          <div className="mx-2 h-5 w-px bg-border" aria-hidden="true" />
 
-          <Link
-            href="/#experience"
-            className="text-sm hover:text-primary transition-colors"
-            aria-label="View experience section"
-          >
-            Experience
-          </Link>
+          <div className="flex items-center gap-1">
+            {contactLinks.map((social) => (
+              <Button
+                key={social.name}
+                variant="ghost"
+                size="icon"
+                className="cursor-pointer hover:text-khaki"
+                asChild
+              >
+                <a
+                  href={social.url}
+                  target={social.external ? "_blank" : undefined}
+                  rel={social.external ? "noopener noreferrer" : undefined}
+                  aria-label={
+                    social.external
+                      ? `Visit ${social.name} profile`
+                      : `Contact via ${social.name.toLowerCase()}`
+                  }
+                >
+                  <social.icon className="size-5" aria-hidden="true" />
+                </a>
+              </Button>
+            ))}
+          </div>
 
           <ModeToggle />
         </nav>
 
-        <div className="flex items-center gap-4 md:hidden" id="mobile-menu">
-          <ModeToggle />
+        <div className="flex items-center gap-2 md:hidden" id="mobile-menu">
+          <ModeToggle className="size-11" />
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" aria-label="Open menu">
+              <Button
+                variant="outline"
+                size="icon"
+                className="size-11"
+                aria-label="Open menu"
+              >
                 <Menu className="size-5 cursor-pointer" aria-hidden="true" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
@@ -112,38 +159,55 @@ export default function Header() {
                 <SheetTitle>donray.dev</SheetTitle>
               </SheetHeader>
               <nav
-                className="flex flex-col gap-4 mt-6 px-4"
+                className="flex flex-col gap-2 mt-6 px-4"
                 aria-label="Mobile navigation"
               >
-                <SheetClose asChild>
-                  <Link
-                    href="/#skills"
-                    className="flex items-center gap-3 text-xl font-bold hover:text-primary transition-colors"
-                  >
-                    <Code2 className="size-5" aria-hidden="true" />
-                    Skills
-                  </Link>
-                </SheetClose>
+                {navLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <SheetClose asChild key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="flex items-center gap-3 text-xl font-bold py-2 hover:text-khaki transition-colors"
+                      >
+                        <Icon className="size-5" aria-hidden="true" />
+                        {link.label}
+                      </Link>
+                    </SheetClose>
+                  );
+                })}
 
-                <SheetClose asChild>
-                  <Link
-                    href="/#projects"
-                    className="flex items-center gap-3 text-xl font-bold hover:text-primary transition-colors"
-                  >
-                    <Rocket className="size-5" aria-hidden="true" />
-                    Projects
-                  </Link>
-                </SheetClose>
+                <div
+                  className="my-2 h-px w-full bg-border"
+                  aria-hidden="true"
+                />
 
-                <SheetClose asChild>
-                  <Link
-                    href="/#experience"
-                    className="flex items-center gap-3 text-xl font-bold hover:text-primary transition-colors"
-                  >
-                    <Briefcase className="size-5" aria-hidden="true" />
-                    Experience
-                  </Link>
-                </SheetClose>
+                <div className="flex items-center gap-3">
+                  {contactLinks.map((social) => (
+                    <Button
+                      key={social.name}
+                      variant="outline"
+                      size="icon"
+                      className="cursor-pointer size-11"
+                      asChild
+                    >
+                      <a
+                        href={social.url}
+                        target={social.external ? "_blank" : undefined}
+                        rel={
+                          social.external ? "noopener noreferrer" : undefined
+                        }
+                        aria-label={
+                          social.external
+                            ? `Visit ${social.name} profile`
+                            : `Contact via ${social.name.toLowerCase()}`
+                        }
+                      >
+                        <social.icon className="size-5" aria-hidden="true" />
+                      </a>
+                    </Button>
+                  ))}
+                </div>
               </nav>
             </SheetContent>
           </Sheet>

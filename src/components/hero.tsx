@@ -3,72 +3,58 @@
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Mail } from "lucide-react";
 import Image from "next/image";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
 import { fadeInUpWithDelay, imageScale } from "@/lib/animations";
 
 export default function Hero() {
   const yearsSince2019 = new Date().getFullYear() - 2019;
 
-  const h1Size = "text-3xl sm:text-5xl lg:text-6xl 2xl:text-7xl";
-  const h2Size = "text-2xl sm:text-4xl lg:text-5xl 2xl:text-6xl";
-  const pSize = "text-base sm:text-lg lg:text-xl 2xl:text-2xl";
+  const h1Size = "text-4xl sm:text-6xl lg:text-7xl";
+  const h2Size = "text-xl sm:text-2xl lg:text-3xl";
+  const pSize = "text-base sm:text-lg lg:text-xl";
 
   return (
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="min-h-screen flex items-center px-4 sm:px-6 lg:px-8"
+      className="min-h-screen flex items-center"
     >
-      <div className="flex flex-col md:flex-row gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center justify-between w-full max-w-[2000px] mx-auto">
-        <div className="space-y-4 sm:space-y-5 md:space-y-6 text-center md:text-left" id="hero-content">
+      <div className="flex flex-col md:flex-row gap-10 sm:gap-12 md:gap-16 lg:gap-20 items-center justify-between w-full">
+        <div
+          className="space-y-4 sm:space-y-5 md:space-y-6 text-center md:text-left"
+          id="hero-content"
+        >
           <motion.h1
             id="hero-heading"
             className={`${h1Size} font-bold tracking-tight`}
             {...fadeInUpWithDelay(0)}
           >
-            Hi, I&apos;m{" "}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger
-                  className="cursor-help"
-                  aria-label="Name pronunciation for Donray Williams"
-                >
-                  Donray Williams
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Pronounced: Don·RAY Wil·ymz</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            Hi, I&apos;m Donray Williams
           </motion.h1>
 
           <motion.h2
-            className={`${h2Size} text-muted-foreground`}
-            {...fadeInUpWithDelay(0.2)}
+            className={`${h2Size} font-normal text-muted-foreground`}
+            {...fadeInUpWithDelay(0.05)}
           >
             Engineering Manager
           </motion.h2>
 
           <motion.p
-            className={`${pSize} text-muted-foreground`}
-            {...fadeInUpWithDelay(0.4)}
+            className={`${pSize} text-muted-foreground max-w-xl`}
+            {...fadeInUpWithDelay(0.1)}
           >
-            I craft fast, accessible, and beautiful web experiences that users love. With <span className="font-bold">{yearsSince2019}+ years</span> of experience, I help teams transform ideas into polished products through clean code and thoughtful design.
+            I build fast, accessible web experiences.{" "}
+            <span className="font-bold">{yearsSince2019}+ years</span> turning
+            ideas into polished products.
           </motion.p>
 
           <motion.div
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-[250px] mx-auto md:mx-0"
-            {...fadeInUpWithDelay(0.6)}
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-sm mx-auto md:mx-0"
+            {...fadeInUpWithDelay(0.15)}
           >
             <Button
               size="lg"
-              className="cursor-pointer text-sm sm:text-base"
+              className="cursor-pointer text-sm sm:text-base h-11"
               aria-label="View Resume"
               asChild
             >
@@ -84,7 +70,7 @@ export default function Hero() {
             <Button
               size="lg"
               variant="outline"
-              className="cursor-pointer text-sm sm:text-base"
+              className="cursor-pointer text-sm sm:text-base h-11"
               asChild
             >
               <a
@@ -100,18 +86,18 @@ export default function Hero() {
 
         <motion.div
           {...imageScale}
-          transition={{ delay: 0.8 }}
-          className="block relative w-[200px] sm:w-[250px] md:w-[350px] lg:w-[450px] xl:w-[550px] 2xl:w-[650px] aspect-square"
+          transition={{ ...imageScale.transition, delay: 0.1 }}
+          className="block relative w-[200px] sm:w-[250px] md:w-[350px] lg:w-[450px] xl:w-[500px] aspect-square shrink-0"
           id="hero-image"
         >
           <Image
             src="/headshot.webp"
             alt="Donray Williams"
             fill
-            className="object-cover rounded-full shadow-lg hover:scale-105 transition-all duration-300"
+            className="object-cover rounded-full shadow-lg"
             priority
             quality={100}
-            sizes="(max-width: 640px) 200px, (max-width: 768px) 250px, (max-width: 1024px) 350px, (max-width: 1280px) 450px, (max-width: 1536px) 550px, 650px"
+            sizes="(max-width: 640px) 200px, (max-width: 768px) 250px, (max-width: 1024px) 350px, (max-width: 1280px) 450px, 500px"
           />
         </motion.div>
       </div>

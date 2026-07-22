@@ -15,7 +15,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   useEffect(() => {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY as string, {
+    const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+    if (!posthogKey) return;
+
+    posthog.init(posthogKey, {
       api_host: "/ingest",
       ui_host: "https://us.posthog.com",
       loaded: (posthogInstance) => {
@@ -43,7 +46,7 @@ export default function RootLayout({
           >
             <div>
               <Header />
-              <main className="max-w-[2000px] mx-auto">{children}</main>
+              <main className="w-full">{children}</main>
               <Footer />
             </div>
           </ThemeProvider>

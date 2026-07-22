@@ -4,13 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Calendar, Briefcase, Sparkles, ChevronDown } from "lucide-react";
+import { MapPin, Calendar, Briefcase, ChevronDown } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
-import {
-  fadeInUp,
-  scaleInWithDelay,
-  slideInLeftWithDelay,
-} from "@/lib/animations";
+import { fadeInUp } from "@/lib/animations";
 
 interface ExperienceItem {
   company: string;
@@ -24,9 +20,102 @@ interface ExperienceItem {
   }[];
 }
 
+const isCurrentPosition = (period: string) => period.includes("Present");
+
+// One job rendered as an Apple "Tech Specs" row: a left label column
+// (company + location + type) and a right detail column (roles timeline +
+// skills), separated from the previous row by a hairline divider. On mobile
+// the two columns stack.
+function JobEntry({
+  exp,
+  index,
+  isInView,
+}: {
+  exp: ExperienceItem;
+  index: number;
+  isInView: boolean;
+}) {
+  return (
+    <motion.div
+      className="grid gap-x-8 gap-y-4 border-t border-border pt-8 md:grid-cols-[minmax(0,15rem)_1fr]"
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={fadeInUp}
+      transition={{ delay: index * 0.05 }}
+      role="listitem"
+    >
+      <div className="space-y-2">
+        <h3 className="text-xl font-semibold">{exp.company}</h3>
+        <div
+          className="flex flex-col gap-1 text-sm text-muted-foreground"
+          role="group"
+          aria-label={`${exp.company} details`}
+        >
+          <div className="flex items-center gap-1.5">
+            <MapPin className="size-4 shrink-0" aria-hidden="true" />
+            <span>{exp.location}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Briefcase className="size-4 shrink-0" aria-hidden="true" />
+            <span>{exp.type}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-5">
+        <div className="space-y-4" role="list" aria-label={`Roles at ${exp.company}`}>
+          {exp.positions.map((pos, posIndex) => (
+            <div
+              key={`position-${posIndex}-${pos.title.toLowerCase().replace(/\s+/g, "-")}`}
+              className={`border-l-2 pl-4 ${
+                isCurrentPosition(pos.period) ? "border-khaki" : "border-muted"
+              }`}
+              role="listitem"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <h4 className="text-lg font-medium">{pos.title}</h4>
+                {isCurrentPosition(pos.period) && (
+                  <Badge
+                    variant="outline"
+                    className="text-xs bg-khaki/10 text-khaki border-khaki/30"
+                  >
+                    Current
+                  </Badge>
+                )}
+              </div>
+              <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Calendar className="size-4 shrink-0" aria-hidden="true" />
+                <span>{pos.period}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {exp.skills && (
+          <div
+            className="flex flex-wrap gap-2"
+            role="list"
+            aria-label={`Technologies used at ${exp.company}`}
+          >
+            {exp.skills.map((skill, i) => (
+              <Badge
+                key={`skill-${i}-${skill.toLowerCase().replace(/\s+/g, "-")}`}
+                variant="secondary"
+                className="text-sm bg-muted/30 hover:bg-muted/50 transition-colors"
+                role="listitem"
+              >
+                {skill}
+              </Badge>
+            ))}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Experience() {
   const [showOlderExperiences, setShowOlderExperiences] = useState(false);
-  // Create refs for each major section
   const sectionRef = useRef(null);
   const companiesRef = useRef(null);
   const isSectionInView = useInView(sectionRef, {
@@ -173,8 +262,6 @@ export default function Experience() {
     },
   ];
 
-  const isCurrentPosition = (period: string) => period.includes("Present");
-
   const recentExperiences = experiences.slice(0, 4); // Justworks through Stuller
   const olderExperiences = experiences.slice(4); // Gemvision through AIE
 
@@ -190,16 +277,12 @@ export default function Experience() {
             block: "start",
           });
         }
-      }, 300); // Increased delay to match animation duration
+      }, 300);
     }
   };
 
   return (
-    <section
-      id="experience"
-      aria-labelledby="experience-heading"
-      ref={sectionRef}
-    >
+    <section id="experience" aria-labelledby="experience-heading" ref={sectionRef}>
       <div className="space-y-8">
         <SectionHeader
           id="experience-heading"
@@ -208,119 +291,24 @@ export default function Experience() {
         />
         <div
           ref={companiesRef}
-          className="space-y-12"
+          className="space-y-8"
           role="list"
           aria-label="Professional experience timeline"
         >
           {recentExperiences.map((exp, index) => (
-            <motion.div
+            <JobEntry
               key={`company-${index}-${exp.company.toLowerCase().replace(/\s+/g, "-")}`}
-              className="space-y-4"
-              initial="hidden"
-              animate={isCompaniesInView ? "visible" : "hidden"}
-              variants={fadeInUp}
-              transition={{ delay: index * 0.1 }}
-              role="listitem"
-            >
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xl font-semibold">{exp.company}</h3>
-                  {exp.positions.some((pos) =>
-                    isCurrentPosition(pos.period),
-                  ) && (
-                    <Badge
-                      variant="default"
-                      className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                    >
-                      <Sparkles className="size-3 mr-1" aria-hidden="true" />
-                      Current
-                    </Badge>
-                  )}
-                </div>
-                <div
-                  className="flex flex-wrap gap-4 text-sm text-muted-foreground"
-                  role="group"
-                  aria-label={`${exp.company} details`}
-                >
-                  <div className="flex items-center gap-1">
-                    <MapPin className="size-4" aria-hidden="true" />
-                    <span>{exp.location}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Briefcase className="size-4" aria-hidden="true" />
-                    <span>{exp.type}</span>
-                  </div>
-                </div>
-                {exp.skills && (
-                  <div
-                    className="flex flex-wrap gap-2 mt-2"
-                    role="list"
-                    aria-label={`Technologies used at ${exp.company}`}
-                  >
-                    {exp.skills.map((skill, i) => (
-                      <motion.div
-                        key={`skill-${index}-${i}-${skill.toLowerCase().replace(/\s+/g, "-")}`}
-                        {...scaleInWithDelay(index * 0.1 + i * 0.05)}
-                        role="listitem"
-                      >
-                        <Badge
-                          variant="secondary"
-                          className="text-sm bg-muted/30 hover:bg-muted/50 transition-colors"
-                        >
-                          {skill}
-                        </Badge>
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {exp.positions.map((pos, posIndex) => (
-                <motion.div
-                  key={`position-${index}-${posIndex}-${pos.title.toLowerCase().replace(/\s+/g, "-")}`}
-                  className={`ml-4 pl-4 border-l-2 ${
-                    isCurrentPosition(pos.period)
-                      ? "border-primary"
-                      : "border-muted"
-                  }`}
-                  {...slideInLeftWithDelay(index * 0.1 + posIndex * 0.05)}
-                  role="listitem"
-                >
-                  <div
-                    className="space-y-2"
-                    role="group"
-                    aria-label={`${pos.title} at ${exp.company}`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <h4 className="text-lg font-medium">{pos.title}</h4>
-                      {isCurrentPosition(pos.period) && (
-                        <Badge
-                          variant="outline"
-                          className="text-xs bg-primary/5 text-primary border-primary/20"
-                        >
-                          Current
-                        </Badge>
-                      )}
-                    </div>
-                    <div
-                      className="flex items-center gap-1 text-sm text-muted-foreground"
-                      role="group"
-                      aria-label="Position duration"
-                    >
-                      <Calendar className="size-4" aria-hidden="true" />
-                      <span>{pos.period}</span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
+              exp={exp}
+              index={index}
+              isInView={isCompaniesInView}
+            />
           ))}
 
           {olderExperiences.length > 0 && (
-            <div className="space-y-4">
+            <div className="space-y-8">
               <button
                 onClick={toggleOlderExperiences}
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-muted/30 hover:bg-muted/50 px-6 py-2 rounded-md mx-auto"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-muted/30 hover:bg-muted/50 px-6 py-2.5 rounded-md mx-auto"
                 aria-expanded={showOlderExperiences}
               >
                 <ChevronDown
@@ -343,110 +331,15 @@ export default function Experience() {
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="space-y-12 overflow-hidden"
+                    className="space-y-8 overflow-hidden"
                   >
                     {olderExperiences.map((exp, index) => (
-                      <motion.div
+                      <JobEntry
                         key={`company-${index + 4}-${exp.company.toLowerCase().replace(/\s+/g, "-")}`}
-                        className="space-y-4"
-                        initial="hidden"
-                        animate={isCompaniesInView ? "visible" : "hidden"}
-                        variants={fadeInUp}
-                        transition={{ delay: (index + 4) * 0.1 }}
-                        role="listitem"
-                      >
-                        <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-xl font-semibold">{exp.company}</h3>
-                            {exp.positions.some((pos) =>
-                              isCurrentPosition(pos.period),
-                            ) && (
-                              <Badge
-                                variant="default"
-                                className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                              >
-                                <Sparkles className="size-3 mr-1" aria-hidden="true" />
-                                Current
-                              </Badge>
-                            )}
-                          </div>
-                          <div
-                            className="flex flex-wrap gap-4 text-sm text-muted-foreground"
-                            role="group"
-                            aria-label={`${exp.company} details`}
-                          >
-                            <div className="flex items-center gap-1">
-                              <MapPin className="size-4" aria-hidden="true" />
-                              <span>{exp.location}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Briefcase className="size-4" aria-hidden="true" />
-                              <span>{exp.type}</span>
-                            </div>
-                          </div>
-                          {exp.skills && (
-                            <div
-                              className="flex flex-wrap gap-2 mt-2"
-                              role="list"
-                              aria-label={`Technologies used at ${exp.company}`}
-                            >
-                              {exp.skills.map((skill, i) => (
-                                <motion.div
-                                  key={`skill-${index + 4}-${i}-${skill.toLowerCase().replace(/\s+/g, "-")}`}
-                                  {...scaleInWithDelay((index + 4) * 0.1 + i * 0.05)}
-                                  role="listitem"
-                                >
-                                  <Badge
-                                    variant="secondary"
-                                    className="text-sm bg-muted/30 hover:bg-muted/50 transition-colors"
-                                  >
-                                    {skill}
-                                  </Badge>
-                                </motion.div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-
-                        {exp.positions.map((pos, posIndex) => (
-                          <motion.div
-                            key={`position-${index + 4}-${posIndex}-${pos.title.toLowerCase().replace(/\s+/g, "-")}`}
-                            className={`ml-4 pl-4 border-l-2 ${
-                              isCurrentPosition(pos.period)
-                                ? "border-primary"
-                                : "border-muted"
-                            }`}
-                            {...slideInLeftWithDelay((index + 4) * 0.1 + posIndex * 0.05)}
-                            role="listitem"
-                          >
-                            <div
-                              className="space-y-2"
-                              role="group"
-                              aria-label={`${pos.title} at ${exp.company}`}
-                            >
-                              <div className="flex items-center gap-2">
-                                <h4 className="text-lg font-medium">{pos.title}</h4>
-                                {isCurrentPosition(pos.period) && (
-                                  <Badge
-                                    variant="outline"
-                                    className="text-xs bg-primary/5 text-primary border-primary/20"
-                                  >
-                                    Current
-                                  </Badge>
-                                )}
-                              </div>
-                              <div
-                                className="flex items-center gap-1 text-sm text-muted-foreground"
-                                role="group"
-                                aria-label="Position duration"
-                              >
-                                <Calendar className="size-4" aria-hidden="true" />
-                                <span>{pos.period}</span>
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </motion.div>
+                        exp={exp}
+                        index={index}
+                        isInView={isCompaniesInView}
+                      />
                     ))}
                   </motion.div>
                 )}

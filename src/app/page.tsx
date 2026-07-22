@@ -21,7 +21,7 @@ const Experience = dynamic(() => import("@/components/experience"), {
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-24 px-4 md:px-16">
+    <div className="flex flex-col gap-24 max-w-7xl mx-auto px-6 lg:px-8">
       <Hero />
       <Skills />
       <Projects />
