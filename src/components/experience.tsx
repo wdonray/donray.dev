@@ -44,6 +44,7 @@ export default function Experience() {
       location: "Manhattan, New York, United States",
       type: "Full-time",
       skills: [
+        "Team Leadership",
         "Vue.js",
         "JavaScript",
         "Internal Library Engineering",
@@ -54,8 +55,12 @@ export default function Experience() {
       ],
       positions: [
         {
+          title: "Engineering Manager",
+          period: "Jun 2026 – Present",
+        },
+        {
           title: "Senior Software Engineer",
-          period: "Dec 2023 – Present",
+          period: "Dec 2023 – Jun 2026",
         },
         {
           title: "Software Engineer",
@@ -78,7 +83,7 @@ export default function Experience() {
       positions: [
         {
           title: "Founding Frontend Engineer",
-          period: "Jul 2023 – Present",
+          period: "Jul 2023 – Aug 2025",
         },
       ],
     },

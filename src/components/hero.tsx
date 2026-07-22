@@ -52,7 +52,7 @@ export default function Hero() {
             className={`${h2Size} text-muted-foreground`}
             {...fadeInUpWithDelay(0.2)}
           >
-            Senior Frontend Engineer
+            Engineering Manager
           </motion.h2>
 
           <motion.p
