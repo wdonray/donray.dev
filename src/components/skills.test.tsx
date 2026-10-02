@@ -33,4 +33,29 @@ describe("Skills", () => {
     expect(screen.getByText("Team Leadership")).toBeInTheDocument();
     expect(screen.getByText("Tailwind CSS")).toBeInTheDocument();
   });
+
+  it("lists the verified stack additions", () => {
+    render(<Skills />);
+    for (const skill of [
+      "Ruby",
+      "Rails",
+      "MySQL",
+      "Testing Library",
+      "GitHub Actions",
+      "Datadog",
+      "AWS S3",
+      "Storybook",
+      "Vue Router",
+      "Vue I18n",
+    ]) {
+      expect(screen.getByText(skill)).toBeInTheDocument();
+    }
+  });
+
+  it("omits unverified skills", () => {
+    render(<Skills />);
+    for (const skill of ["React", "Next.js", "Docker", "GraphQL", "Helm"]) {
+      expect(screen.queryByText(skill)).not.toBeInTheDocument();
+    }
+  });
 });

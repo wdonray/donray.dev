@@ -41,6 +41,32 @@ describe("Experience", () => {
     expect(screen.getByText("Jun 2026 – Present")).toBeInTheDocument();
   });
 
+  it("collapses Justworks to the two resume roles", () => {
+    render(<Experience />);
+    expect(
+      screen.getByRole("heading", { name: "Engineering Manager" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Jan 2023 – Jun 2026")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Software Engineer" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("describes the Engineering Manager role", () => {
+    render(<Experience />);
+    expect(
+      screen.getByText(
+        /player-coach leading frontend for onboarding and billing/i,
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/6,800\+ people/i)).toBeInTheDocument();
+  });
+
+  it("shows Leaflink starting April 2022", () => {
+    render(<Experience />);
+    expect(screen.getByText("Apr 2022 – Dec 2022")).toBeInTheDocument();
+  });
+
   it("shows Justworks location and employment type", () => {
     render(<Experience />);
     expect(

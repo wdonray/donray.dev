@@ -17,6 +17,7 @@ interface ExperienceItem {
   positions: {
     title: string;
     period: string;
+    description?: string;
   }[];
 }
 
@@ -91,6 +92,11 @@ function JobEntry({
                 <Calendar className="size-4 shrink-0" aria-hidden="true" />
                 <span>{pos.period}</span>
               </div>
+              {pos.description && (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {pos.description}
+                </p>
+              )}
             </div>
           ))}
         </div>
@@ -150,14 +156,12 @@ export default function Experience() {
         {
           title: "Engineering Manager",
           period: "Jun 2026 – Present",
+          description:
+            "Player-coach leading frontend for onboarding and billing (team of 3). Shipped the member onboarding flow used by 6,800+ people across 1,365 companies in 30 days.",
         },
         {
           title: "Senior Software Engineer",
-          period: "Dec 2023 – Jun 2026",
-        },
-        {
-          title: "Software Engineer",
-          period: "Jan 2023 – Dec 2023",
+          period: "Jan 2023 – Jun 2026",
         },
       ],
     },
@@ -188,7 +192,7 @@ export default function Experience() {
       positions: [
         {
           title: "Frontend Engineer",
-          period: "Jul 2022 – Dec 2022",
+          period: "Apr 2022 – Dec 2022",
         },
       ],
     },
