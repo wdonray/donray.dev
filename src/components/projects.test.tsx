@@ -5,7 +5,9 @@ import Projects from "./projects";
 describe("Projects", () => {
   it("renders the section heading", () => {
     render(<Projects />);
-    expect(screen.getByRole("heading", { name: "Projects" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Projects" }),
+    ).toBeInTheDocument();
   });
 
   it("renders all four projects", () => {
@@ -35,7 +37,10 @@ describe("Projects", () => {
     const repo = screen.getByRole("link", {
       name: "View donray.dev on GitHub",
     });
-    expect(repo).toHaveAttribute("href", "https://github.com/wdonray/donray.dev");
+    expect(repo).toHaveAttribute(
+      "href",
+      "https://github.com/wdonray/donray.dev",
+    );
   });
 
   it("renders technology badges", () => {

@@ -99,7 +99,9 @@ describe("VersionInfo", () => {
   });
 
   it("shows up-to-date when versions match", () => {
-    render(<VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />);
+    render(
+      <VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />,
+    );
     expect(
       screen.getByText("You're on the latest release."),
     ).toBeInTheDocument();
@@ -107,17 +109,19 @@ describe("VersionInfo", () => {
   });
 
   it("shows behind when a newer release exists", () => {
-    render(<VersionInfo currentVersion="0.5.0" initialLatest={release("0.6.0")} />);
+    render(
+      <VersionInfo currentVersion="0.5.0" initialLatest={release("0.6.0")} />,
+    );
     expect(
       screen.getByText("A newer release is available."),
     ).toBeInTheDocument();
   });
 
   it("shows ahead when the build is newer than the release", () => {
-    render(<VersionInfo currentVersion="0.6.0" initialLatest={release("0.5.0")} />);
-    expect(
-      screen.getByText(/ahead of the latest release/),
-    ).toBeInTheDocument();
+    render(
+      <VersionInfo currentVersion="0.6.0" initialLatest={release("0.5.0")} />,
+    );
+    expect(screen.getByText(/ahead of the latest release/)).toBeInTheDocument();
   });
 
   it("check again updates the status from the GitHub API", async () => {
@@ -134,7 +138,9 @@ describe("VersionInfo", () => {
       }),
     );
 
-    render(<VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />);
+    render(
+      <VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />,
+    );
     expect(
       screen.getByText("You're on the latest release."),
     ).toBeInTheDocument();
@@ -156,7 +162,9 @@ describe("VersionInfo", () => {
     const user = userEvent.setup();
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
 
-    render(<VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />);
+    render(
+      <VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />,
+    );
     await user.click(screen.getByRole("button", { name: /check again/i }));
 
     await waitFor(() => {
@@ -179,7 +187,9 @@ describe("VersionInfo", () => {
       ),
     );
 
-    render(<VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />);
+    render(
+      <VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />,
+    );
     const button = screen.getByRole("button", { name: /check again/i });
     await user.click(button);
 

@@ -25,9 +25,7 @@ test.describe("/version page", () => {
   test("shows the current build version", async ({ page }) => {
     await page.goto("/version");
 
-    await expect(
-      page.getByRole("heading", { name: "Version" }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Version" })).toBeVisible();
     await expect(page.getByText("This build")).toBeVisible();
     await expect(page.getByText(`v${version}`, { exact: true })).toBeVisible();
   });
@@ -42,9 +40,7 @@ test.describe("/version page", () => {
 
     await page.getByRole("button", { name: /check again/i }).click();
 
-    await expect(
-      page.getByText("You're on the latest release."),
-    ).toBeVisible();
+    await expect(page.getByText("You're on the latest release.")).toBeVisible();
   });
 
   test("check again reports when a newer release exists", async ({ page }) => {
@@ -55,9 +51,7 @@ test.describe("/version page", () => {
 
     await page.getByRole("button", { name: /check again/i }).click();
 
-    await expect(
-      page.getByText("A newer release is available."),
-    ).toBeVisible();
+    await expect(page.getByText("A newer release is available.")).toBeVisible();
   });
 
   test("check again handles GitHub errors", async ({ page }) => {

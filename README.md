@@ -7,7 +7,7 @@ A modern, responsive portfolio website built with Next.js, TypeScript, and Tailw
 <div align="center">
   <h3>Desktop View</h3>
   <img src="./public/site-preview.png" alt="Desktop Preview" width="800" />
-  
+
   <h3>Mobile View</h3>
   <img src="./public/site-preview-mobile.png" alt="Mobile Preview" width="300" />
 </div>
@@ -127,10 +127,13 @@ The website is deployed on Vercel. To deploy your own version:
 - `npm run test:unit` — Vitest + Testing Library unit tests (`*.test.ts(x)` next to the source)
 - `npm run test:e2e` — Playwright end-to-end tests in `e2e/` (run against a production build)
 - `npm run test` — both suites
+- `npm run lint` — oxlint
+- `npm run format` / `npm run format:check` — oxfmt write / check
 - `npm run typecheck` — `tsc --noEmit`
 
-Every pull request runs lint, typecheck, unit tests, and the Playwright suite via
-`.github/workflows/test.yml`, and merging is blocked until they pass.
+Every pull request runs lint, format check, typecheck, unit tests, a production
+build, and the Playwright suite via `.github/workflows/test.yml`, and merging is
+blocked until they pass.
 
 ## 🤝 Contact
 

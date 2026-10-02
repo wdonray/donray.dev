@@ -10,19 +10,13 @@ import {
   Tag,
   TriangleAlert,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { fadeInUp, fadeInUpWithDelay } from "@/lib/animations";
 
 export const RELEASES_API =
   "https://api.github.com/repos/wdonray/donray.dev/releases/latest";
-export const RELEASES_URL =
-  "https://github.com/wdonray/donray.dev/releases";
+export const RELEASES_URL = "https://github.com/wdonray/donray.dev/releases";
 
 export interface LatestRelease {
   version: string;
@@ -133,7 +127,9 @@ export default function VersionInfo({
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-4">
-                <dt className="text-sm text-muted-foreground">Latest release</dt>
+                <dt className="text-sm text-muted-foreground">
+                  Latest release
+                </dt>
                 <dd className="font-mono text-lg font-semibold">
                   {status === "loading" ? (
                     <span className="inline-flex items-center gap-2 text-muted-foreground">
