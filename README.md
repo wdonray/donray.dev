@@ -122,6 +122,16 @@ The website is deployed on Vercel. To deploy your own version:
    - Build Command: `next build`
    - Output Directory: `.next`
 
+## 🧪 Testing
+
+- `npm run test:unit` — Vitest + Testing Library unit tests (`*.test.ts(x)` next to the source)
+- `npm run test:e2e` — Playwright end-to-end tests in `e2e/` (run against a production build)
+- `npm run test` — both suites
+- `npm run typecheck` — `tsc --noEmit`
+
+Every pull request runs lint, typecheck, unit tests, and the Playwright suite via
+`.github/workflows/test.yml`, and merging is blocked until they pass.
+
 ## 🤝 Contact
 
 - LinkedIn: [Donray Williams](https://www.linkedin.com/in/donrayxwilliams/)
