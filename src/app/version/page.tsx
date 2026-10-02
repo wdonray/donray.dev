@@ -14,9 +14,18 @@ export const metadata: Metadata = {
 
 async function getLatestRelease(): Promise<LatestRelease | null> {
   try {
+    // Cache for an hour: the GitHub API allows only 60 unauthenticated
+    // requests/hour per IP, and shared hosting egress IPs exhaust that fast.
+    // An optional GITHUB_TOKEN raises the limit to 5,000/hour.
+    const headers: Record<string, string> = {
+      Accept: "application/vnd.github+json",
+    };
+    if (process.env.GITHUB_TOKEN) {
+      headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+    }
     const res = await fetch(RELEASES_API, {
-      headers: { Accept: "application/vnd.github+json" },
-      cache: "no-store",
+      headers,
+      next: { revalidate: 3600 },
       signal: AbortSignal.timeout(4000),
     });
     if (!res.ok) return null;
