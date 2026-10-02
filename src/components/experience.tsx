@@ -311,50 +311,52 @@ export default function Experience() {
               isInView={isCompaniesInView}
             />
           ))}
-
-          {olderExperiences.length > 0 && (
-            <div className="space-y-8">
-              <button
-                onClick={toggleOlderExperiences}
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-muted/30 hover:bg-muted/50 px-6 py-2.5 rounded-md mx-auto"
-                aria-expanded={showOlderExperiences}
-              >
-                <ChevronDown
-                  className={`size-4 transition-transform duration-300 ${
-                    showOlderExperiences ? "rotate-180" : ""
-                  }`}
-                />
-                <span className="font-medium">
-                  {showOlderExperiences
-                    ? "Hide Earlier Experience"
-                    : "View Earlier Experience"}
-                </span>
-              </button>
-
-              <AnimatePresence>
-                {showOlderExperiences && (
-                  <motion.div
-                    id="older-experiences"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="space-y-8 overflow-hidden"
-                  >
-                    {olderExperiences.map((exp, index) => (
-                      <JobEntry
-                        key={`company-${index + 4}-${exp.company.toLowerCase().replace(/\s+/g, "-")}`}
-                        exp={exp}
-                        index={index}
-                        isInView={isCompaniesInView}
-                      />
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
         </div>
+
+        {olderExperiences.length > 0 && (
+          <div className="space-y-8">
+            <button
+              onClick={toggleOlderExperiences}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer bg-muted/30 hover:bg-muted/50 px-6 py-2.5 rounded-md mx-auto"
+              aria-expanded={showOlderExperiences}
+            >
+              <ChevronDown
+                className={`size-4 transition-transform duration-300 ${
+                  showOlderExperiences ? "rotate-180" : ""
+                }`}
+              />
+              <span className="font-medium">
+                {showOlderExperiences
+                  ? "Hide Earlier Experience"
+                  : "View Earlier Experience"}
+              </span>
+            </button>
+
+            <AnimatePresence>
+              {showOlderExperiences && (
+                <motion.div
+                  id="older-experiences"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="space-y-8 overflow-hidden"
+                  role="list"
+                  aria-label="Earlier professional experience"
+                >
+                  {olderExperiences.map((exp, index) => (
+                    <JobEntry
+                      key={`company-${index + 4}-${exp.company.toLowerCase().replace(/\s+/g, "-")}`}
+                      exp={exp}
+                      index={index}
+                      isInView={isCompaniesInView}
+                    />
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
     </section>
   );

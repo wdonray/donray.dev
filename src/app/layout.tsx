@@ -35,7 +35,13 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <title>Donray Williams — Engineering Manager</title>
+        <meta
+          name="description"
+          content="Portfolio of Donray Williams, Engineering Manager building fast, accessible web experiences."
+        />
+      </head>
       <body>
         <PostHogProvider client={posthog}>
           <ThemeProvider
