@@ -27,5 +27,5 @@ jobs:
           token: ${{ secrets.PACKAGES_AUTH_TOKEN }}
       - run: git config --global user.name "${GITHUB_ACTOR}"
       - run: git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      - run: npm version ${{ env.newversion }} -m "[RELEASE] %s [skip-cd]"
+      - run: npm version ${{ env.newversion }} -m "[RELEASE] %s"
       - run: git push --follow-tags
