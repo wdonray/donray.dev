@@ -33,7 +33,7 @@ export interface LatestRelease {
 type Status = "idle" | "loading" | "up-to-date" | "behind" | "ahead" | "error";
 
 /** Parse a semver-ish string ("v0.4.19" / "0.4.19") into comparable parts. */
-function parseVersion(value: string): number[] {
+export function parseVersion(value: string): number[] {
   return value
     .replace(/^v/i, "")
     .split(".")
@@ -41,7 +41,7 @@ function parseVersion(value: string): number[] {
 }
 
 /** Returns 1 if a > b, -1 if a < b, 0 if equal. */
-function compareVersions(a: string, b: string): number {
+export function compareVersions(a: string, b: string): number {
   const pa = parseVersion(a);
   const pb = parseVersion(b);
   const length = Math.max(pa.length, pb.length);
@@ -52,7 +52,7 @@ function compareVersions(a: string, b: string): number {
   return 0;
 }
 
-function statusFor(
+export function statusFor(
   current: string,
   latest: LatestRelease | null,
 ): Exclude<Status, "idle" | "loading"> {
@@ -61,7 +61,7 @@ function statusFor(
   return comparison === 0 ? "up-to-date" : comparison < 0 ? "behind" : "ahead";
 }
 
-function formatDate(value: string | null): string | null {
+export function formatDate(value: string | null): string | null {
   if (!value) return null;
   return new Date(value).toLocaleDateString("en-US", {
     year: "numeric",
