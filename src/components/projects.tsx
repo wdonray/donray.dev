@@ -218,7 +218,11 @@ export default function Projects() {
           title="Projects"
           isInView={isInView}
         />
-        <div className="grid gap-6 md:grid-cols-2">
+        <div
+          className="grid gap-6 md:grid-cols-2"
+          role="list"
+          aria-label="Projects"
+        >
           {projects.map((project, index) => (
             <ProjectCard
               key={`project-${index}-${project.title

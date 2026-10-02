@@ -193,7 +193,7 @@ export default function VersionInfo({
           href={RELEASES_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-primary hover:underline"
+          className="text-primary underline underline-offset-4 hover:decoration-2"
         >
           release history
         </a>{" "}

@@ -125,7 +125,8 @@ The website is deployed on Vercel. To deploy your own version:
 ## 🧪 Testing
 
 - `npm run test:unit` — Vitest + Testing Library unit tests (`*.test.ts(x)` next to the source)
-- `npm run test:e2e` — Playwright end-to-end tests in `e2e/` (run against a production build)
+- `npm run test:e2e` — Playwright end-to-end tests in `e2e/` (run against a production build),
+  including `e2e/a11y.spec.ts`: an axe-core WCAG 2.2 AA scan of every page
 - `npm run test` — both suites
 - `npm run lint` — oxlint
 - `npm run format` / `npm run format:check` — oxfmt write / check
