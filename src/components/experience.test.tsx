@@ -17,7 +17,9 @@ describe("Experience", () => {
       screen.getByRole("heading", { name: "Justworks" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Cyclei" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Leaflink" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Leaflink" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Stuller, Inc." }),
     ).toBeInTheDocument();

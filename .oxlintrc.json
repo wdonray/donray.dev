@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "builtin": true
+  },
+  "ignorePatterns": [".next/**", "out/**", "build/**", "node_modules/**"],
+  "plugins": ["typescript", "unicorn", "oxc", "react", "nextjs"],
+  "rules": {
+    "react/purity": "off"
+  }
+}

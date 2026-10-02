@@ -63,7 +63,11 @@ function JobEntry({
       </div>
 
       <div className="space-y-5">
-        <div className="space-y-4" role="list" aria-label={`Roles at ${exp.company}`}>
+        <div
+          className="space-y-4"
+          role="list"
+          aria-label={`Roles at ${exp.company}`}
+        >
           {exp.positions.map((pos, posIndex) => (
             <div
               key={`position-${posIndex}-${pos.title.toLowerCase().replace(/\s+/g, "-")}`}
@@ -282,7 +286,11 @@ export default function Experience() {
   };
 
   return (
-    <section id="experience" aria-labelledby="experience-heading" ref={sectionRef}>
+    <section
+      id="experience"
+      aria-labelledby="experience-heading"
+      ref={sectionRef}
+    >
       <div className="space-y-8">
         <SectionHeader
           id="experience-heading"

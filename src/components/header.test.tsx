@@ -12,10 +12,9 @@ describe("Header", () => {
 
   it("renders section navigation links", () => {
     render(<Header />);
-    expect(screen.getByRole("link", { name: "View skills section" })).toHaveAttribute(
-      "href",
-      "/#skills",
-    );
+    expect(
+      screen.getByRole("link", { name: "View skills section" }),
+    ).toHaveAttribute("href", "/#skills");
     expect(
       screen.getByRole("link", { name: "View projects section" }),
     ).toHaveAttribute("href", "/#projects");

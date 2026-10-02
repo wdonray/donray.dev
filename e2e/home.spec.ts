@@ -5,7 +5,9 @@ test.describe("home page", () => {
     await page.goto("/");
 
     const hero = page.getByRole("region", { name: /hi, i'm donray williams/i });
-    await expect(hero.getByRole("heading", { name: /hi, i'm donray williams/i })).toBeVisible();
+    await expect(
+      hero.getByRole("heading", { name: /hi, i'm donray williams/i }),
+    ).toBeVisible();
     await expect(
       hero.getByRole("heading", { name: "Engineering Manager" }),
     ).toBeVisible();
@@ -43,9 +45,7 @@ test.describe("home page", () => {
   test("toggles the color theme", async ({ page }) => {
     await page.goto("/");
     const html = page.locator("html");
-    const toggle = page
-      .getByRole("button", { name: "Toggle theme" })
-      .first();
+    const toggle = page.getByRole("button", { name: "Toggle theme" }).first();
 
     await toggle.click();
     await expect(html).toHaveClass(/dark/);
@@ -90,9 +90,7 @@ test.describe("home page", () => {
   test("footer shows the current year", async ({ page }) => {
     await page.goto("/");
     const year = new Date().getFullYear();
-    await expect(
-      page.getByText(`© ${year} Donray Williams`),
-    ).toBeVisible();
+    await expect(page.getByText(`© ${year} Donray Williams`)).toBeVisible();
   });
 
   test("mobile menu opens the navigation", async ({ page }) => {
