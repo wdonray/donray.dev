@@ -73,38 +73,58 @@ export default function VersionInfo({
 }) {
   const [latest, setLatest] = useState<LatestRelease | null>(initialLatest);
   const [status, setStatus] = useState<Status>(() =>
-    statusFor(currentVersion, initialLatest),
+    // When the server-side lookup failed we retry from the browser on mount,
+    // so start in "loading" — the effect below settles it asynchronously.
+    initialLatest === null
+      ? "loading"
+      : statusFor(currentVersion, initialLatest),
   );
+
+  const fetchLatest = useCallback(async (): Promise<LatestRelease> => {
+    const res = await fetch(RELEASES_API, {
+      headers: { Accept: "application/vnd.github+json" },
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error(`GitHub responded ${res.status}`);
+    const data = await res.json();
+    return {
+      version: String(data.tag_name ?? "").replace(/^v/i, ""),
+      url: data.html_url ?? RELEASES_URL,
+      publishedAt: data.published_at ?? null,
+    };
+  }, []);
 
   const checkLatest = useCallback(async () => {
     setStatus("loading");
     try {
-      const res = await fetch(RELEASES_API, {
-        headers: { Accept: "application/vnd.github+json" },
-        cache: "no-store",
-      });
-      if (!res.ok) throw new Error(`GitHub responded ${res.status}`);
-      const data = await res.json();
-      const next: LatestRelease = {
-        version: String(data.tag_name ?? "").replace(/^v/i, ""),
-        url: data.html_url ?? RELEASES_URL,
-        publishedAt: data.published_at ?? null,
-      };
+      const next = await fetchLatest();
       setLatest(next);
       setStatus(statusFor(currentVersion, next));
     } catch {
       setStatus("error");
     }
-  }, [currentVersion]);
+  }, [currentVersion, fetchLatest]);
 
   useEffect(() => {
     // If the server-side lookup failed (GitHub unreachable from the host),
     // retry from the visitor's browser on mount — an independent network
     // with its own rate-limit quota.
-    if (initialLatest === null) {
-      void checkLatest();
-    }
-  }, [initialLatest, checkLatest]);
+    if (initialLatest !== null) return;
+    let cancelled = false;
+    fetchLatest().then(
+      (next) => {
+        if (cancelled) return;
+        setLatest(next);
+        setStatus(statusFor(currentVersion, next));
+      },
+      () => {
+        if (!cancelled) setStatus("error");
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [initialLatest, fetchLatest, currentVersion]);
 
   return (
     <div className="w-full max-w-lg space-y-8">
