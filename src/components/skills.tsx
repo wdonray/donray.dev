@@ -31,12 +31,28 @@ export default function Skills() {
     {
       category: "Frontend Development",
       icon: Atom,
-      items: ["Vue 3", "TypeScript", "JavaScript", "React", "Next.js", "Vite"],
+      items: [
+        "Vue 3",
+        "TypeScript",
+        "JavaScript",
+        "Vite",
+        "Vue Router",
+        "Vue I18n",
+        "Storybook",
+      ],
     },
     {
       category: "Backend & APIs",
       icon: Server,
-      items: ["Go", "REST APIs", "GraphQL", "OpenAPI", "Node.js"],
+      items: [
+        "Go",
+        "REST APIs",
+        "OpenAPI",
+        "Node.js",
+        "Ruby",
+        "Rails",
+        "MySQL",
+      ],
     },
     {
       category: "Testing & Quality",
@@ -44,6 +60,7 @@ export default function Skills() {
       items: [
         "Vitest",
         "Playwright",
+        "Testing Library",
         "Unit Testing",
         "E2E Testing",
         "Test Automation",
@@ -52,7 +69,14 @@ export default function Skills() {
     {
       category: "Platform & DevOps",
       icon: Container,
-      items: ["Docker", "Helm", "CI/CD", "Git", "Package Management"],
+      items: [
+        "GitHub Actions",
+        "Datadog",
+        "AWS S3",
+        "CI/CD",
+        "Git",
+        "Package Management",
+      ],
     },
     {
       category: "UI & Web Standards",
