@@ -91,10 +91,30 @@ describe("VersionInfo", () => {
     expect(screen.getByText("v0.5.0")).toBeInTheDocument();
   });
 
-  it("shows an error banner when the release is unknown", () => {
+  it("retries the lookup from the browser on mount when the server lookup failed", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            tag_name: "v0.5.0",
+            html_url: "https://github.com/wdonray/donray.dev/releases",
+            published_at: "2026-10-01T12:00:00Z",
+          }),
+      }),
+    );
     render(<VersionInfo currentVersion="0.5.0" initialLatest={null} />);
     expect(
-      screen.getByText("Couldn't reach GitHub to compare versions."),
+      await screen.findByText("You're on the latest release."),
+    ).toBeInTheDocument();
+  });
+
+  it("shows an error banner when the release is unknown", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
+    render(<VersionInfo currentVersion="0.5.0" initialLatest={null} />);
+    expect(
+      await screen.findByText("Couldn't reach GitHub to compare versions."),
     ).toBeInTheDocument();
   });
 

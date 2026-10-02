@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Check,
@@ -96,6 +96,15 @@ export default function VersionInfo({
       setStatus("error");
     }
   }, [currentVersion]);
+
+  useEffect(() => {
+    // If the server-side lookup failed (GitHub unreachable from the host),
+    // retry from the visitor's browser on mount — an independent network
+    // with its own rate-limit quota.
+    if (initialLatest === null) {
+      void checkLatest();
+    }
+  }, [initialLatest, checkLatest]);
 
   return (
     <div className="w-full max-w-lg space-y-8">
