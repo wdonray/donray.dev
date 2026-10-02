@@ -8,6 +8,7 @@ import { PostHogProvider } from "posthog-js/react";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import AnalyticsTracker from "@/components/analytics-tracker";
 
 export default function RootLayout({
   children,
@@ -54,6 +55,7 @@ export default function RootLayout({
               <Header />
               <main className="w-full">{children}</main>
               <Footer />
+              <AnalyticsTracker />
             </div>
           </ThemeProvider>
         </PostHogProvider>

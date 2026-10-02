@@ -34,28 +34,36 @@ export default function Footer() {
           <div className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Donray Williams
           </div>
-          <nav aria-label="Social links">
-            <div className="flex items-center gap-4">
-              {socialLinks.map((social) => (
-                <Button
-                  key={social.name}
-                  variant="outline"
-                  size="icon"
-                  className="cursor-pointer size-11"
-                  asChild
-                >
-                  <Link
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Visit ${social.name} profile`}
+          <div className="flex items-center gap-4">
+            <Link
+              href="/analytics"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Analytics
+            </Link>
+            <nav aria-label="Social links">
+              <div className="flex items-center gap-4">
+                {socialLinks.map((social) => (
+                  <Button
+                    key={social.name}
+                    variant="outline"
+                    size="icon"
+                    className="cursor-pointer size-11"
+                    asChild
                   >
-                    <social.icon className="size-5" aria-hidden="true" />
-                  </Link>
-                </Button>
-              ))}
-            </div>
-          </nav>
+                    <Link
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Visit ${social.name} profile`}
+                    >
+                      <social.icon className="size-5" aria-hidden="true" />
+                    </Link>
+                  </Button>
+                ))}
+              </div>
+            </nav>
+          </div>
         </div>
       </div>
     </footer>
