@@ -5,9 +5,7 @@ import sitemap from "@/app/sitemap";
 describe("robots.txt", () => {
   it("allows all crawlers and disallows /api/", () => {
     const result = robots();
-    const rules = Array.isArray(result.rules)
-      ? result.rules
-      : [result.rules];
+    const rules = Array.isArray(result.rules) ? result.rules : [result.rules];
     const wildcard = rules.find((r) => r.userAgent === "*");
     expect(wildcard).toBeDefined();
     expect(wildcard?.allow).toBe("/");
