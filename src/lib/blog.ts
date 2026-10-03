@@ -16,6 +16,7 @@ export interface BlogPostMeta {
   date: string;
   excerpt: string;
   readingMinutes: number;
+  faq: { q: string; a: string }[];
 }
 
 export interface BlogHeading {
@@ -49,6 +50,7 @@ export function getPostMeta(slug: string): BlogPostMeta {
     date: data.date as string,
     excerpt: data.excerpt as string,
     readingMinutes: Math.max(1, Math.round(readingTime(content).minutes)),
+    faq: (data.faq as { q: string; a: string }[] | undefined) ?? [],
   };
 }
 

@@ -2,32 +2,70 @@
 title: "What 422 code reviews taught me about staying technical as a manager"
 date: "2026-10-03"
 excerpt: "Between June and October 2026, I reviewed 422 pull requests while managing a team of 3. Here's what review-at-scale actually teaches you, and what it costs."
+faq:
+  - q: "Should every engineering manager review code?"
+    a: "No. It depends on team size, the manager's technical background, and where the team needs leverage. For a small team where the manager was recently an IC, review is high-leverage. For a team of 15, it's a bottleneck."
+  - q: "How much time does 422 reviews actually take?"
+    a: "Roughly five reviews per workday over four months. Most take 10-20 minutes; risky ones take longer. It's real time, and it competes with 1:1s, planning, and hiring."
+  - q: "Doesn't reviewing everything make you a bottleneck?"
+    a: "Yes, if you review everything. I don't. I review the risky changes, the patterns that repeat, and PRs from engineers who are still leveling up. The goal is learning, not approval."
+  - q: "What if my team resents manager review?"
+    a: "Then stop, or change how you do it. Review as a student, not a judge. Ask questions more than you give directives. The moment it feels like surveillance, it's hurting more than helping."
+  - q: "Can AI do this instead?"
+    a: "AI review catches style and obvious bugs. It doesn't calibrate your judgment, surface systemic design problems, or build trust with your team. Those are the reasons to review."
 ---
+
+Should engineering managers stay in code review? Yes, but not to control. Review to learn. Between June and October 2026, I reviewed 422 pull requests while managing a team of 3 at Justworks. Here's what that volume teaches you that you can't get any other way, and what it costs.
 
 The standard advice for new engineering managers is simple: stop coding. Your job is the team now: 1:1s, planning, hiring, unblocking. The code will survive without you.
 
-I didn't take that advice. I'm a player-coach: I manage a team of 3 at Justworks, I own frontend for all things onboarding and billing, and I'm still in the code. Between June and October 2026, my team merged 231 pull requests, and I reviewed 422.
+I didn't take that advice. I'm a player-coach: I manage a team of 3, I own frontend for all things onboarding and billing, and I'm still in the code.
 
-Here's what that volume actually teaches you.
+## The numbers
 
-## Standards stay calibrated
+| Metric | Value |
+|---|---|
+| PRs reviewed (Jun-Oct 2026) | 422 |
+| Team PRs merged (same period) | 231 |
+| Team size | 3 engineers |
+| Reviews per workday (avg) | ~5 |
+| Diffs read per month | 100+ |
 
-Your standards stay calibrated to reality. Managers who stop reading code develop opinions about quality based on memory. Memory drifts. Reading 100+ diffs a month keeps your sense of "good enough" anchored to what the team actually ships, not what you shipped three years ago.
+## Standards stay calibrated to reality
 
-## You see struggles early
+Managers who stop reading code develop opinions about quality based on memory. Memory drifts. Reading 100+ diffs a month keeps your sense of "good enough" anchored to what the team actually ships, not what you shipped three years ago.
 
-You see where the team struggles before they tell you. When three different engineers hit the same confusing API, that's not three skill problems. It's a design problem. Review is the cheapest observability you have into your own systems.
+## You see struggles before the team tells you
 
-## Mentorship compounds
+When three different engineers hit the same confusing API, that's not three skill problems. It's a design problem. Review is the cheapest observability you have into your own systems. No dashboard tells you where the abstractions are leaking; the diffs do.
 
-Review is where mentorship compounds. A thoughtful comment on a PR teaches once and is visible to the whole team. The same feedback in a 1:1 teaches once and disappears.
+## Mentorship compounds in public
+
+A thoughtful comment on a PR teaches once and is visible to the whole team. The same feedback in a 1:1 teaches once and disappears. Review comments are the highest-leverage teaching surface a manager has.
 
 ## The cost is real
 
 Four hundred reviews in four months is roughly five a day, every workday. That's context-switching on top of management work, and some weeks it meant reviews happened early in the morning or not at all. I don't review everything. I review the risky things, the patterns, and the PRs from engineers who are still leveling up.
 
-## The payoff
+## The payoff is trust
 
-When I make a technical call, the team trusts it, because they watched me earn it in their diffs, not in a meeting.
+When I make a technical call, the team trusts it, because they watched me earn it in their diffs, not in a meeting. You can't delegate credibility.
 
 If you're a new manager wondering whether to keep reviewing: don't review to control. Review to learn. The moment it becomes about gatekeeping instead of understanding, stop.
+
+## FAQ
+
+**Should every engineering manager review code?**
+No. It depends on team size, the manager's technical background, and where the team needs leverage. For a small team where the manager was recently an IC, review is high-leverage. For a team of 15, it's a bottleneck.
+
+**How much time does 422 reviews actually take?**
+Roughly five reviews per workday over four months. Most take 10-20 minutes; risky ones take longer. It's real time, and it competes with 1:1s, planning, and hiring.
+
+**Doesn't reviewing everything make you a bottleneck?**
+Yes, if you review everything. I don't. I review the risky changes, the patterns that repeat, and PRs from engineers who are still leveling up. The goal is learning, not approval.
+
+**What if my team resents manager review?**
+Then stop, or change how you do it. Review as a student, not a judge. Ask questions more than you give directives. The moment it feels like surveillance, it's hurting more than helping.
+
+**Can AI do this instead?**
+AI review catches style and obvious bugs. It doesn't calibrate your judgment, surface systemic design problems, or build trust with your team. Those are the reasons to review.

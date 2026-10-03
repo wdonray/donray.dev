@@ -27,6 +27,6 @@ describe("blog", () => {
       expect(h.text).toBeTruthy();
       expect([2, 3]).toContain(h.level);
     }
-    expect(headings[0].text).toBe("Standards stay calibrated");
+    expect(headings[0].text).toBe("The numbers");
   });
 });

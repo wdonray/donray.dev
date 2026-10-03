@@ -48,6 +48,19 @@ function blogPostingJsonLd(post: NonNullable<ReturnType<typeof getPost>>) {
   };
 }
 
+function faqPageJsonLd(post: NonNullable<ReturnType<typeof getPost>>) {
+  if (post.faq.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: post.faq.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
 export default async function BlogPostPage({
   params,
 }: {
@@ -68,6 +81,7 @@ export default async function BlogPostPage({
 
   const mdxSource = await getPostContent(slug);
   const headings = getHeadings(slug);
+  const faqJsonLd = faqPageJsonLd(post);
 
   return (
     <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
@@ -77,6 +91,14 @@ export default async function BlogPostPage({
           __html: serializeJsonLd(blogPostingJsonLd(post)),
         }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: serializeJsonLd(faqJsonLd),
+          }}
+        />
+      )}
       <Link
         href="/blog"
         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
