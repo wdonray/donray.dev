@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Menu, Code2, Briefcase, Rocket, Mail, PenLine } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { Github, Linkedin } from "./ui/brand-icons";
@@ -45,34 +46,39 @@ const navLinks = [
 
 export default function Header() {
   const [scrolled, setScrolled] = React.useState(false);
+  const [hidden, setHidden] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const lastY = React.useRef(0);
 
   React.useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-
     const handleScroll = () => {
-      // Clear the previous timeout
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      const y = window.scrollY;
+      setScrolled(y > 0);
 
-      // Set a new timeout to update the state after 100ms of no scrolling
-      timeoutId = setTimeout(() => {
-        setScrolled(window.scrollY > 0);
-      }, 100);
+      // On mobile the header gets out of the way while reading: hide on
+      // scroll down, reveal on scroll up. Desktop keeps a persistent bar.
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+      if (!isMobile || menuOpen) {
+        setHidden(false);
+      } else if (y > 160 && y > lastY.current) {
+        setHidden(true);
+      } else if (y < lastY.current) {
+        setHidden(false);
+      }
+      lastY.current = y;
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
     };
-  }, []);
+  }, [menuOpen]);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 border-b border-border ${
+    <motion.header
+      animate={{ y: hidden ? "-100%" : "0%" }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
+      className={`fixed top-0 left-0 right-0 z-50 border-b border-border pt-[env(safe-area-inset-top)] ${
         scrolled
           ? "bg-background/80 backdrop-blur-sm shadow-sm"
           : "bg-background"
@@ -104,7 +110,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm px-3 py-2.5 rounded-md hover:text-khaki hover:bg-accent transition-colors"
+              className="text-sm px-3 py-3 rounded-md hover:text-khaki hover:bg-accent transition-colors"
               aria-label={`View ${link.label.toLowerCase()} section`}
             >
               {link.label}
@@ -119,7 +125,7 @@ export default function Header() {
                 key={social.name}
                 variant="ghost"
                 size="icon"
-                className="cursor-pointer hover:text-khaki"
+                className="cursor-pointer hover:text-khaki size-11"
                 asChild
               >
                 <a
@@ -138,12 +144,12 @@ export default function Header() {
             ))}
           </div>
 
-          <ModeToggle />
+          <ModeToggle className="size-11" />
         </nav>
 
         <div className="flex items-center gap-2 md:hidden" id="mobile-menu">
           <ModeToggle className="size-11" />
-          <Sheet>
+          <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="outline"
@@ -155,7 +161,10 @@ export default function Header() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="w-full h-[80vh]">
+            <SheetContent
+              side="bottom"
+              className="w-full h-[80vh] pb-[calc(1rem+env(safe-area-inset-bottom))]"
+            >
               <SheetHeader>
                 <SheetTitle>donray.dev</SheetTitle>
               </SheetHeader>
@@ -214,6 +223,6 @@ export default function Header() {
           </Sheet>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

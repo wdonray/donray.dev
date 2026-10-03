@@ -42,7 +42,7 @@ export default async function VersionPage() {
   const initialReleases = await getRecentReleases();
 
   return (
-    <div className="min-h-screen flex items-start justify-center px-4 md:px-16 pt-28 pb-16">
+    <div className="min-h-screen flex items-start justify-center px-4 md:px-16 pt-24 pb-16">
       <VersionInfo currentVersion={version} initialReleases={initialReleases} />
     </div>
   );

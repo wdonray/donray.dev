@@ -77,7 +77,7 @@ export default async function BlogPostPage({
   const post = getPost(slug);
   if (!post) {
     return (
-      <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
+      <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-16">
         <h1 className="text-2xl font-bold">Post not found</h1>
         <Link href="/blog" className="text-primary underline">
           Back to blog
@@ -92,7 +92,7 @@ export default async function BlogPostPage({
   const faqJsonLd = faqPageJsonLd(post);
 
   return (
-    <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
+    <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

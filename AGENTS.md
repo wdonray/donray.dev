@@ -18,7 +18,9 @@ he decides, you execute. He verifies your work as a habit — be precise.
   build automatically. Never put `[skip-cd]` on release commits.
 - **Accessibility is a CI gate.** axe-core scans against WCAG 2.2 AA in
   `e2e/a11y.spec.ts`. New interactive elements need real touch targets
-  (24px minimum).
+  (44px minimum, Apple HIG).
+- **Page rhythm:** content pages use `pt-24 pb-16` below the fixed header;
+  homepage sections are separated by `gap-24` with `pb-16` at the end.
 
 ## Stack
 
