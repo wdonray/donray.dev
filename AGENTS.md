@@ -58,6 +58,12 @@ To add a post: create the `.mdx` file, no code changes needed. The index,
 RSS feed, sitemap, and JSON-LD pick it up automatically. Element styling
 lives in `src/components/mdx-components.tsx`.
 
+**Posts are written through the `blog-writer` skill**
+(`~/workspace/skills/blog-writer/SKILL.md`): it interviews Donray to extract
+a real take (grills until the information-gain test is answerable), presents
+an outline for his approval, drafts in his voice, and runs the safety check
+below before writing the file. Donray is the author; the skill is the writer.
+
 ### Writing standards (research-backed, Oct 2026)
 
 Every post must pass the **information gain test**: can Donray point to one
@@ -80,11 +86,32 @@ experience.
 - Opinions with teeth beat safe takes. Failures and retrospectives are un-sloppable.
 - Never publish Justworks internals. Patterns and metrics at altitude.
 
+**Pre-publish safety check (hard gate, every post):**
+
+- No names: no colleagues, reports, managers, anyone identifiable.
+- No specific teams identified ("my team" at most; composites and
+  timeline-shifting where needed, but details de-anonymize, so when in
+  doubt, cut).
+- No feature work: no unreleased features, roadmaps, internal metrics,
+  financials, or anything not public.
+- No comp details: no pay packages, no salary numbers, his or anyone's.
+- Nothing disparaging about the employer, colleagues, customers, or
+  competitors.
+- Three-rooms test: would Donray say this in front of a client, in line at
+  the grocery store, at dinner with friends?
+- Nothing written hot: if a draft argues with anyone, it gets a cooling-off
+  read first.
+- Deleting doesn't unpublish: treat every post as permanent.
+- If anything is borderline, stop and ask Donray. Never decide alone.
+
 **Themes (repeat these, build identity):** player-coach leadership, frontend
 architecture decisions, onboarding/billing UX lessons, small-team leverage,
 engineering career craft. Roughly 70% technical, 30% management/opinion.
 
-**Cadence:** one solid post every 2 weeks, sustained. Missing weeks is fine;
+**Cadence:** one solid post every 2 weeks, sustained. A scheduled nudge
+(`blog-topic-nudge`, every other Saturday morning) reviews recent frontend
+and AI news and brings Donray 3-5 topic ideas; he picks one (or brings his
+own) and the `blog-writer` skill takes it from there. Missing weeks is fine;
 abandoning the blog is the failure mode.
 
 ## Testing
