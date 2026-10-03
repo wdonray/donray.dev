@@ -6,6 +6,7 @@ import { getPost, getPostContent, getHeadings, POSTS } from "@/lib/blog";
 import { serializeJsonLd } from "@/lib/schema";
 import TableOfContents from "@/components/table-of-contents";
 import { mdxComponents } from "@/components/mdx-components";
+import ViewCount from "@/components/view-count";
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -121,6 +122,7 @@ export default async function BlogPostPage({
               <Clock className="size-3.5" aria-hidden="true" />
               {post.readingMinutes} min read
             </span>
+            <ViewCount path={`/blog/${slug}`} />
           </p>
           <h1 className="text-4xl font-bold tracking-tight">{post.title}</h1>
           <p className="text-lg text-muted-foreground">{post.excerpt}</p>

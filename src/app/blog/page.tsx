@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { POSTS } from "@/lib/blog";
+import ViewCount from "@/components/view-count";
 
 export const metadata: Metadata = {
   title: "Blog | donray.dev",
@@ -33,13 +34,16 @@ export default function BlogIndexPage() {
             key={post.slug}
             className="rounded-xl border bg-card p-6 shadow-sm"
           >
-            <p className="text-sm text-muted-foreground">
-              {new Date(post.date + "T12:00:00").toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}{" "}
-              · {post.readingMinutes} min read
+            <p className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span>
+                {new Date(post.date + "T12:00:00").toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}{" "}
+                · {post.readingMinutes} min read
+              </span>
+              <ViewCount path={`/blog/${post.slug}`} />
             </p>
             <h2 className="mt-2 text-xl font-bold tracking-tight">
               <Link
