@@ -111,7 +111,7 @@ export default async function AnalyticsPage() {
                     {summary.totalViews.toLocaleString()}
                   </div>
                   <CardDescription className="mt-1">
-                    Real page loads · bots filtered
+                    All time · bots filtered
                   </CardDescription>
                 </CardContent>
               </Card>
