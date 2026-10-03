@@ -45,7 +45,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 ### 3. Richer title / meta / OG tags
 
 - **What:** Per-page `<title>`, meta description, Open Graph + Twitter card
-  tags. Homepage title gains location ("New York / New Jersey") and
+  tags. Homepage title gains location ("NYC Metro" — Donray lives in NJ, works out of NYC) and
   player-coach / frontend-leadership keywords. Add OG image.
 - **Why:** Controls how the site appears in Google results and in
   LinkedIn/Twitter/Slack link previews — which is where recruiters first
@@ -73,7 +73,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** Donray's ask (2026-10-02): "I also likely need a way for anyone
   to access these hidden public pages." Helps humans and crawlers.
 - **Effort:** Small. **Value:** MEDIUM.
-- **Status:** TODO
+- **Status:** DONE (PR #40)
 
 ---
 
@@ -95,7 +95,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Evidence:** 2026 portfolio guides consensus; Princeton GEO paper
   (Aggarwal et al., KDD 2024).
 - **Effort:** Medium. **Value:** HIGH.
-- **Status:** TODO
+- **Status:** SCRAPPED 2026-10-03 — Donray killed it: publishing internal Justworks funnel metrics on a personal site is a confidentiality risk, and it ties his brand too closely to his current employer. PR #43 closed unmerged.
 
 ### 7. FAQ section + FAQPage schema
 
@@ -118,7 +118,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   2026 Agentic Browsing audit checks for it. ~1 hour of work, so cheap
   insurance. Never pay a vendor for this.
 - **Effort:** Small. **Value:** LOW-MEDIUM.
-- **Status:** IN PROGRESS (PR #41)
+- **Status:** DONE (PR #41)
 
 ### 9. Cal.com / Calendly coffee-chat link
 
@@ -226,3 +226,5 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - 2026-10-03: Roadmap created from portfolio-optimization research
   (research_notes/portfolio-optimization-ai-age-20261003-0138). 16 items
   kept, 5 scrapped, 2 blocked.
+- 2026-10-03: Item #6 (Justworks case study) scrapped per Donray — confidentiality risk; PR #43 closed unmerged. Location copy switched to "NYC Metro" framing (lives in NJ, works out of NYC).
+- 2026-10-03: Item #6 (Justworks case study) scrapped per Donray — confidentiality risk. Location copy changed to "NYC Metro" framing.
