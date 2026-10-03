@@ -1,0 +1,81 @@
+---
+title: "The best code review I did as a manager proved me wrong"
+date: "2026-10-03"
+excerpt: "For a stretch this fall I reviewed all of my small team's code. The review that taught me the most is the one where the author proved me wrong."
+faq:
+  - q: "Should every engineering manager review code?"
+    a: "No. It depends on team size, the manager's technical background, and where the team needs leverage. For a small team where the manager was recently an IC, review is high-leverage. For a team of 15, it's a bottleneck."
+  - q: "How much time does this actually take?"
+    a: "It depends on team size and how selective you are. For a small team it's a daily habit, not a second job. Most reviews take 10-20 minutes; risky ones take longer. It's real time, and it competes with 1:1s, planning, and hiring."
+  - q: "Doesn't reviewing everything make you a bottleneck?"
+    a: "Yes, if you review everything. I don't. I review the risky changes, the patterns that repeat, and PRs from engineers who are still leveling up. The goal is learning, not approval."
+  - q: "What if my team resents manager review?"
+    a: "Then stop, or change how you do it. Review as a student, not a judge. Ask questions more than you give directives. The moment it feels like surveillance, it's hurting more than helping."
+  - q: "Can AI do this instead?"
+    a: "AI review catches style and obvious bugs. It doesn't calibrate your judgment, surface systemic design problems, or build trust with your team. Those are the reasons to review."
+---
+
+Should engineering managers stay in code review? Yes, but not to control. Review to learn. For a stretch this fall, I reviewed all of my small team's code and left questions on most PRs. The review that taught me the most is the one where I was wrong.
+
+The standard advice for new engineering managers is simple: stop coding. Your job is the team now: 1:1s, planning, hiring, unblocking. The code will survive without you.
+
+I didn't take that advice. I'm a player-coach: I manage a small team, I own frontend for onboarding and billing, and I'm still in the code.
+
+## What does a review catch that nothing else does?
+
+The places where the system is quietly fragile. No dashboard tells you where the abstractions are leaking; the diffs do. When you read code every day, you notice the things nobody wrote down.
+
+A teammate added a welcome step to an onboarding flow. The step asks the user to pick one of two identity types, then continues into personal-info screens. The diff was around 480 additions across 8 files: the welcome form, personal-info and contact forms, and the review screen.
+
+Two details caught my eye. The choice from the welcome screen was held in a short-lived UI variable, so the next screen knew which identity type to submit. And the contact-form submit hard-coded the identity flag to one value for every submission, regardless of what the user had just picked.
+
+I didn't flag it as a bug. I asked questions, the way I'd want to be asked. Does this value survive a reload, and what does downstream code do with a missing one? Across the app we call this `formData`, should this follow that? Is a separate component needed here, since it's used in one place?
+
+The answers changed the diff. The variable was only a bridge for the moment right after welcome, before the backend read lands, so the submit was changed to read the identity choice from the backend workflow value first, with a computed fallback, instead of the hard-coded value. The one-use component got inlined and renamed to match convention. A follow-up fix gated the welcome form on the workflow being loaded, which killed a flash for returning users and a silently dead submit for new users.
+
+I requested changes one evening, asked follow-ups the next morning, and approved that afternoon after the fixes.
+
+I didn't catch any of that by asserting control. I asked a learning question about reload behavior, and the answer exposed a real risk: transient state plus a hard-coded submit. That's the whole thesis in one review.
+
+## What do you do when the diff proves you wrong?
+
+You learn the domain. My first instinct was scope creep; the author showed me a mid-flow identity flip I didn't know existed. The diff corrected my mental model, which is exactly what review is for.
+
+A later iteration of the same onboarding work touched an unrelated celebration hook. It stopped matching on a strict member ID and added a retry once member data arrives. My first thought: why is this file in the diff at all?
+
+The author explained. The identity-type choice changes the member's ID mid-flow, after business details are submitted, so the strict match never fired for those users and they never got the celebration. The dashboard can also load before the membership refresh lands, which is why the retry matters.
+
+I approved after the explanation. No code changed because of me. The diff taught me a domain edge I hadn't known, and my mental model of that flow is permanently better for it.
+
+If I'd been reviewing to control, I'd have demanded the file be split into its own change and learned nothing. Reviewing to learn meant asking the dumb question and getting schooled. That's a good trade.
+
+## How do you do this without becoming a bottleneck?
+
+You don't review everything. You review the risky changes, the patterns that repeat, and the PRs from engineers who are still leveling up. And you review as a student, not a judge.
+
+A thoughtful comment on a PR teaches once and is visible to the whole team. The same feedback in a 1:1 teaches once and disappears. Review comments are the highest-leverage teaching surface a manager has, but only if the tone is right. Ask questions more than you give directives. The moment it feels like surveillance, it's hurting more than helping.
+
+## What does it cost?
+
+Real time, every day. Reading your team's code daily means context-switching on top of management work, and some weeks reviews happen early in the morning or not at all. It's a daily habit, not a second job, but the hours are real and they compete with 1:1s, planning, and hiring.
+
+When I make a technical call, the team trusts it, because they watched me earn it in their diffs, not in a meeting. You can't delegate credibility.
+
+If you're a new manager wondering whether to keep reviewing: don't review to control. Review to learn. The moment it becomes about gatekeeping instead of understanding, stop.
+
+## FAQ
+
+**Should every engineering manager review code?**
+No. It depends on team size, the manager's technical background, and where the team needs leverage. For a small team where the manager was recently an IC, review is high-leverage. For a team of 15, it's a bottleneck.
+
+**How much time does this actually take?**
+It depends on team size and how selective you are. For a small team it's a daily habit, not a second job. Most reviews take 10-20 minutes; risky ones take longer. It's real time, and it competes with 1:1s, planning, and hiring.
+
+**Doesn't reviewing everything make you a bottleneck?**
+Yes, if you review everything. I don't. I review the risky changes, the patterns that repeat, and PRs from engineers who are still leveling up. The goal is learning, not approval.
+
+**What if my team resents manager review?**
+Then stop, or change how you do it. Review as a student, not a judge. Ask questions more than you give directives. The moment it feels like surveillance, it's hurting more than helping.
+
+**Can AI do this instead?**
+AI review catches style and obvious bugs. It doesn't calibrate your judgment, surface systemic design problems, or build trust with your team. Those are the reasons to review.
