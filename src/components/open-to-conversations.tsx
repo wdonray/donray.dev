@@ -2,14 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import {
-  Coffee,
-  GraduationCap,
-  Mic,
-  Podcast,
-  Users,
-  Mail,
-} from "lucide-react";
+import { Coffee, GraduationCap, Mic, Podcast, Users, Mail } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { fadeInUp } from "@/lib/animations";
 import { Card, CardContent } from "@/components/ui/card";
@@ -78,17 +71,13 @@ export default function OpenToConversations() {
           variants={fadeInUp}
           className="text-muted-foreground max-w-2xl"
         >
-          I&apos;m happily at Justworks — not looking for a new role. But I
-          am always up for good conversations with peers, mentees, and
-          conference organizers. Based in New Jersey (ET), working hybrid.
+          I&apos;m happily at Justworks — not looking for a new role. But I am
+          always up for good conversations with peers, mentees, and conference
+          organizers. Based in New Jersey (ET), working hybrid.
         </motion.p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {CONVERSATIONS.map((item, index) => (
-            <motion.div
-              key={item.title}
-              variants={fadeInUp}
-              custom={index}
-            >
+            <motion.div key={item.title} variants={fadeInUp} custom={index}>
               <Card className="h-full">
                 <CardContent className="pt-6 space-y-2">
                   <item.icon
