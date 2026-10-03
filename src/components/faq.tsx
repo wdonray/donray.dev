@@ -1,10 +1,11 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { fadeInUp } from "@/lib/animations";
+import { cn } from "@/lib/utils";
 import { getFaqJsonLd, serializeJsonLd, type FaqItem } from "@/lib/schema";
 
 const FAQS: FaqItem[] = [
@@ -44,6 +45,19 @@ export default function Faq() {
     once: true,
     margin: "-100px",
   });
+  const [openIndexes, setOpenIndexes] = useState<Set<number>>(new Set());
+
+  const toggle = (index: number) => {
+    setOpenIndexes((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  };
 
   return (
     <motion.section
@@ -65,25 +79,54 @@ export default function Faq() {
           isInView={isSectionInView}
         />
         <div className="space-y-3">
-          {FAQS.map((faq, index) => (
-            <motion.details
-              key={faq.question}
-              variants={fadeInUp}
-              custom={index}
-              className="group rounded-xl border bg-card px-6 py-4 shadow-sm"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold [&::-webkit-details-marker]:hidden">
-                {faq.question}
-                <ChevronDown
-                  className="size-5 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
-                  aria-hidden="true"
-                />
-              </summary>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {faq.answer}
-              </p>
-            </motion.details>
-          ))}
+          {FAQS.map((faq, index) => {
+            const open = openIndexes.has(index);
+            return (
+              <motion.div
+                key={faq.question}
+                variants={fadeInUp}
+                custom={index}
+                className="rounded-xl border bg-card px-6 py-4 shadow-sm"
+              >
+                <button
+                  type="button"
+                  onClick={() => toggle(index)}
+                  aria-expanded={open}
+                  aria-controls={`faq-panel-${index}`}
+                  id={`faq-button-${index}`}
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 text-left font-semibold"
+                >
+                  {faq.question}
+                  <ChevronDown
+                    className={cn(
+                      "size-5 shrink-0 text-muted-foreground transition-transform duration-300",
+                      open && "rotate-180",
+                    )}
+                    aria-hidden="true"
+                  />
+                </button>
+                <AnimatePresence initial={false}>
+                  {open && (
+                    <motion.div
+                      key="panel"
+                      id={`faq-panel-${index}`}
+                      role="region"
+                      aria-labelledby={`faq-button-${index}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <p className="pt-3 text-sm leading-relaxed text-muted-foreground">
+                        {faq.answer}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </motion.section>
