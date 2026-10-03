@@ -99,7 +99,7 @@ export default function Faq() {
                   {faq.question}
                   <ChevronDown
                     className={cn(
-                      "size-5 shrink-0 text-muted-foreground transition-transform duration-300",
+                      "size-5 shrink-0 text-muted-foreground transition-transform duration-200",
                       open && "rotate-180",
                     )}
                     aria-hidden="true"
@@ -115,7 +115,7 @@ export default function Faq() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
                       <p className="pt-3 text-sm leading-relaxed text-muted-foreground">
