@@ -54,7 +54,7 @@ export default async function BlogPostPage({
   const post = getPost(slug);
   if (!post) {
     return (
-      <div className="max-w-3xl mx-auto px-6 lg:px-8 py-12">
+      <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
         <h1 className="text-2xl font-bold">Post not found</h1>
         <Link href="/blog" className="text-primary underline">
           Back to blog
@@ -64,7 +64,7 @@ export default async function BlogPostPage({
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-6 lg:px-8 py-12">
+    <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

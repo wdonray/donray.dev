@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function BlogIndexPage() {
   return (
-    <div className="max-w-3xl mx-auto px-6 lg:px-8 py-12">
+    <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
       <Link
         href="/"
         className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
