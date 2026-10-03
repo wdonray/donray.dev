@@ -30,10 +30,12 @@ export default function ViewCount({ path }: { path: string }) {
   if (views === null) return null;
 
   return (
-    <span className="inline-flex items-center gap-1">
+    <span className="inline-flex items-center gap-3">
       <span aria-hidden="true">·</span>
-      <Eye className="size-3.5" aria-hidden="true" />
-      {views} {views === 1 ? "view" : "views"}
+      <span className="inline-flex items-center gap-1">
+        <Eye className="size-3.5" aria-hidden="true" />
+        {views} {views === 1 ? "view" : "views"}
+      </span>
     </span>
   );
 }
