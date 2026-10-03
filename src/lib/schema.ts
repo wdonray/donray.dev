@@ -90,3 +90,14 @@ export function getFaqJsonLd(faqs: FaqItem[]): FaqPageSchema {
     })),
   };
 }
+
+/**
+ * Serialize JSON-LD for injection into a <script> tag.
+ *
+ * Escapes `<` so a `</script>` sequence in data can never break out of the
+ * script element (XSS defense in depth). The data is currently all static,
+ * but this makes the serialization safe by construction.
+ */
+export function serializeJsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}

@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { ChevronDown } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { fadeInUp } from "@/lib/animations";
-import { getFaqJsonLd, type FaqItem } from "@/lib/schema";
+import { getFaqJsonLd, serializeJsonLd, type FaqItem } from "@/lib/schema";
 
 const FAQS: FaqItem[] = [
   {
@@ -55,7 +55,7 @@ export default function Faq() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(getFaqJsonLd(FAQS)),
+          __html: serializeJsonLd(getFaqJsonLd(FAQS)),
         }}
       />
       <div className="space-y-8">

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   clientIpFromHeaders,
+  isRateLimited,
   normalizePath,
   recordPageView,
 } from "@/lib/analytics";
@@ -14,6 +15,15 @@ import {
  */
 export async function POST(request: Request) {
   try {
+    const userAgent = request.headers.get("user-agent") ?? "";
+    const ip = clientIpFromHeaders(request.headers);
+
+    // Basic abuse protection: cap writes per IP so the endpoint can't be
+    // used to inflate stats or run up DynamoDB costs.
+    if (isRateLimited(`track:${ip}`)) {
+      return NextResponse.json({ ok: false }, { status: 429 });
+    }
+
     const body = (await request.json().catch(() => null)) as {
       path?: unknown;
     } | null;
@@ -24,8 +34,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false }, { status: 400 });
     }
 
-    const userAgent = request.headers.get("user-agent") ?? "";
-    const ip = clientIpFromHeaders(request.headers);
     await recordPageView(path, ip, userAgent);
     return NextResponse.json({ ok: true });
   } catch {
