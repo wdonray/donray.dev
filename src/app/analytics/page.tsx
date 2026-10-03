@@ -99,85 +99,87 @@ export default async function AnalyticsPage() {
             </div>
             {/* Headline stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <Eye className="size-4 text-primary" aria-hidden="true" />
-                  Page views
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">
-                  {summary.totalViews.toLocaleString()}
-                </div>
-                <CardDescription className="mt-1">
-                  Real page loads · bots filtered
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <Users className="size-4 text-primary" aria-hidden="true" />
-                  Unique visitors
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">
-                  {summary.totalUniques.toLocaleString()}
-                </div>
-                <CardDescription className="mt-1">
-                  Last 30 days · estimated
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                    <Eye className="size-4 text-primary" aria-hidden="true" />
+                    Page views
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">
+                    {summary.totalViews.toLocaleString()}
+                  </div>
+                  <CardDescription className="mt-1">
+                    Real page loads · bots filtered
+                  </CardDescription>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                    <Users className="size-4 text-primary" aria-hidden="true" />
+                    Unique visitors
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold">
+                    {summary.totalUniques.toLocaleString()}
+                  </div>
+                  <CardDescription className="mt-1">
+                    Last 30 days · estimated
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </div>
 
-          {/* Daily chart */}
-          {summary.dailyTotals.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Page views per day</CardTitle>
-                <CardDescription>Last 30 days</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div
-                  className="flex items-end gap-1 h-32"
-                  role="img"
-                  aria-label={`Bar chart of page views per day for the last ${summary.dailyTotals.length} days`}
-                >
-                  {(() => {
-                    const max = Math.max(
-                      ...summary.dailyTotals.map((d) => d.views),
-                      1,
-                    );
-                    return summary.dailyTotals.map((d) => (
-                      <div
-                        key={d.day}
-                        className="flex-1 flex flex-col justify-end h-full group relative"
-                        title={`${formatDate(d.day)}: ${d.views.toLocaleString()} views`}
-                      >
+            {/* Daily chart */}
+            {summary.dailyTotals.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-base">
+                    Page views per day
+                  </CardTitle>
+                  <CardDescription>Last 30 days</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div
+                    className="flex items-end gap-1 h-32"
+                    role="img"
+                    aria-label={`Bar chart of page views per day for the last ${summary.dailyTotals.length} days`}
+                  >
+                    {(() => {
+                      const max = Math.max(
+                        ...summary.dailyTotals.map((d) => d.views),
+                        1,
+                      );
+                      return summary.dailyTotals.map((d) => (
                         <div
-                          className="w-full rounded-sm bg-primary/70 group-hover:bg-primary transition-colors"
-                          style={{
-                            height: `${Math.max(4, (d.views / max) * 100)}%`,
-                          }}
-                        />
-                      </div>
-                    ));
-                  })()}
-                </div>
-                <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                  <span>{formatDate(summary.dailyTotals[0].day)}</span>
-                  <span>
-                    {formatDate(
-                      summary.dailyTotals[summary.dailyTotals.length - 1].day,
-                    )}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                          key={d.day}
+                          className="flex-1 flex flex-col justify-end h-full group relative"
+                          title={`${formatDate(d.day)}: ${d.views.toLocaleString()} views`}
+                        >
+                          <div
+                            className="w-full rounded-sm bg-primary/70 group-hover:bg-primary transition-colors"
+                            style={{
+                              height: `${Math.max(4, (d.views / max) * 100)}%`,
+                            }}
+                          />
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                  <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                    <span>{formatDate(summary.dailyTotals[0].day)}</span>
+                    <span>
+                      {formatDate(
+                        summary.dailyTotals[summary.dailyTotals.length - 1].day,
+                      )}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </section>
 
           {/* Historical estimates — a different, older measurement */}
@@ -190,58 +192,58 @@ export default async function AnalyticsPage() {
                 Before tracking started
               </h2>
               <p className="text-sm text-muted-foreground">
-                CDN-request estimates from before page-view tracking existed
-                — a different measurement, not page views, and not comparable
-                to the tracked numbers above.
+                CDN-request estimates from before page-view tracking existed — a
+                different measurement, not page views, and not comparable to the
+                tracked numbers above.
               </p>
             </div>
 
-          {/* Historical traffic (estimated) */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">
-                Historical traffic (estimated)
-              </CardTitle>
-              <CardDescription>
-                CDN requests per month — includes page loads, images, scripts,
-                stylesheets, and bots. Not page views; approximate, for rough
-                scale only.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2.5">
-                {(() => {
-                  const max = Math.max(
-                    ...HISTORICAL_CDN_REQUESTS.map((m) => m.requests),
-                  );
-                  return HISTORICAL_CDN_REQUESTS.map((m) => (
-                    <div key={m.month} className="flex items-center gap-3">
-                      <span className="w-20 shrink-0 text-xs text-muted-foreground">
-                        {m.month}
-                        {m.partial ? "*" : ""}
-                      </span>
-                      <div className="h-5 flex-1 overflow-hidden rounded-sm bg-muted">
-                        <div
-                          className="h-full rounded-sm bg-primary/50"
-                          style={{
-                            width: `${(m.requests / max) * 100}%`,
-                          }}
-                        />
+            {/* Historical traffic (estimated) */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">
+                  Historical traffic (estimated)
+                </CardTitle>
+                <CardDescription>
+                  CDN requests per month — includes page loads, images, scripts,
+                  stylesheets, and bots. Not page views; approximate, for rough
+                  scale only.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2.5">
+                  {(() => {
+                    const max = Math.max(
+                      ...HISTORICAL_CDN_REQUESTS.map((m) => m.requests),
+                    );
+                    return HISTORICAL_CDN_REQUESTS.map((m) => (
+                      <div key={m.month} className="flex items-center gap-3">
+                        <span className="w-20 shrink-0 text-xs text-muted-foreground">
+                          {m.month}
+                          {m.partial ? "*" : ""}
+                        </span>
+                        <div className="h-5 flex-1 overflow-hidden rounded-sm bg-muted">
+                          <div
+                            className="h-full rounded-sm bg-primary/50"
+                            style={{
+                              width: `${(m.requests / max) * 100}%`,
+                            }}
+                          />
+                        </div>
+                        <span className="w-20 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
+                          ≈{m.requests.toLocaleString()}
+                        </span>
                       </div>
-                      <span className="w-20 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
-                        ≈{m.requests.toLocaleString()}
-                      </span>
-                    </div>
-                  ));
-                })()}
-              </div>
-              <p className="mt-4 text-xs text-muted-foreground">
-                * Oct 2026 covers Oct 1–2 only. Source: AWS CloudWatch (Amplify
-                Hosting requests), pulled Oct 2, 2026. Page-view tracking
-                started Oct 2026.
-              </p>
-            </CardContent>
-          </Card>
+                    ));
+                  })()}
+                </div>
+                <p className="mt-4 text-xs text-muted-foreground">
+                  * Oct 2026 covers Oct 1–2 only. Source: AWS CloudWatch
+                  (Amplify Hosting requests), pulled Oct 2, 2026. Page-view
+                  tracking started Oct 2026.
+                </p>
+              </CardContent>
+            </Card>
           </section>
 
           {/* Methodology — the honesty section */}
@@ -257,7 +259,9 @@ export default async function AnalyticsPage() {
             <CardContent>
               <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <strong className="text-foreground">Tracked page views</strong>{" "}
+                  <strong className="text-foreground">
+                    Tracked page views
+                  </strong>{" "}
                   are real page loads in a browser, recorded from October 2026.
                   Images, scripts, and stylesheets don&apos;t count — only the
                   page itself. Known bots and crawlers are filtered out before
