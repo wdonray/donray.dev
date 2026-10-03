@@ -1,0 +1,35 @@
+# donray.dev
+
+> Personal portfolio of Donray Williams — player-coach Engineering Manager at
+> Justworks, leading frontend for onboarding and billing. Based in New Jersey.
+
+## Pages
+
+- [Home](https://www.donray.dev): hero, skills, projects, experience, and
+  "open to conversations" section.
+- [Analytics](https://www.donray.dev/analytics): public, privacy-respecting
+  traffic stats — real page views and estimated unique visitors, plus
+  historical CDN-request estimates.
+- [Version](https://www.donray.dev/version): current build vs latest release.
+
+## Background
+
+- Engineering Manager at Justworks (Jun 2026–present), player-coach leading
+  a team of 3 on frontend for member onboarding and billing.
+- Previously Senior Software Engineer at Justworks (Jan 2023–Jun 2026) and
+  Founding Frontend Engineer at Cyclei.
+- Shipped the new member onboarding flow: 6,800+ people across 1,365
+  companies in its first 30 days.
+
+## Contact
+
+- Email: donrayxwilliams@gmail.com
+- GitHub: https://github.com/wdonray
+- LinkedIn: https://www.linkedin.com/in/donrayxwilliams/
+
+## Notes
+
+- Not currently looking for a new role; open to EM coffee chats, frontend
+  mentorship, conference speaking, and podcast guesting.
+- The `/llms.txt` file is provided for agentic browsing convenience. It is
+  not a ranking signal.
