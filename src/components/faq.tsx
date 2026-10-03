@@ -11,7 +11,7 @@ const FAQS: FaqItem[] = [
   {
     question: "What do you do at Justworks?",
     answer:
-      "I'm a player-coach Engineering Manager leading a team of 3. I own frontend for member onboarding and billing — setting technical direction, reviewing the team's code, and still writing production code myself.",
+      "I'm a player-coach Engineering Manager leading a team of 3. I own frontend for all things onboarding, member and company, plus billing. I set technical direction, review the team's code, and still write production code myself.",
   },
   {
     question: "Are you open to new roles?",
