@@ -106,7 +106,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** The evidence-backed AEO play: FAQ schema + direct-answer-first
   formatting targets featured snippets and AI-answer extraction.
 - **Effort:** Small. **Value:** MEDIUM-HIGH.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #47)
 
 ### 8. llms.txt (+ llms-full.txt)
 
