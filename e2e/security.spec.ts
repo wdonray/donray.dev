@@ -26,6 +26,11 @@ test.describe("security headers", () => {
       expect(headers["content-security-policy"]).toContain(
         "frame-ancestors 'none'",
       );
+      // The /version page retries the GitHub release lookup from the
+      // browser, so api.github.com must be an allowed connect-src.
+      expect(headers["content-security-policy"]).toContain(
+        "connect-src 'self' https://api.github.com",
+      );
     });
   }
 });
