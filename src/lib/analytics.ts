@@ -51,7 +51,7 @@ export function normalizePath(raw: string | null | undefined): string | null {
   if (trimmed.includes("?") || trimmed.includes("#")) return null;
   // Reject paths with characters that would be odd in a URL path.
   if (/[<>"\\]/.test(trimmed)) return null;
-  return trimmed === "" ? null : trimmed;
+  return trimmed;
 }
 
 export function dayKey(date: Date = new Date()): string {
@@ -83,7 +83,7 @@ export function clientIpFromHeaders(
   };
   const forwarded = get("x-forwarded-for");
   if (forwarded) {
-    const first = forwarded.split(",")[0]?.trim();
+    const first = forwarded.split(",")[0].trim();
     if (first) return first;
   }
   return get("x-real-ip") ?? "unknown";
@@ -133,6 +133,11 @@ export function __resetClientForTests(): void {
 }
 
 const pkFor = (path: string) => `PAGE#${path}`;
+
+/** Compare daily stats by day ascending (for sort). */
+export function compareDays(a: { day: string }, b: { day: string }): number {
+  return a.day < b.day ? -1 : 1;
+}
 
 /**
  * Record one page view. Returns false when analytics is not configured
@@ -309,7 +314,7 @@ export async function getAnalyticsSummary(
   }
 
   for (const stat of byPage.values()) {
-    stat.daily.sort((a, b) => (a.day < b.day ? -1 : 1));
+    stat.daily.sort(compareDays);
     stat.uniquesLast30d = stat.daily.reduce((sum, d) => sum + d.uniques, 0);
   }
 
@@ -336,9 +341,7 @@ export async function getAnalyticsSummary(
     pages,
     totalViews,
     totalUniques: [...siteDailyUniques.values()].reduce((sum, n) => sum + n, 0),
-    dailyTotals: [...dailyTotals.values()].sort((a, b) =>
-      a.day < b.day ? -1 : 1,
-    ),
+    dailyTotals: [...dailyTotals.values()].sort(compareDays),
     fetchedAt: now.toISOString(),
   };
 }

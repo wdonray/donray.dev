@@ -16,13 +16,13 @@ export default defineConfig({
     exclude: ["e2e/**", "node_modules/**"],
     coverage: {
       provider: "v8",
-      // CI fails if coverage drops below these floors.
-      // Raise them as coverage improves; never lower them.
+      // 100% across the board. CI fails if coverage drops.
+      // Thresholds only go up; never lower them.
       thresholds: {
-        statements: 72,
-        branches: 68,
-        functions: 80,
-        lines: 73,
+        statements: 100,
+        branches: 100,
+        functions: 100,
+        lines: 100,
       },
     },
   },

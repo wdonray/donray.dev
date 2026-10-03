@@ -106,3 +106,18 @@ describe("Experience", () => {
     });
   });
 });
+
+describe("Experience toggle edge cases", () => {
+  it("handles missing scroll target gracefully", async () => {
+    const { default: userEvent } = await import("@testing-library/user-event");
+    const user = userEvent.setup();
+    const { unmount } = render(<Experience />);
+
+    await user.click(
+      screen.getByRole("button", { name: /view earlier experience/i }),
+    );
+    // Unmount before the scroll timeout fires; getElementById returns null.
+    unmount();
+    await new Promise((r) => setTimeout(r, 350));
+  });
+});

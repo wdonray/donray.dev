@@ -57,3 +57,45 @@ describe("Header", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("Header scroll behavior", () => {
+  it("adds scrolled style after scrolling", async () => {
+    const { unmount } = render(<Header />);
+    const header = screen.getByRole("banner");
+
+    // Simulate scrolling down.
+    Object.defineProperty(window, "scrollY", { value: 100, writable: true });
+    window.dispatchEvent(new Event("scroll"));
+    // Second scroll clears the pending timeout (covers clearTimeout branch).
+    window.dispatchEvent(new Event("scroll"));
+
+    await new Promise((r) => setTimeout(r, 150));
+    expect(header.className).toMatch(/scrolled|shadow|backdrop/i);
+
+    // Scroll back to top.
+    Object.defineProperty(window, "scrollY", { value: 0, writable: true });
+    window.dispatchEvent(new Event("scroll"));
+    await new Promise((r) => setTimeout(r, 150));
+
+    unmount(); // covers cleanup with pending timeout
+  });
+});
+
+describe("Header mobile sheet", () => {
+  it("opens the sheet with navigation links", async () => {
+    const { default: userEvent } = await import("@testing-library/user-event");
+    const user = userEvent.setup();
+    render(<Header />);
+
+    await user.click(screen.getByRole("button", { name: "Open menu" }));
+
+    // Sheet content renders with the nav links.
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog).toBeInTheDocument();
+    expect(dialog.querySelector('a[href="/#skills"]')).not.toBeNull();
+
+    // Close via the close button.
+    const close = dialog.querySelector('button[aria-label="Close"]');
+    if (close) await user.click(close as HTMLElement);
+  });
+});

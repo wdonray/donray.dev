@@ -19,7 +19,7 @@ import { SectionHeader } from "@/components/ui/section-header";
 import Image from "next/image";
 import { itemVariants } from "@/lib/animations";
 
-interface Project {
+export interface Project {
   slug: string;
   title: string;
   subtitle?: string;
@@ -32,7 +32,13 @@ interface Project {
   note?: string;
 }
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+export function ProjectCard({
+  project,
+  index,
+}: {
+  project: Project;
+  index: number;
+}) {
   // The whole card is a single tap target pointing at the primary destination
   // (site URL, or GitHub when there's no site). A secondary GitHub control sits
   // above the stretched overlay link via z-index so it stays independently
