@@ -39,10 +39,9 @@ export function ProjectCard({
   project: Project;
   index: number;
 }) {
-  // The whole card is a single tap target pointing at the primary destination
-  // (site URL, or GitHub when there's no site). A secondary GitHub control sits
-  // above the stretched overlay link via z-index so it stays independently
-  // clickable without nesting anchors.
+  // Each action is an explicit visible link. No stretched invisible overlay:
+  // a full-card link plus inner links creates redundant tab stops and
+  // confusing screen-reader output.
   const primaryUrl = project.url ?? project.github;
   const primaryIsSite = Boolean(project.url);
   const hasSecondaryGithub = Boolean(project.url && project.github);
@@ -55,25 +54,12 @@ export function ProjectCard({
       variants={itemVariants}
       role="listitem"
     >
-      <Card className="group h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:shadow-khaki/10 hover:border-khaki/30 relative overflow-hidden">
-        {primaryUrl && (
-          <a
-            href={primaryUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={
-              primaryIsSite
-                ? `Visit ${project.title} website`
-                : `View ${project.title} on GitHub`
-            }
-            className="absolute inset-0 z-10 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          />
-        )}
+      <Card className="group h-full flex flex-col transition-all duration-300 hover:shadow-lg hover:shadow-khaki/10 hover:border-khaki/30 overflow-hidden">
         <div
           className="absolute inset-0 bg-gradient-to-br from-khaki/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
           aria-hidden="true"
         />
-        <CardHeader className="relative">
+        <CardHeader>
           <div className="flex items-start gap-4">
             <div className="flex-1">
               <CardTitle className="text-xl font-semibold tracking-tight group-hover:text-khaki transition-colors">
@@ -102,7 +88,7 @@ export function ProjectCard({
             )}
           </div>
         </CardHeader>
-        <CardContent className="flex-grow relative pointer-events-none">
+        <CardContent className="flex-grow">
           <div
             className="flex flex-wrap gap-2"
             role="list"
@@ -121,8 +107,13 @@ export function ProjectCard({
           </div>
         </CardContent>
         {primaryUrl && (
-          <CardFooter className="flex items-center justify-between gap-2 relative">
-            <span className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground group-hover:text-khaki transition-colors">
+          <CardFooter className="flex items-center justify-between gap-2">
+            <a
+              href={primaryUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground group-hover:text-khaki transition-colors underline underline-offset-4 hover:opacity-80"
+            >
               {primaryIsSite ? (
                 <>
                   <ExternalLink className="size-4" aria-hidden="true" />
@@ -134,13 +125,13 @@ export function ProjectCard({
                   View on GitHub
                 </>
               )}
-            </span>
+            </a>
             {hasSecondaryGithub && (
               <Button
                 variant="ghost"
                 size="icon"
                 asChild
-                className="relative z-20 hover:text-khaki"
+                className="hover:text-khaki"
               >
                 <a
                   href={project.github}
@@ -155,7 +146,7 @@ export function ProjectCard({
             <a
               href={`/projects/${project.slug}`}
               aria-label={`View details about ${project.title}`}
-              className="relative z-20 inline-flex min-h-6 items-center text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
+              className="inline-flex min-h-6 items-center text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
             >
               Details →
             </a>

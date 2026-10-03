@@ -24,10 +24,13 @@ describe("Projects", () => {
 
   it("links site projects to their websites", () => {
     render(<Projects />);
-    const pico = screen.getByRole("link", {
-      name: "Visit pico.domains website",
+    const links = screen.getAllByRole("link", {
+      name: /visit site/i,
     });
-    expect(pico).toHaveAttribute("href", "https://www.pico.domains/");
+    const pico = links.find(
+      (l) => l.getAttribute("href") === "https://www.pico.domains/",
+    );
+    expect(pico).toBeDefined();
     expect(pico).toHaveAttribute("target", "_blank");
     expect(pico).toHaveAttribute("rel", "noopener noreferrer");
   });
@@ -35,7 +38,7 @@ describe("Projects", () => {
   it("links the repo-only project to GitHub", () => {
     render(<Projects />);
     const repo = screen.getByRole("link", {
-      name: "View donray.dev on GitHub",
+      name: /view on github/i,
     });
     expect(repo).toHaveAttribute(
       "href",
