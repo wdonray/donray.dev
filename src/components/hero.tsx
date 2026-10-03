@@ -19,7 +19,7 @@ export default function Hero() {
       aria-labelledby="hero-heading"
       className="min-h-screen flex items-center"
     >
-      <div className="flex flex-col md:flex-row gap-10 sm:gap-12 md:gap-16 lg:gap-20 items-center justify-between w-full">
+      <div className="flex flex-col md:flex-row gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center justify-between w-full">
         <div
           className="space-y-4 sm:space-y-5 md:space-y-6 text-center md:text-left"
           id="hero-content"
@@ -88,7 +88,7 @@ export default function Hero() {
         <motion.div
           {...imageScale}
           transition={{ ...imageScale.transition, delay: 0.1 }}
-          className="block relative w-[200px] sm:w-[250px] md:w-[350px] lg:w-[450px] xl:w-[500px] aspect-square shrink-0"
+          className="order-first md:order-none block relative w-36 sm:w-[250px] md:w-[350px] lg:w-[450px] xl:w-[500px] aspect-square shrink-0"
           id="hero-image"
         >
           <Image
@@ -98,7 +98,7 @@ export default function Hero() {
             className="object-cover rounded-full shadow-lg"
             priority
             quality={100}
-            sizes="(max-width: 640px) 200px, (max-width: 768px) 250px, (max-width: 1024px) 350px, (max-width: 1280px) 450px, 500px"
+            sizes="(max-width: 640px) 144px, (max-width: 768px) 250px, (max-width: 1024px) 350px, (max-width: 1280px) 450px, 500px"
           />
         </motion.div>
       </div>
