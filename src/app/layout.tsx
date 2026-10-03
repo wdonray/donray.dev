@@ -39,8 +39,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <title>
-          Donray Williams — Engineering Manager | Frontend Leadership, NYC
-          Metro
+          Donray Williams — Engineering Manager | Frontend Leadership, NYC Metro
         </title>
         <meta
           name="description"
