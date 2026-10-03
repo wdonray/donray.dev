@@ -66,7 +66,7 @@ const GROUPS: { title: string; items: { name: string; note: string }[] }[] = [
 
 export default function UsesPage() {
   return (
-    <div className="max-w-3xl mx-auto px-6 lg:px-8 py-12">
+    <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-16">
       <div className="space-y-2">
         <div className="h-1 w-10 rounded-full bg-primary" aria-hidden="true" />
         <h1 className="text-3xl font-bold tracking-tight">Uses</h1>

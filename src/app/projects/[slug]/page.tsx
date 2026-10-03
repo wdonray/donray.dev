@@ -40,7 +40,7 @@ export default async function ProjectPage({
   if (!project) notFound();
 
   return (
-    <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
+    <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-16">
       <article className="space-y-8">
         <header>
           <div className="flex items-start gap-6">

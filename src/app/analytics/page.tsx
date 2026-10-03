@@ -59,7 +59,7 @@ export default async function AnalyticsPage() {
   const summary = await getAnalyticsSummary(30);
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 md:px-8 pt-28 pb-16 space-y-8">
+    <div className="w-full max-w-4xl mx-auto px-4 md:px-8 pt-24 pb-16 space-y-8">
       {/* Heading: mirrors the SectionHeader accent bar + title */}
       <div className="space-y-2">
         <div className="h-1 w-10 rounded-full bg-primary" aria-hidden="true" />
