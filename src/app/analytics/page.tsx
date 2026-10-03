@@ -232,12 +232,12 @@ export default async function AnalyticsPage() {
                 </li>
                 <li>
                   <strong className="text-foreground">Unique visitors</strong>{" "}
-                  are estimated: each visit is hashed (IP + browser, salted
-                  and non-reversible) and counted once per day. The headline
-                  number dedupes across pages — a visitor who reads three
-                  pages in one day counts once. Per-page numbers count that
-                  visitor once per page. Shared networks can undercount;
-                  changing IPs can overcount.
+                  are estimated: each visit is hashed (IP + browser, salted and
+                  non-reversible) and counted once per day. The headline number
+                  dedupes across pages — a visitor who reads three pages in one
+                  day counts once. Per-page numbers count that visitor once per
+                  page. Shared networks can undercount; changing IPs can
+                  overcount.
                 </li>
                 <li>
                   No cookies are set and no raw IP addresses are stored. Daily

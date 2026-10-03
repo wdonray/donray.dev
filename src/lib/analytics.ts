@@ -339,10 +339,7 @@ export async function getAnalyticsSummary(
   return {
     pages,
     totalViews,
-    totalUniques: [...siteDailyUniques.values()].reduce(
-      (sum, n) => sum + n,
-      0,
-    ),
+    totalUniques: [...siteDailyUniques.values()].reduce((sum, n) => sum + n, 0),
     dailyTotals: [...dailyTotals.values()].sort((a, b) =>
       a.day < b.day ? -1 : 1,
     ),
