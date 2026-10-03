@@ -1,21 +1,58 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { act, render, screen } from "@testing-library/react";
 import VersionInfo, {
+  POLL_INTERVAL_MS,
   compareVersions,
+  fetchReleases,
+  formatCheckedAgo,
   formatDate,
   parseVersion,
   statusFor,
-  type LatestRelease,
+  summarizeRelease,
+  timeAgo,
+  toRelease,
+  type Release,
 } from "./version-info";
 
-const release = (version: string): LatestRelease => ({
-  version,
-  url: "https://github.com/wdonray/donray.dev/releases",
-  publishedAt: "2026-10-01T12:00:00Z",
+const NOW = Date.parse("2026-10-03T12:00:00Z");
+
+const releasePayload = (
+  tag: string,
+  overrides: Record<string, unknown> = {},
+) => ({
+  tag_name: tag,
+  html_url: `https://github.com/wdonray/donray.dev/releases/tag/${tag}`,
+  published_at: "2026-10-03T11:00:00Z",
+  body: "### \u2705 Tests\n\n  - Some change (abc1234)\n",
+  ...overrides,
 });
 
+const release = (
+  version: string,
+  overrides: Partial<Release> = {},
+): Release => ({
+  version,
+  url: "https://github.com/wdonray/donray.dev/releases",
+  publishedAt: "2026-10-03T11:00:00Z",
+  summary: "Some change",
+  ...overrides,
+});
+
+function mockFetchResponse(payload: unknown, ok = true) {
+  return vi.fn().mockResolvedValue({
+    ok,
+    status: ok ? 200 : 403,
+    json: async () => payload,
+  });
+}
+
+function useFakeTimers() {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date(NOW));
+}
+
 afterEach(() => {
+  vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
@@ -56,21 +93,27 @@ describe("compareVersions", () => {
   });
 });
 
-describe("statusFor", () => {
-  it("is up-to-date when versions match", () => {
-    expect(statusFor("0.5.0", release("0.5.0"))).toBe("up-to-date");
+describe("summarizeRelease", () => {
+  it("returns null for null input", () => {
+    expect(summarizeRelease(null)).toBeNull();
   });
 
-  it("is behind when the release is newer", () => {
-    expect(statusFor("0.5.0", release("0.6.0"))).toBe("behind");
+  it("extracts the first PR title", () => {
+    expect(
+      summarizeRelease(
+        "### \u2705 Tests\n\n  - Fix project card locators (80946f4)\n  - Simplify assertions (2816486)\n",
+      ),
+    ).toBe("Fix project card locators");
   });
 
-  it("is ahead when the build is newer than the release", () => {
-    expect(statusFor("0.6.0", release("0.5.0"))).toBe("ahead");
+  it("returns null when no PR line is present", () => {
+    expect(
+      summarizeRelease("### \u2764\ufe0f Contributors\n\n- Wdonray"),
+    ).toBeNull();
   });
 
-  it("is an error when the release is unknown", () => {
-    expect(statusFor("0.5.0", null)).toBe("error");
+  it("ignores contributor lines without a sha", () => {
+    expect(summarizeRelease("- Just a line\n- Another (nothex!)")).toBeNull();
   });
 });
 
@@ -84,118 +127,413 @@ describe("formatDate", () => {
   });
 });
 
-describe("VersionInfo", () => {
-  it("renders the current build version", () => {
-    render(<VersionInfo currentVersion="0.5.0" initialLatest={null} />);
-    expect(screen.getByText("This build")).toBeInTheDocument();
-    expect(screen.getByText("v0.5.0")).toBeInTheDocument();
+describe("timeAgo", () => {
+  it("returns null for null input", () => {
+    expect(timeAgo(null, NOW)).toBeNull();
   });
 
-  it("retries the lookup from the browser on mount when the server lookup failed", async () => {
+  it("says just now for under a minute", () => {
+    expect(timeAgo(new Date(NOW - 30_000).toISOString(), NOW)).toBe("just now");
+  });
+
+  it("clamps future dates to just now", () => {
+    expect(timeAgo(new Date(NOW + 60_000).toISOString(), NOW)).toBe("just now");
+  });
+
+  it("shows minutes", () => {
+    expect(timeAgo(new Date(NOW - 5 * 60_000).toISOString(), NOW)).toBe(
+      "5m ago",
+    );
+  });
+
+  it("shows hours", () => {
+    expect(timeAgo(new Date(NOW - 3 * 3_600_000).toISOString(), NOW)).toBe(
+      "3h ago",
+    );
+  });
+
+  it("shows days", () => {
+    expect(timeAgo(new Date(NOW - 2 * 86_400_000).toISOString(), NOW)).toBe(
+      "2d ago",
+    );
+  });
+
+  it("returns null past a week", () => {
+    expect(
+      timeAgo(new Date(NOW - 10 * 86_400_000).toISOString(), NOW),
+    ).toBeNull();
+  });
+});
+
+describe("formatCheckedAgo", () => {
+  it("shows a relative age", () => {
+    expect(formatCheckedAgo(NOW - 2 * 60_000, NOW)).toBe("2m ago");
+  });
+
+  it("falls back to just now for stale timestamps", () => {
+    expect(formatCheckedAgo(NOW - 10 * 86_400_000, NOW)).toBe("just now");
+  });
+});
+
+describe("toRelease", () => {
+  it("normalizes a full payload", () => {
+    expect(toRelease(releasePayload("v0.6.0"))).toEqual({
+      version: "0.6.0",
+      url: "https://github.com/wdonray/donray.dev/releases/tag/v0.6.0",
+      publishedAt: "2026-10-03T11:00:00Z",
+      summary: "Some change",
+    });
+  });
+
+  it("handles missing fields", () => {
+    expect(toRelease({})).toEqual({
+      version: "",
+      url: "https://github.com/wdonray/donray.dev/releases",
+      publishedAt: null,
+      summary: null,
+    });
+  });
+
+  it("handles wrongly typed fields", () => {
+    expect(
+      toRelease({
+        tag_name: "v1.0.0",
+        html_url: "",
+        published_at: 123,
+        body: 456,
+      }),
+    ).toEqual({
+      version: "1.0.0",
+      url: "https://github.com/wdonray/donray.dev/releases",
+      publishedAt: null,
+      summary: null,
+    });
+  });
+});
+
+describe("fetchReleases", () => {
+  it("fetches and normalizes releases", async () => {
+    vi.stubGlobal("fetch", mockFetchResponse([releasePayload("v0.6.0")]));
+    const releases = await fetchReleases();
+    expect(releases).toHaveLength(1);
+    expect(releases[0]?.version).toBe("0.6.0");
+    expect(fetch).toHaveBeenCalledWith(
+      "https://api.github.com/repos/wdonray/donray.dev/releases?per_page=5",
+      expect.objectContaining({ cache: "no-store" }),
+    );
+  });
+
+  it("throws when GitHub responds non-OK", async () => {
+    vi.stubGlobal("fetch", mockFetchResponse(null, false));
+    await expect(fetchReleases()).rejects.toThrow("GitHub responded 403");
+  });
+
+  it("throws when the response is not a list", async () => {
+    vi.stubGlobal("fetch", mockFetchResponse({ tag_name: "v1.0.0" }));
+    await expect(fetchReleases()).rejects.toThrow("Unexpected GitHub response");
+  });
+
+  it("tolerates null items in the list", async () => {
+    vi.stubGlobal("fetch", mockFetchResponse([null]));
+    const releases = await fetchReleases();
+    expect(releases).toHaveLength(1);
+    expect(releases[0]?.version).toBe("");
+  });
+});
+
+describe("statusFor", () => {
+  it("is up-to-date when versions match", () => {
+    expect(statusFor("0.5.0", release("0.5.0"))).toBe("up-to-date");
+  });
+
+  it("is behind when the release is newer", () => {
+    expect(statusFor("0.5.0", release("0.6.0"))).toBe("behind");
+  });
+
+  it("is ahead when the build is newer than the release", () => {
+    expect(statusFor("0.6.0", release("0.5.0"))).toBe("ahead");
+  });
+
+  it("is unknown when there is no release", () => {
+    expect(statusFor("0.5.0", null)).toBe("unknown");
+  });
+
+  it("is unknown when the release has no version", () => {
+    expect(statusFor("0.5.0", release(""))).toBe("unknown");
+  });
+});
+
+describe("VersionInfo", () => {
+  it("renders the heading, live indicator, and current build", async () => {
+    useFakeTimers();
+    vi.stubGlobal("fetch", mockFetchResponse([releasePayload("v0.5.0")]));
+    render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(
+      screen.getByRole("heading", { name: "Version" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("This build")).toHaveLength(2);
+    expect(screen.getAllByText("v0.5.0")).toHaveLength(2);
+    expect(screen.getByText(/Live/)).toBeInTheDocument();
+    expect(screen.getByText(/updated just now/)).toBeInTheDocument();
+  });
+
+  it("marks the newest release with Latest and the running build", async () => {
+    useFakeTimers();
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: () =>
-          Promise.resolve({
-            tag_name: "v0.5.0",
-            html_url: "https://github.com/wdonray/donray.dev/releases",
-            published_at: "2026-10-01T12:00:00Z",
-          }),
-      }),
+      mockFetchResponse([
+        releasePayload("v0.6.0"),
+        releasePayload("v0.5.0", { published_at: "2026-10-02T12:00:00Z" }),
+      ]),
     );
-    render(<VersionInfo currentVersion="0.5.0" initialLatest={null} />);
-    expect(
-      await screen.findByText("You're on the latest release."),
-    ).toBeInTheDocument();
-  });
-
-  it("shows an error banner when the release is unknown", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
-    render(<VersionInfo currentVersion="0.5.0" initialLatest={null} />);
-    expect(
-      await screen.findByText("Couldn't reach GitHub to compare versions."),
-    ).toBeInTheDocument();
-  });
-
-  it("shows up-to-date when versions match", () => {
     render(
-      <VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />,
+      <VersionInfo
+        currentVersion="0.5.0"
+        initialReleases={[
+          release("0.6.0"),
+          release("0.5.0", { publishedAt: "2026-10-02T12:00:00Z" }),
+        ]}
+      />,
     );
-    expect(
-      screen.getByText("You're on the latest release."),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Oct 1, 2026")).toBeInTheDocument();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(screen.getByText("Latest")).toBeInTheDocument();
+    expect(screen.getAllByText("This build")).toHaveLength(2);
+    expect(screen.getAllByText("v0.5.0")).toHaveLength(2);
+    expect(screen.getAllByText("Some change")).toHaveLength(2);
+    expect(screen.getByText("Oct 3, 2026 · 1h ago")).toBeInTheDocument();
+    expect(screen.getByText("Oct 2, 2026 · 1d ago")).toBeInTheDocument();
   });
 
-  it("shows behind when a newer release exists", () => {
+  it("omits the summary and date when a release lacks them", async () => {
+    useFakeTimers();
+    vi.stubGlobal("fetch", mockFetchResponse([]));
     render(
-      <VersionInfo currentVersion="0.5.0" initialLatest={release("0.6.0")} />,
+      <VersionInfo
+        currentVersion="0.5.0"
+        initialReleases={[
+          release("0.5.0", { summary: null, publishedAt: null }),
+        ]}
+      />,
     );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(screen.queryByText("Some change")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Oct 3, 2026/)).not.toBeInTheDocument();
+  });
+
+  it("shows only the absolute date for releases older than a week", async () => {
+    useFakeTimers();
+    vi.stubGlobal(
+      "fetch",
+      mockFetchResponse([
+        releasePayload("v0.5.0", { published_at: "2026-09-20T12:00:00Z" }),
+      ]),
+    );
+    render(
+      <VersionInfo
+        currentVersion="0.5.0"
+        initialReleases={[
+          release("0.5.0", { publishedAt: "2026-09-20T12:00:00Z" }),
+        ]}
+      />,
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(screen.getByText("Sep 20, 2026")).toBeInTheDocument();
+  });
+
+  it("shows up-to-date when the build matches the latest release", async () => {
+    useFakeTimers();
+    vi.stubGlobal("fetch", mockFetchResponse([releasePayload("v0.5.0")]));
+    render(
+      <VersionInfo
+        currentVersion="0.5.0"
+        initialReleases={[release("0.5.0")]}
+      />,
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(
+      screen.getByText("This build is on the latest release."),
+    ).toBeInTheDocument();
+  });
+
+  it("shows behind when a newer release exists", async () => {
+    useFakeTimers();
+    vi.stubGlobal("fetch", mockFetchResponse([releasePayload("v0.6.0")]));
+    render(
+      <VersionInfo
+        currentVersion="0.5.0"
+        initialReleases={[release("0.6.0")]}
+      />,
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
     expect(
       screen.getByText("A newer release is available."),
     ).toBeInTheDocument();
   });
 
-  it("shows ahead when the build is newer than the release", () => {
+  it("shows ahead when the build is newer than the latest release", async () => {
+    useFakeTimers();
+    vi.stubGlobal("fetch", mockFetchResponse([releasePayload("v0.5.0")]));
     render(
-      <VersionInfo currentVersion="0.6.0" initialLatest={release("0.5.0")} />,
+      <VersionInfo
+        currentVersion="0.6.0"
+        initialReleases={[release("0.5.0")]}
+      />,
     );
-    expect(screen.getByText(/ahead of the latest release/)).toBeInTheDocument();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(
+      screen.getByText("This build is ahead of the latest release."),
+    ).toBeInTheDocument();
   });
 
-  it("check again updates the status from the GitHub API", async () => {
-    const user = userEvent.setup();
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({
-          tag_name: "v0.6.0",
-          html_url: "https://github.com/wdonray/donray.dev/releases",
-          published_at: "2026-10-02T12:00:00Z",
-        }),
-      }),
-    );
-
-    render(
-      <VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />,
-    );
-    expect(
-      screen.getByText("You're on the latest release."),
-    ).toBeInTheDocument();
-
-    await user.click(screen.getByRole("button", { name: /check again/i }));
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("A newer release is available."),
-      ).toBeInTheDocument();
+  it("shows no status banner when releases are unknown", async () => {
+    useFakeTimers();
+    vi.stubGlobal("fetch", mockFetchResponse([]));
+    render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
     });
-    expect(fetch).toHaveBeenCalledWith(
-      "https://api.github.com/repos/wdonray/donray.dev/releases/latest",
+
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(screen.getByText("No releases found.")).toBeInTheDocument();
+  });
+
+  it("fetches fresh releases on mount", async () => {
+    useFakeTimers();
+    const fetchMock = mockFetchResponse([releasePayload("v0.6.0")]);
+    vi.stubGlobal("fetch", fetchMock);
+    render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.github.com/repos/wdonray/donray.dev/releases?per_page=5",
       expect.objectContaining({ cache: "no-store" }),
     );
+    expect(screen.getByText("v0.6.0")).toBeInTheDocument();
+    expect(screen.queryByText("Couldn't reach GitHub")).not.toBeInTheDocument();
   });
 
-  it("check again shows an error when GitHub is unreachable", async () => {
-    const user = userEvent.setup();
-    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
-
-    render(
-      <VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />,
-    );
-    await user.click(screen.getByRole("button", { name: /check again/i }));
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("Couldn't reach GitHub to compare versions."),
-      ).toBeInTheDocument();
+  it("polls for new releases on the interval and updates the list", async () => {
+    useFakeTimers();
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [releasePayload("v0.6.0")],
+      })
+      .mockResolvedValue({
+        ok: true,
+        json: async () => [releasePayload("v0.7.0"), releasePayload("v0.6.0")],
+      });
+    vi.stubGlobal("fetch", fetchMock);
+    render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
     });
+    expect(screen.getByText("v0.6.0")).toBeInTheDocument();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(90_000);
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(screen.getByText("Live · updated 1m ago")).toBeInTheDocument();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(30_000);
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(screen.getByText("v0.7.0")).toBeInTheDocument();
+    expect(screen.getByText("Live · updated just now")).toBeInTheDocument();
   });
 
-  it("disables check again while loading", async () => {
-    const user = userEvent.setup();
+  it("shows a warning but keeps last-known releases when polling fails", async () => {
+    useFakeTimers();
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
+    render(
+      <VersionInfo
+        currentVersion="0.5.0"
+        initialReleases={[release("0.5.0")]}
+      />,
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(
+      screen.getByText("Couldn't reach GitHub. Showing last known releases."),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("v0.5.0")).toHaveLength(2);
+  });
+
+  it("shows an empty-state message when GitHub is unreachable and no releases exist", async () => {
+    useFakeTimers();
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
+    render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(
+      screen.getByText("Couldn't reach GitHub to load releases."),
+    ).toBeInTheDocument();
+  });
+
+  it("renders releases without a version tag", async () => {
+    useFakeTimers();
+    vi.stubGlobal("fetch", mockFetchResponse([{}]));
+    render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    expect(screen.getByText("v", { exact: true })).toBeInTheDocument();
+  });
+
+  it("stops polling on unmount", async () => {
+    useFakeTimers();
+    const fetchMock = mockFetchResponse([releasePayload("v0.6.0")]);
+    vi.stubGlobal("fetch", fetchMock);
+    const { unmount } = render(
+      <VersionInfo currentVersion="0.5.0" initialReleases={[]} />,
+    );
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    unmount();
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS * 2);
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("ignores a late poll success after unmount", async () => {
+    useFakeTimers();
     let resolveFetch: (value: unknown) => void = () => {};
     vi.stubGlobal(
       "fetch",
@@ -206,63 +544,19 @@ describe("VersionInfo", () => {
           }),
       ),
     );
-
-    render(
-      <VersionInfo currentVersion="0.5.0" initialLatest={release("0.5.0")} />,
+    const { unmount } = render(
+      <VersionInfo currentVersion="0.5.0" initialReleases={[]} />,
     );
-    const button = screen.getByRole("button", { name: /check again/i });
-    await user.click(button);
-
-    await waitFor(() => expect(button).toBeDisabled());
-
-    resolveFetch({
-      ok: true,
-      json: async () => ({
-        tag_name: "v0.5.0",
-        html_url: "https://github.com/wdonray/donray.dev/releases",
-        published_at: "2026-10-01T12:00:00Z",
-      }),
-    });
-
-    await waitFor(() => expect(button).toBeEnabled());
-  });
-});
-
-describe("fetchLatest error paths", () => {
-  it("shows an error when GitHub responds non-OK", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({ ok: false, status: 403 }),
-    );
-    render(<VersionInfo currentVersion="0.5.0" initialLatest={null} />);
-    await waitFor(() => {
-      expect(
-        screen.getByText("Couldn't reach GitHub to compare versions."),
-      ).toBeInTheDocument();
+    unmount();
+    await act(async () => {
+      resolveFetch({ ok: true, json: async () => [releasePayload("v0.6.0")] });
+      await vi.advanceTimersByTimeAsync(0);
     });
   });
-});
 
-describe("fetchLatest field fallbacks", () => {
-  it("handles missing fields in the GitHub response", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({}),
-      }),
-    );
-    render(<VersionInfo currentVersion="0.5.0" initialLatest={null} />);
-    // Renders without crashing; empty version is treated as unknown.
-    await waitFor(() => {
-      expect(screen.getAllByText(/version/i).length).toBeGreaterThan(0);
-    });
-  });
-});
-
-describe("fetchLatest cancellation", () => {
-  it("ignores rejection after unmount", async () => {
-    let rejectFetch: (e: unknown) => void = () => {};
+  it("ignores a late poll failure after unmount", async () => {
+    useFakeTimers();
+    let rejectFetch: (reason: unknown) => void = () => {};
     vi.stubGlobal(
       "fetch",
       vi.fn().mockImplementation(
@@ -273,29 +567,12 @@ describe("fetchLatest cancellation", () => {
       ),
     );
     const { unmount } = render(
-      <VersionInfo currentVersion="0.5.0" initialLatest={null} />,
+      <VersionInfo currentVersion="0.5.0" initialReleases={[]} />,
     );
     unmount();
-    rejectFetch(new Error("too late"));
-    await new Promise((r) => setTimeout(r, 50));
-  });
-
-  it("ignores fulfillment after unmount", async () => {
-    let resolveFetch: (v: unknown) => void = () => {};
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockImplementation(
-        () =>
-          new Promise((resolve) => {
-            resolveFetch = resolve;
-          }),
-      ),
-    );
-    const { unmount } = render(
-      <VersionInfo currentVersion="0.5.0" initialLatest={null} />,
-    );
-    unmount();
-    resolveFetch({ ok: true, json: async () => ({ tag_name: "v1.0.0" }) });
-    await new Promise((r) => setTimeout(r, 50));
+    await act(async () => {
+      rejectFetch(new Error("too late"));
+      await vi.advanceTimersByTimeAsync(0);
+    });
   });
 });
