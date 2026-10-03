@@ -2,6 +2,7 @@
 
 [![Tests](https://github.com/wdonray/donray.dev/actions/workflows/test.yml/badge.svg)](https://github.com/wdonray/donray.dev/actions/workflows/test.yml)
 [![Coverage: 100%](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/wdonray/donray.dev/actions/workflows/test.yml)
+[![Release](https://img.shields.io/github/v/release/wdonray/donray.dev)](https://github.com/wdonray/donray.dev/releases)
 
 Personal portfolio of Donray Williams — Engineering Manager at Justworks.
 Live at [donray.dev](https://www.donray.dev).
