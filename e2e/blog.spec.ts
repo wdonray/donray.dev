@@ -22,6 +22,13 @@ test.describe("blog post page", () => {
     await expect(
       body.getByRole("heading", { name: "The numbers" }),
     ).toBeVisible();
+    // Markdown tables need remark-gfm; without it they render as raw pipes.
+    const table = body.locator("table").first();
+    await expect(table).toBeVisible();
+    await expect(
+      table.getByRole("columnheader", { name: "Metric" }),
+    ).toBeVisible();
+    await expect(table.getByRole("cell", { name: "422" })).toBeVisible();
   });
 
   test("blog index links to the post", async ({ page }) => {

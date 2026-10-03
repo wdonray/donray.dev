@@ -47,6 +47,23 @@ export const mdxComponents: MDXComponents = {
       {children}
     </blockquote>
   ),
+  table: ({ children }) => (
+    <div className="mt-6 overflow-x-auto rounded-lg border border-border">
+      <table className="w-full text-sm">{children}</table>
+    </div>
+  ),
+  thead: ({ children }) => <thead className="bg-muted/50">{children}</thead>,
+  th: ({ children }) => (
+    <th className="px-4 py-2.5 text-left font-semibold border-b border-border">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => (
+    <td className="px-4 py-2.5 border-b border-border/50 text-foreground/90">
+      {children}
+    </td>
+  ),
+  tr: ({ children }) => <tr>{children}</tr>,
   pre: ({ children }) => (
     <pre className="mt-6 overflow-x-auto rounded-lg border border-border bg-muted/50 p-4 text-sm [&>code]:bg-transparent [&>code]:p-0">
       {children}
