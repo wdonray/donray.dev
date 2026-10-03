@@ -2,11 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import readingTime from "reading-time";
-import { serialize } from "next-mdx-remote/serialize";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 
 const CONTENT_DIR = path.join(process.cwd(), "src/content/blog");
 
@@ -63,20 +61,24 @@ export function getPost(slug: string): BlogPostMeta | undefined {
   }
 }
 
-/** Serialize a post's MDX content for rendering. */
-export async function getPostContent(
-  slug: string,
-): Promise<MDXRemoteSerializeResult> {
+/** Raw MDX body for a post (frontmatter stripped). Passed to next-mdx-remote/rsc's
+ * MDXRemote, which serializes it at render time. */
+export function getPostContent(slug: string): string {
   const { content } = matter(readSource(slug));
-  return serialize(content, {
+  return content;
+}
+
+/** Shared MDX compile options (syntax highlighting, heading anchors). */
+export function getMdxOptions() {
+  return {
     mdxOptions: {
       rehypePlugins: [
         rehypeSlug,
         [rehypePrettyCode, { theme: "github-light" }],
         [rehypeAutolinkHeadings, { behavior: "append" }],
-      ],
+      ] as never[],
     },
-  });
+  };
 }
 
 /** Extract h2/h3 headings for the table of contents. */
