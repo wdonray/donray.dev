@@ -361,3 +361,37 @@ export async function getPageTotalViews(path: string): Promise<number | null> {
   const item = res.Item as { views?: number } | undefined;
   return item?.views ?? 0;
 }
+
+/* ------------------------------------------------------------------ */
+/* Simple in-memory rate limiter for the /api/track endpoint.          */
+/* Protects DynamoDB from abuse: an attacker spamming the endpoint     */
+/* could otherwise inflate stats or run up AWS write costs.           */
+/* ------------------------------------------------------------------ */
+
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX = 60; // requests per window per key
+
+const rateLimitBuckets = new Map<string, number[]>();
+
+/**
+ * Returns true when the key has exceeded the rate limit.
+ * Old timestamps are pruned on each call.
+ */
+export function isRateLimited(key: string, now: number = Date.now()): boolean {
+  const cutoff = now - RATE_LIMIT_WINDOW_MS;
+  const timestamps = (rateLimitBuckets.get(key) ?? []).filter(
+    (t) => t > cutoff,
+  );
+  if (timestamps.length >= RATE_LIMIT_MAX) {
+    rateLimitBuckets.set(key, timestamps);
+    return true;
+  }
+  timestamps.push(now);
+  rateLimitBuckets.set(key, timestamps);
+  return false;
+}
+
+/** For tests: clear all rate-limit state. */
+export function __resetRateLimitForTests(): void {
+  rateLimitBuckets.clear();
+}

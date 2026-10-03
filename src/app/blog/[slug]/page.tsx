@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getPost, POSTS } from "@/lib/blog";
+import { serializeJsonLd } from "@/lib/schema";
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -67,7 +68,7 @@ export default async function BlogPostPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(blogPostingJsonLd(post)),
+          __html: serializeJsonLd(blogPostingJsonLd(post)),
         }}
       />
       <Link

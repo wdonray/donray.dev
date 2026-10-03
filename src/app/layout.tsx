@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import AnalyticsTracker from "@/components/analytics-tracker";
-import { getPersonJsonLd } from "@/lib/schema";
+import { getPersonJsonLd, serializeJsonLd } from "@/lib/schema";
 
 export default function RootLayout({
   children,
@@ -61,7 +61,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(getPersonJsonLd()),
+            __html: serializeJsonLd(getPersonJsonLd()),
           }}
         />
       </head>

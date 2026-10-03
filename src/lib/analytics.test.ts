@@ -1,11 +1,13 @@
-import { describe, expect, it, vi, afterEach } from "vitest";
+import { describe, expect, it, vi, afterEach, beforeEach } from "vitest";
 import {
   __resetClientForTests,
+  __resetRateLimitForTests,
   clientIpFromHeaders,
   dayKey,
   getConfig,
   hashVisitor,
   isBot,
+  isRateLimited,
   normalizePath,
   recordPageView,
 } from "./analytics";
@@ -151,5 +153,41 @@ describe("recordPageView", () => {
     await expect(
       recordPageView("https://evil.com", "1.2.3.4", "browser"),
     ).resolves.toBe(false);
+  });
+});
+
+describe("isRateLimited", () => {
+  beforeEach(() => {
+    __resetRateLimitForTests();
+  });
+
+  it("allows requests under the limit", () => {
+    for (let i = 0; i < 60; i++) {
+      expect(isRateLimited("test-key", 1000 + i)).toBe(false);
+    }
+  });
+
+  it("blocks the 61st request within a minute", () => {
+    for (let i = 0; i < 60; i++) {
+      isRateLimited("test-key", 1000 + i);
+    }
+    expect(isRateLimited("test-key", 2000)).toBe(true);
+  });
+
+  it("resets after the window passes", () => {
+    for (let i = 0; i < 60; i++) {
+      isRateLimited("test-key", 1000 + i);
+    }
+    expect(isRateLimited("test-key", 2000)).toBe(true);
+    // 61 seconds later — window has slid past the burst.
+    expect(isRateLimited("test-key", 62_000)).toBe(false);
+  });
+
+  it("tracks keys independently", () => {
+    for (let i = 0; i < 60; i++) {
+      isRateLimited("key-a", 1000 + i);
+    }
+    expect(isRateLimited("key-a", 2000)).toBe(true);
+    expect(isRateLimited("key-b", 2000)).toBe(false);
   });
 });

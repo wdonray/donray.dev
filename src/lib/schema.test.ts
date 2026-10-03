@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getFaqJsonLd, getPersonJsonLd } from "./schema";
+import { getFaqJsonLd, getPersonJsonLd, serializeJsonLd } from "./schema";
 
 describe("getPersonJsonLd", () => {
   it("returns a valid Person schema", () => {
@@ -34,5 +34,21 @@ describe("getFaqJsonLd", () => {
     expect(schema.mainEntity).toHaveLength(2);
     expect(schema.mainEntity[0].name).toBe("What?");
     expect(schema.mainEntity[0].acceptedAnswer.text).toBe("This.");
+  });
+});
+
+describe("serializeJsonLd", () => {
+  it("escapes </script> to prevent script breakout", () => {
+    const evil = { text: 'x</script><script>alert("xss")</script>' };
+    const out = serializeJsonLd(evil);
+    expect(out).not.toContain("</script>");
+    expect(out).not.toContain("<script>");
+    // Still valid JSON that parses back to the original data.
+    expect(JSON.parse(out)).toEqual(evil);
+  });
+
+  it("leaves normal data untouched", () => {
+    const data = { "@type": "Person", name: "Donray Williams" };
+    expect(serializeJsonLd(data)).toBe(JSON.stringify(data));
   });
 });
