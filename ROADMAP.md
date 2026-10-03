@@ -153,7 +153,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   decent post every 2–3 weeks compounds"). Google's guidance rewards
   first-hand, non-commodity expertise — Donray's natural lane.
 - **Effort:** Medium-Large. **Value:** HIGH.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #52)
 
 ### 12. /uses page
 
