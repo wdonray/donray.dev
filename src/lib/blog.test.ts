@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { getPost, getPostContent, getHeadings, POSTS } from "./blog";
+import {
+  getPost,
+  getPostContent,
+  getMdxOptions,
+  getHeadings,
+  POSTS,
+} from "./blog";
 
 describe("blog", () => {
   it("has at least one post with required fields", () => {
@@ -41,5 +47,30 @@ describe("blog", () => {
       "Should engineering managers stay in code review",
     );
     expect(content).not.toContain("compiledSource");
+  });
+
+  it("provides GFM and rehype plugins for MDX compilation", () => {
+    const opts = getMdxOptions();
+    expect(opts.mdxOptions.remarkPlugins).toHaveLength(1);
+    expect(opts.mdxOptions.rehypePlugins).toHaveLength(3);
+  });
+});
+
+describe("getPostMeta faq fallback", () => {
+  it("defaults faq to empty array when frontmatter has none", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const dir = path.join(process.cwd(), "src/content/blog");
+    const tmp = path.join(dir, "__test-no-faq.mdx");
+    fs.writeFileSync(
+      tmp,
+      `---\ntitle: "Test"\ndate: "2026-01-01"\nexcerpt: "Test excerpt"\n---\n\nBody.\n`,
+    );
+    try {
+      const post = getPost("__test-no-faq");
+      expect(post?.faq).toEqual([]);
+    } finally {
+      fs.unlinkSync(tmp);
+    }
   });
 });

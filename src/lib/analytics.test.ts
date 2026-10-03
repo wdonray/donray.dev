@@ -3,6 +3,7 @@ import {
   __resetClientForTests,
   __resetRateLimitForTests,
   clientIpFromHeaders,
+  compareDays,
   dayKey,
   getConfig,
   getPageUniqueViews,
@@ -51,6 +52,7 @@ describe("normalizePath", () => {
   it("rejects junk", () => {
     expect(normalizePath(null)).toBeNull();
     expect(normalizePath("")).toBeNull();
+    expect(normalizePath("   ")).toBeNull();
     expect(normalizePath("https://evil.com")).toBeNull();
     expect(normalizePath("/page?x=1")).toBeNull();
     expect(normalizePath("/page#frag")).toBeNull();
@@ -97,6 +99,11 @@ describe("clientIpFromHeaders", () => {
     expect(clientIpFromHeaders(headers)).toBe("203.0.113.7");
   });
 
+  it("skips empty first forwarded entry", () => {
+    const headers = new Headers({ "x-forwarded-for": ", 203.0.113.7" });
+    expect(clientIpFromHeaders(headers)).toBe("unknown");
+  });
+
   it("falls back to x-real-ip then unknown", () => {
     expect(clientIpFromHeaders(new Headers())).toBe("unknown");
     expect(
@@ -108,6 +115,7 @@ describe("clientIpFromHeaders", () => {
     expect(clientIpFromHeaders({ "x-forwarded-for": "203.0.113.7" })).toBe(
       "203.0.113.7",
     );
+    expect(clientIpFromHeaders({ "x-forwarded-for": null })).toBe("unknown");
   });
 });
 
@@ -197,5 +205,307 @@ describe("getPageUniqueViews", () => {
   it("returns null when analytics is not configured", async () => {
     // No ANALYTICS_* env vars set in test env.
     await expect(getPageUniqueViews("/blog/test")).resolves.toBeNull();
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/* DynamoDB-backed paths, with a mocked document client.               */
+/* ------------------------------------------------------------------ */
+
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { getAnalyticsSummary, getPageTotalViews } from "./analytics";
+
+vi.mock("@aws-sdk/lib-dynamodb", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@aws-sdk/lib-dynamodb")>();
+  return { ...actual, DynamoDBDocumentClient: { from: vi.fn() } };
+});
+
+const TEST_ENV = {
+  ANALYTICS_TABLE: "test-table",
+  ANALYTICS_AWS_REGION: "us-east-1",
+  ANALYTICS_AWS_ACCESS_KEY_ID: "test-key",
+  ANALYTICS_AWS_SECRET_ACCESS_KEY: "test-secret",
+  ANALYTICS_SALT: "test-salt",
+};
+
+function mockClient(sendImpl: (cmd: unknown) => Promise<unknown>) {
+  const send = vi.fn(sendImpl);
+  vi.mocked(DynamoDBDocumentClient.from).mockReturnValue({ send } as never);
+  return send;
+}
+
+function setTestEnv() {
+  for (const [k, v] of Object.entries(TEST_ENV)) vi.stubEnv(k, v);
+}
+
+describe("recordPageView (with DynamoDB)", () => {
+  beforeEach(() => {
+    setTestEnv();
+    __resetClientForTests();
+  });
+
+  it("writes total, daily, and site records", async () => {
+    const send = mockClient(async () => ({}));
+    const ok = await recordPageView(
+      "/blog/test",
+      "1.2.3.4",
+      "Mozilla/5.0 Chrome/120",
+      new Date("2026-10-03T12:00:00Z"),
+    );
+    expect(ok).toBe(true);
+    // TOTAL + page DAY + SITE DAY records.
+    expect(send).toHaveBeenCalledTimes(3);
+  });
+
+  it("reuses the cached client across calls", async () => {
+    const send = mockClient(async () => ({}));
+    await recordPageView("/a", "1.1.1.1", "Mozilla/5.0", new Date());
+    await recordPageView("/b", "1.1.1.1", "Mozilla/5.0", new Date());
+    expect(DynamoDBDocumentClient.from).toHaveBeenCalledTimes(1);
+    expect(send).toHaveBeenCalledTimes(6);
+  });
+});
+
+describe("getPageTotalViews (with DynamoDB)", () => {
+  beforeEach(() => {
+    setTestEnv();
+    __resetClientForTests();
+  });
+
+  it("returns the stored view count", async () => {
+    mockClient(async () => ({ Item: { views: 42 } }));
+    await expect(getPageTotalViews("/blog/test")).resolves.toBe(42);
+  });
+
+  it("returns 0 when the page has no record", async () => {
+    mockClient(async () => ({}));
+    await expect(getPageTotalViews("/blog/test")).resolves.toBe(0);
+  });
+
+  it("returns null without configuration", async () => {
+    vi.unstubAllEnvs();
+    __resetClientForTests();
+    await expect(getPageTotalViews("/blog/test")).resolves.toBeNull();
+  });
+});
+
+describe("getPageUniqueViews (with DynamoDB)", () => {
+  beforeEach(() => {
+    setTestEnv();
+    __resetClientForTests();
+  });
+
+  it("sums array and Set visitor collections", async () => {
+    mockClient(async () => ({
+      Items: [
+        { visitors: ["a", "b", "c"] },
+        { visitors: new Set(["d", "e"]) },
+        {},
+      ],
+    }));
+    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(5);
+  });
+
+  it("follows pagination cursors", async () => {
+    let calls = 0;
+    mockClient(async () => {
+      calls += 1;
+      if (calls === 1) {
+        return {
+          Items: [{ visitors: ["a"] }],
+          LastEvaluatedKey: { pk: "x" },
+        };
+      }
+      return { Items: [{ visitors: ["b", "c"] }] };
+    });
+    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(3);
+  });
+
+  it("handles empty query results", async () => {
+    mockClient(async () => ({}));
+    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(0);
+  });
+
+  it("limits to a recent window when days is given", async () => {
+    const send = mockClient(async () => ({ Items: [] }));
+    const now = new Date("2026-10-10T12:00:00Z");
+    await getPageUniqueViews("/blog/test", 7, now);
+    const cmd = send.mock.calls[0][0] as {
+      input: { ExpressionAttributeValues: Record<string, string> };
+    };
+    expect(cmd.input.ExpressionAttributeValues[":sk"]).toBe("DAY#2026-10-04");
+  });
+});
+
+describe("getAnalyticsSummary (with DynamoDB)", () => {
+  beforeEach(() => {
+    setTestEnv();
+    __resetClientForTests();
+  });
+
+  it("returns null without configuration", async () => {
+    vi.unstubAllEnvs();
+    __resetClientForTests();
+    await expect(getAnalyticsSummary()).resolves.toBeNull();
+  });
+
+  it("aggregates totals, daily stats, and site uniques", async () => {
+    mockClient(async () => ({
+      Items: [
+        { pk: "PAGE#/blog/a", sk: "TOTAL", path: "/blog/a", views: 100 },
+        {
+          pk: "PAGE#/blog/a",
+          sk: "DAY#2026-10-02",
+          path: "/blog/a",
+          day: "2026-10-02",
+          views: 4,
+          visitors: ["u4"],
+        },
+        {
+          pk: "PAGE#/blog/a",
+          sk: "DAY#2026-10-01",
+          path: "/blog/a",
+          day: "2026-10-01",
+          views: 2,
+          visitors: new Set(["u5"]),
+        },
+        {
+          pk: "PAGE#/blog/a",
+          sk: "DAY#2026-10-03",
+          path: "/blog/a",
+          day: "2026-10-03",
+          views: 10,
+          visitors: ["u1", "u2"],
+        },
+        {
+          pk: "PAGE#/blog/a",
+          sk: "DAY#2026-09-28",
+          path: "/blog/a",
+          day: "2026-09-28",
+          views: 1,
+          visitors: ["u6"],
+        },
+        {
+          pk: "PAGE#/blog/a",
+          sk: "DAY#2026-09-30",
+          path: "/blog/a",
+          day: "2026-09-30",
+          views: 5,
+          visitors: ["u7", "u8"],
+        },
+        {
+          pk: "SITE",
+          sk: "DAY#2026-10-03",
+          day: "2026-10-03",
+          views: 25,
+          visitors: ["u1", "u2", "u3"],
+        },
+        {
+          pk: "SITE",
+          sk: "DAY#2026-10-02",
+          day: "2026-10-02",
+          views: 10,
+          visitors: ["u4"],
+        },
+      ],
+    }));
+    const summary = await getAnalyticsSummary(
+      30,
+      new Date("2026-10-03T12:00:00Z"),
+    );
+    expect(summary).not.toBeNull();
+    expect(summary!.totalViews).toBe(100);
+    expect(summary!.totalUniques).toBe(4);
+    expect(summary!.pages).toHaveLength(1);
+    expect(summary!.pages[0].path).toBe("/blog/a");
+    expect(summary!.pages[0].uniquesLast30d).toBe(7);
+    expect(summary!.dailyTotals).toHaveLength(5);
+    // Sorted ascending by day.
+    expect(summary!.dailyTotals[0].day).toBe("2026-09-28");
+    expect(summary!.dailyTotals[4].day).toBe("2026-10-03");
+    expect(summary!.fetchedAt).toBeTruthy();
+  });
+
+  it("follows scan pagination", async () => {
+    let calls = 0;
+    mockClient(async () => {
+      calls += 1;
+      if (calls === 1) {
+        return {
+          Items: [{ pk: "PAGE#/x", sk: "TOTAL", path: "/x", views: 5 }],
+          LastEvaluatedKey: { pk: "y" },
+        };
+      }
+      return {
+        Items: [{ pk: "PAGE#/y", sk: "TOTAL", path: "/y", views: 7 }],
+      };
+    });
+    const summary = await getAnalyticsSummary();
+    expect(summary!.totalViews).toBe(12);
+    expect(summary!.pages).toHaveLength(2);
+  });
+
+  it("ignores items outside the day window", async () => {
+    mockClient(async () => ({
+      Items: [
+        { pk: "PAGE#/blog/a", sk: "TOTAL", path: "/blog/a", views: 50 },
+        {
+          pk: "PAGE#/blog/a",
+          sk: "DAY#2020-01-01",
+          path: "/blog/a",
+          day: "2020-01-01",
+          views: 99,
+          visitors: ["old"],
+        },
+      ],
+    }));
+    const summary = await getAnalyticsSummary(
+      30,
+      new Date("2026-10-03T12:00:00Z"),
+    );
+    expect(summary!.totalViews).toBe(50);
+    expect(summary!.pages[0].daily).toHaveLength(0);
+    expect(summary!.pages[0].uniquesLast30d).toBe(0);
+  });
+
+  it("handles missing fields and empty pages", async () => {
+    let calls = 0;
+    mockClient(async () => {
+      calls += 1;
+      if (calls === 1) return { LastEvaluatedKey: { pk: "x" } }; // no Items
+      return {
+        Items: [
+          // No path field: falls back to pk slice.
+          // No views field: falls back to 0.
+          { pk: "PAGE#/blog/b", sk: "TOTAL" },
+          { pk: "PAGE#/blog/b", sk: "DAY#2026-10-01", views: 3 },
+          // DAY without views: falls back to 0.
+          { pk: "PAGE#/blog/b", sk: "DAY#2026-09-29" },
+          // No sk at all: sk?.startsWith is undefined.
+          { pk: "PAGE#/blog/b" },
+          // SITE without DAY sk.
+          { pk: "SITE" },
+          // SITE with old DAY sk (outside window).
+          { pk: "SITE", sk: "DAY#2020-01-01", visitors: ["x"] },
+          // Unrecognized pk prefix: skipped.
+          { pk: "OTHER", sk: "TOTAL" },
+        ],
+      };
+    });
+    const summary = await getAnalyticsSummary(
+      30,
+      new Date("2026-10-03T12:00:00Z"),
+    );
+    expect(summary!.totalViews).toBe(0);
+    expect(summary!.pages[0].path).toBe("/blog/b");
+    expect(summary!.pages[0].totalViews).toBe(0);
+  });
+});
+
+describe("compareDays", () => {
+  it("orders days ascending", () => {
+    expect(compareDays({ day: "2026-10-01" }, { day: "2026-10-02" })).toBe(-1);
+    expect(compareDays({ day: "2026-10-02" }, { day: "2026-10-01" })).toBe(1);
+    expect(compareDays({ day: "2026-10-01" }, { day: "2026-10-01" })).toBe(1);
   });
 });

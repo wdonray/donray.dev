@@ -1,5 +1,8 @@
 # donray.dev
 
+[![Tests](https://github.com/wdonray/donray.dev/actions/workflows/test.yml/badge.svg)](https://github.com/wdonray/donray.dev/actions/workflows/test.yml)
+[![Coverage: 100%](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/wdonray/donray.dev/actions/workflows/test.yml)
+
 Personal portfolio of Donray Williams — Engineering Manager at Justworks.
 Live at [donray.dev](https://www.donray.dev).
 
@@ -26,6 +29,8 @@ a Next.js app with a public analytics dashboard backed by DynamoDB.
 - **Hosting:** AWS Amplify (us-east-1), auto-builds on every release
 - **CI:** GitHub Actions — Build, Lint (oxlint + oxfmt), Unit (Vitest),
   E2E (Playwright + axe-core WCAG 2.2 AA). All four required to merge.
+  Unit tests enforce 100% coverage (statements, branches, functions,
+  lines); E2E asserts every page renders substantive content.
 
 ## Getting started
 

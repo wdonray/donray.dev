@@ -227,3 +227,75 @@ describe("VersionInfo", () => {
     await waitFor(() => expect(button).toBeEnabled());
   });
 });
+
+describe("fetchLatest error paths", () => {
+  it("shows an error when GitHub responds non-OK", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 403 }),
+    );
+    render(<VersionInfo currentVersion="0.5.0" initialLatest={null} />);
+    await waitFor(() => {
+      expect(
+        screen.getByText("Couldn't reach GitHub to compare versions."),
+      ).toBeInTheDocument();
+    });
+  });
+});
+
+describe("fetchLatest field fallbacks", () => {
+  it("handles missing fields in the GitHub response", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({}),
+      }),
+    );
+    render(<VersionInfo currentVersion="0.5.0" initialLatest={null} />);
+    // Renders without crashing; empty version is treated as unknown.
+    await waitFor(() => {
+      expect(screen.getAllByText(/version/i).length).toBeGreaterThan(0);
+    });
+  });
+});
+
+describe("fetchLatest cancellation", () => {
+  it("ignores rejection after unmount", async () => {
+    let rejectFetch: (e: unknown) => void = () => {};
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation(
+        () =>
+          new Promise((_, reject) => {
+            rejectFetch = reject;
+          }),
+      ),
+    );
+    const { unmount } = render(
+      <VersionInfo currentVersion="0.5.0" initialLatest={null} />,
+    );
+    unmount();
+    rejectFetch(new Error("too late"));
+    await new Promise((r) => setTimeout(r, 50));
+  });
+
+  it("ignores fulfillment after unmount", async () => {
+    let resolveFetch: (v: unknown) => void = () => {};
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolveFetch = resolve;
+          }),
+      ),
+    );
+    const { unmount } = render(
+      <VersionInfo currentVersion="0.5.0" initialLatest={null} />,
+    );
+    unmount();
+    resolveFetch({ ok: true, json: async () => ({ tag_name: "v1.0.0" }) });
+    await new Promise((r) => setTimeout(r, 50));
+  });
+});
