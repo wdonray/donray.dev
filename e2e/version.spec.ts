@@ -27,14 +27,20 @@ test.describe("/version page", () => {
   test("shows the heading, live indicator, and current build", async ({
     page,
   }) => {
+    await page.route(
+      (url) => url.href.startsWith(RELEASES_URL),
+      (route) => route.fulfill(mockReleases([`v${version}`])),
+    );
     await page.goto("/version");
 
     await expect(page.getByRole("heading", { name: "Version" })).toBeVisible();
     await expect(
       page.getByText("This build", { exact: true }).first(),
     ).toBeVisible();
-    await expect(page.getByText(`v${version}`, { exact: true })).toBeVisible();
-    await expect(page.getByText(/Live/)).toBeVisible();
+    await expect(
+      page.getByText(`v${version}`, { exact: true }).first(),
+    ).toBeVisible();
+    await expect(page.getByText(/Live · updated/)).toBeVisible();
   });
 
   test("lists recent releases with the newest marked Latest", async ({
@@ -63,7 +69,9 @@ test.describe("/version page", () => {
     await expect(page.getByText("This build", { exact: true })).toHaveCount(2);
   });
 
-  test("shows a warning when GitHub is unreachable", async ({ page }) => {
+  test("shows offline in the live indicator when GitHub is unreachable", async ({
+    page,
+  }) => {
     await page.route(
       (url) => url.href.startsWith(RELEASES_URL),
       (route) => route.abort(),
@@ -71,7 +79,7 @@ test.describe("/version page", () => {
     await page.goto("/version");
 
     await expect(
-      page.getByText("Couldn't reach GitHub. Showing last known releases."),
+      page.getByText("Offline · showing last known releases"),
     ).toBeVisible();
   });
 });

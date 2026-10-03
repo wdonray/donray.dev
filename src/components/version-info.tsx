@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Check, TriangleAlert } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { fadeInUp, fadeInUpWithDelay } from "@/lib/animations";
 
@@ -117,14 +116,6 @@ export async function fetchReleases(): Promise<Release[]> {
   return data.map((item) => toRelease((item ?? {}) as GitHubReleasePayload));
 }
 
-type Status = "up-to-date" | "behind" | "ahead" | "unknown";
-
-export function statusFor(current: string, latest: Release | null): Status {
-  if (!latest || !latest.version) return "unknown";
-  const comparison = compareVersions(current, latest.version);
-  return comparison === 0 ? "up-to-date" : comparison < 0 ? "behind" : "ahead";
-}
-
 export default function VersionInfo({
   currentVersion,
   initialReleases,
@@ -165,8 +156,6 @@ export default function VersionInfo({
     return () => clearInterval(id);
   }, []);
 
-  const latest = releases[0] ?? null;
-  const status = statusFor(currentVersion, latest);
   const checkedAgo = formatCheckedAgo(lastChecked, now);
 
   return (
@@ -180,10 +169,20 @@ export default function VersionInfo({
         </p>
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           <span className="relative flex size-2" aria-hidden="true">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
-            <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+            {unreachable ? (
+              <span className="relative inline-flex size-2 rounded-full bg-muted-foreground" />
+            ) : (
+              <>
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+              </>
+            )}
           </span>
-          <span>Live · updated {checkedAgo}</span>
+          <span>
+            {unreachable
+              ? "Offline · showing last known releases"
+              : `Live · updated ${checkedAgo}`}
+          </span>
         </p>
       </motion.div>
 
@@ -194,7 +193,6 @@ export default function VersionInfo({
             v{currentVersion}
           </span>
         </div>
-        <StatusBanner status={status} unreachable={unreachable} />
       </motion.div>
 
       <motion.div {...fadeInUpWithDelay(0.15)}>
@@ -248,62 +246,4 @@ export default function VersionInfo({
       </motion.div>
     </div>
   );
-}
-
-function StatusBanner({
-  status,
-  unreachable,
-}: {
-  status: Status;
-  unreachable: boolean;
-}) {
-  if (unreachable) {
-    return (
-      <div
-        role="status"
-        className="flex items-center gap-2.5 rounded-lg border border-border bg-muted px-4 py-3 text-sm font-medium text-muted-foreground"
-      >
-        <TriangleAlert className="size-4 shrink-0" aria-hidden="true" />
-        <span>Couldn't reach GitHub. Showing last known releases.</span>
-      </div>
-    );
-  }
-
-  if (status === "up-to-date") {
-    return (
-      <div
-        role="status"
-        className="flex items-center gap-2.5 rounded-lg border border-primary/20 bg-primary/10 px-4 py-3 text-sm font-medium text-primary"
-      >
-        <Check className="size-4 shrink-0" aria-hidden="true" />
-        <span>This build is on the latest release.</span>
-      </div>
-    );
-  }
-
-  if (status === "behind") {
-    return (
-      <div
-        role="status"
-        className="flex items-center gap-2.5 rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm font-medium text-amber-700 dark:text-amber-400"
-      >
-        <TriangleAlert className="size-4 shrink-0" aria-hidden="true" />
-        <span>A newer release is available.</span>
-      </div>
-    );
-  }
-
-  if (status === "ahead") {
-    return (
-      <div
-        role="status"
-        className="flex items-center gap-2.5 rounded-lg border border-border bg-muted px-4 py-3 text-sm font-medium text-muted-foreground"
-      >
-        <TriangleAlert className="size-4 shrink-0" aria-hidden="true" />
-        <span>This build is ahead of the latest release.</span>
-      </div>
-    );
-  }
-
-  return null;
 }

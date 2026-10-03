@@ -7,7 +7,6 @@ import VersionInfo, {
   formatCheckedAgo,
   formatDate,
   parseVersion,
-  statusFor,
   summarizeRelease,
   timeAgo,
   toRelease,
@@ -241,28 +240,6 @@ describe("fetchReleases", () => {
   });
 });
 
-describe("statusFor", () => {
-  it("is up-to-date when versions match", () => {
-    expect(statusFor("0.5.0", release("0.5.0"))).toBe("up-to-date");
-  });
-
-  it("is behind when the release is newer", () => {
-    expect(statusFor("0.5.0", release("0.6.0"))).toBe("behind");
-  });
-
-  it("is ahead when the build is newer than the release", () => {
-    expect(statusFor("0.6.0", release("0.5.0"))).toBe("ahead");
-  });
-
-  it("is unknown when there is no release", () => {
-    expect(statusFor("0.5.0", null)).toBe("unknown");
-  });
-
-  it("is unknown when the release has no version", () => {
-    expect(statusFor("0.5.0", release(""))).toBe("unknown");
-  });
-});
-
 describe("VersionInfo", () => {
   it("renders the heading, live indicator, and current build", async () => {
     useFakeTimers();
@@ -353,61 +330,7 @@ describe("VersionInfo", () => {
     expect(screen.getByText("Sep 20, 2026")).toBeInTheDocument();
   });
 
-  it("shows up-to-date when the build matches the latest release", async () => {
-    useFakeTimers();
-    vi.stubGlobal("fetch", mockFetchResponse([releasePayload("v0.5.0")]));
-    render(
-      <VersionInfo
-        currentVersion="0.5.0"
-        initialReleases={[release("0.5.0")]}
-      />,
-    );
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    expect(
-      screen.getByText("This build is on the latest release."),
-    ).toBeInTheDocument();
-  });
-
-  it("shows behind when a newer release exists", async () => {
-    useFakeTimers();
-    vi.stubGlobal("fetch", mockFetchResponse([releasePayload("v0.6.0")]));
-    render(
-      <VersionInfo
-        currentVersion="0.5.0"
-        initialReleases={[release("0.6.0")]}
-      />,
-    );
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    expect(
-      screen.getByText("A newer release is available."),
-    ).toBeInTheDocument();
-  });
-
-  it("shows ahead when the build is newer than the latest release", async () => {
-    useFakeTimers();
-    vi.stubGlobal("fetch", mockFetchResponse([releasePayload("v0.5.0")]));
-    render(
-      <VersionInfo
-        currentVersion="0.6.0"
-        initialReleases={[release("0.5.0")]}
-      />,
-    );
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    expect(
-      screen.getByText("This build is ahead of the latest release."),
-    ).toBeInTheDocument();
-  });
-
-  it("shows no status banner when releases are unknown", async () => {
+  it("shows a quiet empty state when no releases exist", async () => {
     useFakeTimers();
     vi.stubGlobal("fetch", mockFetchResponse([]));
     render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
@@ -415,7 +338,6 @@ describe("VersionInfo", () => {
       await vi.advanceTimersByTimeAsync(0);
     });
 
-    expect(screen.queryByRole("status")).not.toBeInTheDocument();
     expect(screen.getByText("No releases found.")).toBeInTheDocument();
   });
 
@@ -470,7 +392,7 @@ describe("VersionInfo", () => {
     expect(screen.getByText("Live · updated just now")).toBeInTheDocument();
   });
 
-  it("shows a warning but keeps last-known releases when polling fails", async () => {
+  it("shows offline in the live indicator but keeps last-known releases when polling fails", async () => {
     useFakeTimers();
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
     render(
@@ -484,7 +406,7 @@ describe("VersionInfo", () => {
     });
 
     expect(
-      screen.getByText("Couldn't reach GitHub. Showing last known releases."),
+      screen.getByText("Offline · showing last known releases"),
     ).toBeInTheDocument();
     expect(screen.getAllByText("v0.5.0")).toHaveLength(2);
   });
