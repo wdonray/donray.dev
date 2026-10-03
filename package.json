@@ -1,6 +1,6 @@
 {
   "name": "donray.dev",
-  "version": "0.5.33",
+  "version": "0.5.34",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
