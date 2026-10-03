@@ -200,8 +200,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** "The portfolio converts; LinkedIn/GitHub discover" — backlinks
   from profiles matter more than new channels.
 - **Effort:** Small, ongoing. **Value:** MEDIUM.
-- **Status:** TODO (repo-side parts doable now; profile edits need Donray
-  or a browser session)
+- **Status:** PARTIAL 2026-10-03 — repo-side done via API: description set, homepage URL set (donray.dev), topics added (portfolio, nextjs, typescript, tailwindcss). Remaining (need Donray or browser): GitHub profile README link, LinkedIn Featured + About, dev.to cross-post, pinned repos.
 
 ---
 
