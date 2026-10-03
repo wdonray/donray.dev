@@ -1,30 +1,32 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Check,
-  ExternalLink,
-  LoaderCircle,
-  RefreshCw,
-  Tag,
-  TriangleAlert,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { fadeInUp, fadeInUpWithDelay } from "@/lib/animations";
 
 export const RELEASES_API =
-  "https://api.github.com/repos/wdonray/donray.dev/releases/latest";
+  "https://api.github.com/repos/wdonray/donray.dev/releases?per_page=5";
 export const RELEASES_URL = "https://github.com/wdonray/donray.dev/releases";
 
-export interface LatestRelease {
+/** How often the page silently re-checks GitHub for new releases. */
+export const POLL_INTERVAL_MS = 120_000;
+/** How often the relative timestamps ("3h ago") re-render. */
+const TICK_INTERVAL_MS = 15_000;
+
+export interface Release {
   version: string;
   url: string;
   publishedAt: string | null;
+  summary: string | null;
 }
 
-type Status = "idle" | "loading" | "up-to-date" | "behind" | "ahead" | "error";
+interface GitHubReleasePayload {
+  tag_name?: unknown;
+  html_url?: unknown;
+  published_at?: unknown;
+  body?: unknown;
+}
 
 /** Parse a semver-ish string ("v0.4.19" / "0.4.19") into comparable parts. */
 export function parseVersion(value: string): number[] {
@@ -46,13 +48,15 @@ export function compareVersions(a: string, b: string): number {
   return 0;
 }
 
-export function statusFor(
-  current: string,
-  latest: LatestRelease | null,
-): Exclude<Status, "idle" | "loading"> {
-  if (!latest) return "error";
-  const comparison = compareVersions(current, latest.version);
-  return comparison === 0 ? "up-to-date" : comparison < 0 ? "behind" : "ahead";
+/**
+ * Pull a one-line summary from a release body: the first PR title, e.g.
+ * "  - Fix project card locators (80946f4)" -> "Fix project card locators".
+ */
+export function summarizeRelease(body: string | null): string | null {
+  if (!body) return null;
+  const match = body.match(/^\s*-\s+(.+?)\s*\([0-9a-f]{7,40}\)\s*$/m);
+  const summary = match?.[1]?.trim();
+  return summary ? summary : null;
 }
 
 export function formatDate(value: string | null): string | null {
@@ -64,210 +68,182 @@ export function formatDate(value: string | null): string | null {
   });
 }
 
+/**
+ * Relative age ("just now", "3h ago", "2d ago"). Returns null for null input
+ * or ages past a week, where the absolute date is enough.
+ */
+export function timeAgo(iso: string | null, now: number): string | null {
+  if (!iso) return null;
+  const seconds = Math.max(0, Math.floor((now - Date.parse(iso)) / 1000));
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return null;
+}
+
+/** Relative age for the "updated …" line; never blank. */
+export function formatCheckedAgo(lastChecked: number, now: number): string {
+  return timeAgo(new Date(lastChecked).toISOString(), now) ?? "just now";
+}
+
+/** Normalize one GitHub release payload into a Release. */
+export function toRelease(data: GitHubReleasePayload): Release {
+  return {
+    version: String(data.tag_name ?? "").replace(/^v/i, ""),
+    url:
+      typeof data.html_url === "string" && data.html_url
+        ? data.html_url
+        : RELEASES_URL,
+    publishedAt:
+      typeof data.published_at === "string" ? data.published_at : null,
+    summary: summarizeRelease(typeof data.body === "string" ? data.body : null),
+  };
+}
+
+/** Fetch the most recent releases from the GitHub API. */
+export async function fetchReleases(): Promise<Release[]> {
+  const res = await fetch(RELEASES_API, {
+    headers: { Accept: "application/vnd.github+json" },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`GitHub responded ${res.status}`);
+  const data: unknown = await res.json();
+  if (!Array.isArray(data)) throw new Error("Unexpected GitHub response");
+  return data.map((item) => toRelease((item ?? {}) as GitHubReleasePayload));
+}
+
 export default function VersionInfo({
   currentVersion,
-  initialLatest,
+  initialReleases,
 }: {
   currentVersion: string;
-  initialLatest: LatestRelease | null;
+  initialReleases: Release[];
 }) {
-  const [latest, setLatest] = useState<LatestRelease | null>(initialLatest);
-  const [status, setStatus] = useState<Status>(() =>
-    // When the server-side lookup failed we retry from the browser on mount,
-    // so start in "loading" — the effect below settles it asynchronously.
-    initialLatest === null
-      ? "loading"
-      : statusFor(currentVersion, initialLatest),
-  );
+  const [releases, setReleases] = useState<Release[]>(initialReleases);
+  const [lastChecked, setLastChecked] = useState<number>(() => Date.now());
+  const [now, setNow] = useState<number>(() => Date.now());
+  const [unreachable, setUnreachable] = useState(initialReleases.length === 0);
 
-  const fetchLatest = useCallback(async (): Promise<LatestRelease> => {
-    const res = await fetch(RELEASES_API, {
-      headers: { Accept: "application/vnd.github+json" },
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error(`GitHub responded ${res.status}`);
-    const data = await res.json();
-    return {
-      version: String(data.tag_name ?? "").replace(/^v/i, ""),
-      url: data.html_url ?? RELEASES_URL,
-      publishedAt: data.published_at ?? null,
+  useEffect(() => {
+    let cancelled = false;
+    const poll = async () => {
+      try {
+        const next = await fetchReleases();
+        if (cancelled) return;
+        setReleases(next);
+        setLastChecked(Date.now());
+        setUnreachable(false);
+      } catch {
+        if (!cancelled) setUnreachable(true);
+      }
+    };
+    // Always re-check from the browser on mount: an independent network with
+    // its own rate-limit quota, and fresher than the server cache.
+    poll();
+    const id = setInterval(poll, POLL_INTERVAL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
     };
   }, []);
 
-  const checkLatest = useCallback(async () => {
-    setStatus("loading");
-    try {
-      const next = await fetchLatest();
-      setLatest(next);
-      setStatus(statusFor(currentVersion, next));
-    } catch {
-      setStatus("error");
-    }
-  }, [currentVersion, fetchLatest]);
-
   useEffect(() => {
-    // If the server-side lookup failed (GitHub unreachable from the host),
-    // retry from the visitor's browser on mount — an independent network
-    // with its own rate-limit quota.
-    if (initialLatest !== null) return;
-    let cancelled = false;
-    fetchLatest().then(
-      (next) => {
-        if (cancelled) return;
-        setLatest(next);
-        setStatus(statusFor(currentVersion, next));
-      },
-      () => {
-        if (!cancelled) setStatus("error");
-      },
-    );
-    return () => {
-      cancelled = true;
-    };
-  }, [initialLatest, fetchLatest, currentVersion]);
+    const id = setInterval(() => setNow(Date.now()), TICK_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, []);
+
+  const checkedAgo = formatCheckedAgo(lastChecked, now);
 
   return (
-    <div className="w-full max-w-lg space-y-8">
+    <div className="w-full max-w-xl space-y-8">
       {/* Heading: mirrors the SectionHeader accent bar + title */}
       <motion.div className="space-y-2" {...fadeInUp}>
         <div className="h-1 w-10 rounded-full bg-primary" aria-hidden="true" />
         <h1 className="text-3xl font-bold tracking-tight">Version</h1>
         <p className="text-muted-foreground">
-          The build currently running on donray.dev, compared against the latest
-          published release.
+          Every deploy to donray.dev, most recent first.
+        </p>
+        <p className="flex items-center gap-2 text-sm text-muted-foreground">
+          <span className="relative flex size-2" aria-hidden="true">
+            {unreachable ? (
+              <span className="relative inline-flex size-2 rounded-full bg-muted-foreground" />
+            ) : (
+              <>
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
+                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+              </>
+            )}
+          </span>
+          <span>
+            {unreachable
+              ? "Offline · showing last known releases"
+              : `Live · updated ${checkedAgo}`}
+          </span>
         </p>
       </motion.div>
 
-      <motion.div {...fadeInUpWithDelay(0.15)}>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Tag className="size-4 text-primary" aria-hidden="true" />
-              Release status
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Version rows */}
-            <dl className="space-y-4">
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-sm text-muted-foreground">This build</dt>
-                <dd className="font-mono text-lg font-semibold">
-                  v{currentVersion}
-                </dd>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-sm text-muted-foreground">
-                  Latest release
-                </dt>
-                <dd className="font-mono text-lg font-semibold">
-                  {status === "loading" ? (
-                    <span className="inline-flex items-center gap-2 text-muted-foreground">
-                      <LoaderCircle
-                        className="size-4 animate-spin"
-                        aria-hidden="true"
-                      />
-                      <span className="text-sm">Checking…</span>
-                    </span>
-                  ) : latest ? (
-                    <a
-                      href={latest.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 hover:text-primary transition-colors"
-                    >
-                      v{latest.version}
-                      <ExternalLink className="size-3.5" aria-hidden="true" />
-                    </a>
-                  ) : (
-                    <span className="text-sm text-muted-foreground">
-                      Unavailable
-                    </span>
-                  )}
-                </dd>
-              </div>
-              {latest?.publishedAt && (
-                <div className="flex items-center justify-between gap-4">
-                  <dt className="text-sm text-muted-foreground">Released</dt>
-                  <dd className="text-sm">{formatDate(latest.publishedAt)}</dd>
-                </div>
-              )}
-            </dl>
-
-            {/* Status banner */}
-            <StatusBanner status={status} />
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={checkLatest}
-              disabled={status === "loading"}
-              className="w-full cursor-pointer"
-            >
-              <RefreshCw
-                className={`size-4 ${status === "loading" ? "animate-spin" : ""}`}
-                aria-hidden="true"
-              />
-              Check again
-            </Button>
-          </CardContent>
-        </Card>
+      <motion.div className="space-y-3" {...fadeInUpWithDelay(0.1)}>
+        <div className="flex items-center justify-between gap-4 rounded-lg border px-4 py-3">
+          <span className="text-sm text-muted-foreground">This build</span>
+          <span className="font-mono text-lg font-semibold">
+            v{currentVersion}
+          </span>
+        </div>
       </motion.div>
 
-      <motion.p
-        className="text-center text-sm text-muted-foreground"
-        {...fadeInUpWithDelay(0.3)}
-      >
-        View the full{" "}
-        <a
-          href={RELEASES_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary underline underline-offset-4 hover:decoration-2"
-        >
-          release history
-        </a>{" "}
-        on GitHub.
-      </motion.p>
-    </div>
-  );
-}
-
-function StatusBanner({ status }: { status: Status }) {
-  if (status === "loading" || status === "idle") return null;
-
-  const config = {
-    "up-to-date": {
-      icon: Check,
-      text: "You're on the latest release.",
-      className: "bg-primary/10 text-primary border-primary/20",
-    },
-    behind: {
-      icon: TriangleAlert,
-      text: "A newer release is available.",
-      className:
-        "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
-    },
-    ahead: {
-      icon: Tag,
-      text: "This build is ahead of the latest release (unreleased).",
-      className: "bg-muted text-muted-foreground border-border",
-    },
-    error: {
-      icon: TriangleAlert,
-      text: "Couldn't reach GitHub to compare versions.",
-      className: "bg-muted text-muted-foreground border-border",
-    },
-  }[status];
-
-  const Icon = config.icon;
-
-  return (
-    <div
-      role="status"
-      className={`flex items-center gap-2.5 rounded-lg border px-4 py-3 text-sm font-medium ${config.className}`}
-    >
-      <Icon className="size-4 shrink-0" aria-hidden="true" />
-      <span>{config.text}</span>
+      <motion.div {...fadeInUpWithDelay(0.15)}>
+        {releases.length > 0 ? (
+          <ol className="space-y-3">
+            {releases.map((release, index) => {
+              const relative = timeAgo(release.publishedAt, now);
+              const isCurrentBuild =
+                compareVersions(currentVersion, release.version) === 0;
+              return (
+                <li
+                  key={release.version || index}
+                  className="rounded-lg border p-4 transition-colors hover:border-primary/40"
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <a
+                      href={release.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-xl font-bold tracking-tight transition-colors hover:text-primary"
+                    >
+                      v{release.version}
+                    </a>
+                    {index === 0 && <Badge>Latest</Badge>}
+                    {isCurrentBuild && (
+                      <Badge variant="outline">This build</Badge>
+                    )}
+                  </div>
+                  {release.summary && (
+                    <p className="mt-1.5 text-sm text-muted-foreground">
+                      {release.summary}
+                    </p>
+                  )}
+                  {release.publishedAt && (
+                    <p className="mt-1.5 text-xs text-muted-foreground">
+                      {formatDate(release.publishedAt)}
+                      {relative ? ` · ${relative}` : ""}
+                    </p>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        ) : (
+          <p className="rounded-lg border px-4 py-6 text-center text-sm text-muted-foreground">
+            {unreachable
+              ? "Couldn't reach GitHub to load releases."
+              : "No releases found."}
+          </p>
+        )}
+      </motion.div>
     </div>
   );
 }
