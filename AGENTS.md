@@ -53,6 +53,35 @@ To add a post: create the `.mdx` file, no code changes needed. The index,
 RSS feed, sitemap, and JSON-LD pick it up automatically. Element styling
 lives in `src/components/mdx-components.tsx`.
 
+### Writing standards (research-backed, Oct 2026)
+
+Every post must pass the **information gain test**: can Donray point to one
+new datapoint, real story, or original take that doesn't exist elsewhere?
+If not, don't publish. AI can write generic advice; only he has his
+experience.
+
+**Structure (for humans and AI engines):**
+
+- Answer the core question in the first 40-60 words (featured snippets + AI citations).
+- Direct, self-contained answer in the first sentence or two of every section, before context or story. Each section should be quotable standalone.
+- 3-5 H2 sections, 1,000-2,000 words. Table of contents is automatic.
+- End with an FAQ section (5-8 real questions, direct answers) where it fits. Add FAQPage JSON-LD for the post.
+- A "Citable Statistics" table where real numbers exist (his onboarding metrics, review counts). Statistics lift AI citation visibility ~30-40%.
+
+**Voice (anti-slop):**
+
+- First person, specific stories, real constraints (team size, deadlines, trade-offs). "With a team of 3 owning onboarding for 1,365 companies" beats generic advice every time.
+- No AI tells: no em dashes, no "delve/landscape/tapestry", no "not just X, but Y", no rule-of-three adjective lists, no throat-clearing intros.
+- Opinions with teeth beat safe takes. Failures and retrospectives are un-sloppable.
+- Never publish Justworks internals. Patterns and metrics at altitude.
+
+**Themes (repeat these, build identity):** player-coach leadership, frontend
+architecture decisions, onboarding/billing UX lessons, small-team leverage,
+engineering career craft. Roughly 70% technical, 30% management/opinion.
+
+**Cadence:** one solid post every 2 weeks, sustained. Missing weeks is fine;
+abandoning the blog is the failure mode.
+
 ## Testing
 
 - `npm run test:unit` — Vitest (`*.test.ts(x)` next to source)
