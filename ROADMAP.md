@@ -161,7 +161,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** Low-effort traffic magnet; quotable for "what does X use" AI
   queries.
 - **Effort:** Small. **Value:** LOW-MEDIUM.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #49)
 
 ### 13. Analytics write-up
 
