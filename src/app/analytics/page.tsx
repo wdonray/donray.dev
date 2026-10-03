@@ -206,9 +206,9 @@ export default async function AnalyticsPage() {
                 })()}
               </div>
               <p className="mt-4 text-xs text-muted-foreground">
-                * Oct 2026 covers Oct 1–2 only. Source: AWS CloudWatch
-                (Amplify Hosting requests), pulled Oct 2, 2026. Page-view
-                tracking started Oct 2026.
+                * Oct 2026 covers Oct 1–2 only. Source: AWS CloudWatch (Amplify
+                Hosting requests), pulled Oct 2, 2026. Page-view tracking
+                started Oct 2026.
               </p>
             </CardContent>
           </Card>
@@ -226,8 +226,8 @@ export default async function AnalyticsPage() {
             <CardContent>
               <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
                 <li>
-                  A <strong className="text-foreground">page view</strong>{" "}
-                  is one real page load in a browser. Images, scripts, and
+                  A <strong className="text-foreground">page view</strong> is
+                  one real page load in a browser. Images, scripts, and
                   stylesheets don&apos;t count — only the page itself.
                 </li>
                 <li>
@@ -236,9 +236,9 @@ export default async function AnalyticsPage() {
                 <li>
                   <strong className="text-foreground">Unique visitors</strong>{" "}
                   are estimated: each visit is hashed (IP + browser, salted and
-                  non-reversible) and counted once per day. A visitor who
-                  reads several pages in one day counts once. Shared networks
-                  can undercount; changing IPs can overcount.
+                  non-reversible) and counted once per day. A visitor who reads
+                  several pages in one day counts once. Shared networks can
+                  undercount; changing IPs can overcount.
                 </li>
                 <li>
                   No cookies are set and no raw IP addresses are stored. Daily
