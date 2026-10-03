@@ -36,7 +36,7 @@ const Faq = dynamic(() => import("@/components/faq"), {
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-24 max-w-7xl mx-auto px-6 lg:px-8">
+    <div className="flex flex-col gap-24 max-w-7xl mx-auto px-6 lg:px-8 pb-16">
       <Hero />
       <Skills />
       <Projects />
