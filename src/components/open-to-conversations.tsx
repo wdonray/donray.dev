@@ -73,7 +73,7 @@ export default function OpenToConversations() {
         >
           I&apos;m happily at Justworks — not looking for a new role. But I am
           always up for good conversations with peers, mentees, and conference
-          organizers. Based in New Jersey (ET), working hybrid.
+          organizers. Based in the NYC metro area (ET), working hybrid.
         </motion.p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {CONVERSATIONS.map((item, index) => (

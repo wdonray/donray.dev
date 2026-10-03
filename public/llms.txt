@@ -1,7 +1,8 @@
 # donray.dev
 
 > Personal portfolio of Donray Williams — player-coach Engineering Manager at
-> Justworks, leading frontend for onboarding and billing. Based in New Jersey.
+> Justworks, leading frontend for onboarding and billing. Based in the NYC
+> metro area.
 
 ## Pages
 
