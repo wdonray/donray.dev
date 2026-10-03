@@ -1,6 +1,6 @@
 {
   "name": "donray.dev",
-  "version": "0.5.22",
+  "version": "0.5.26",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -27,8 +27,6 @@
     "motion": "^12.42.2",
     "next": "16.2.11",
     "next-themes": "^0.4.6",
-    "posthog-js": "^1.406.2",
-    "posthog-node": "^5.46.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "tailwind-merge": "^3.6.0",

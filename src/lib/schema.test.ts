@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getPersonJsonLd } from "./schema";
+import { getFaqJsonLd, getPersonJsonLd } from "./schema";
 
 describe("getPersonJsonLd", () => {
   it("returns a valid Person schema", () => {
@@ -20,5 +20,19 @@ describe("getPersonJsonLd", () => {
 
   it("serializes to JSON without errors", () => {
     expect(() => JSON.stringify(getPersonJsonLd())).not.toThrow();
+  });
+});
+
+describe("getFaqJsonLd", () => {
+  it("returns a valid FAQPage schema", () => {
+    const schema = getFaqJsonLd([
+      { question: "What?", answer: "This." },
+      { question: "Why?", answer: "Because." },
+    ]);
+    expect(schema["@context"]).toBe("https://schema.org");
+    expect(schema["@type"]).toBe("FAQPage");
+    expect(schema.mainEntity).toHaveLength(2);
+    expect(schema.mainEntity[0].name).toBe("What?");
+    expect(schema.mainEntity[0].acceptedAnswer.text).toBe("This.");
   });
 });

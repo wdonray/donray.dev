@@ -63,3 +63,30 @@ export function getPersonJsonLd(): PersonSchema {
     },
   };
 }
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export interface FaqPageSchema {
+  "@context": "https://schema.org";
+  "@type": "FAQPage";
+  mainEntity: {
+    "@type": "Question";
+    name: string;
+    acceptedAnswer: { "@type": "Answer"; text: string };
+  }[];
+}
+
+export function getFaqJsonLd(faqs: FaqItem[]): FaqPageSchema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  };
+}

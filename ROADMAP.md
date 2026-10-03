@@ -106,7 +106,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** The evidence-backed AEO play: FAQ schema + direct-answer-first
   formatting targets featured snippets and AI-answer extraction.
 - **Effort:** Small. **Value:** MEDIUM-HIGH.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #47)
 
 ### 8. llms.txt (+ llms-full.txt)
 
@@ -161,7 +161,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** Low-effort traffic magnet; quotable for "what does X use" AI
   queries.
 - **Effort:** Small. **Value:** LOW-MEDIUM.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #49)
 
 ### 13. Analytics write-up
 
@@ -171,7 +171,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** Rare differentiator; "build in public" credibility. Public
   dashboards are cited in portfolio case studies as engagement drivers.
 - **Effort:** Small. **Value:** MEDIUM.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #50)
 
 ### 14. Per-project detail pages (/projects/[slug])
 

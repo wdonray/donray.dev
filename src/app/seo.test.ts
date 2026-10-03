@@ -29,6 +29,7 @@ describe("sitemap.xml", () => {
     expect(urls).toContain("https://www.donray.dev");
     expect(urls).toContain("https://www.donray.dev/analytics");
     expect(urls).toContain("https://www.donray.dev/version");
+    expect(urls).toContain("https://www.donray.dev/uses");
   });
 
   it("prioritizes the homepage", () => {

@@ -1,143 +1,90 @@
-# Donray Williams - Portfolio Website
+# donray.dev
 
-A modern, responsive portfolio website built with Next.js, TypeScript, and Tailwind CSS. This portfolio showcases my professional experience, projects, and skills with a focus on frontend development.
+Personal portfolio of Donray Williams — Engineering Manager at Justworks.
+Live at [donray.dev](https://www.donray.dev).
 
-## 📸 Site Preview
+## What this is
 
-<div align="center">
-  <h3>Desktop View</h3>
-  <img src="./public/site-preview.png" alt="Desktop Preview" width="800" />
+A fast, accessible, single-owner portfolio. No CMS, no backend server — just
+a Next.js app with a public analytics dashboard backed by DynamoDB.
 
-  <h3>Mobile View</h3>
-  <img src="./public/site-preview-mobile.png" alt="Mobile Preview" width="300" />
-</div>
+## Tech stack
 
-## 🌟 Features
+- **Framework:** Next.js 16 (App Router, static-first)
+- **Language:** TypeScript, React 19
+- **Styling:** Tailwind CSS v4, shadcn/ui, Lucide icons
+- **Motion:** Framer Motion (entrance animations only — no layout shift)
+- **Analytics:** Custom-built, privacy-respecting page-view tracking on
+  DynamoDB (`donray-dev-page-views`). One page load per page per session,
+  bots filtered, daily uniques via salted SHA-256(IP + UA + day) — raw IPs
+  never stored, ~400-day TTL.
+- **SEO/AI visibility:** `robots.txt` + `sitemap.xml` (Next.js routes),
+  Person + FAQPage JSON-LD, Open Graph/Twitter cards, `llms.txt`
+- **Hosting:** AWS Amplify (us-east-1), auto-builds on every release
+- **CI:** GitHub Actions — Build, Lint (oxlint + oxfmt), Unit (Vitest),
+  E2E (Playwright + axe-core WCAG 2.2 AA). All four required to merge.
 
-- **Modern Design**: Clean and professional layout with smooth animations
-- **Responsive**: Fully responsive design that works on all devices
-- **Dark Mode**: Built-in dark/light mode support
-- **Accessibility**: WCAG compliant with proper ARIA labels and semantic HTML
-- **Performance**: Optimized for speed with Next.js and static generation
-- **Animations**: Smooth scroll animations using Framer Motion
-- **Components**: Built with shadcn/ui for consistent design
+## Getting started
 
-## 🛠️ Tech Stack
+```bash
+npm install
+npm run dev      # http://localhost:3000
+```
 
-- **Framework**: Next.js 14
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **UI Components**: shadcn/ui
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **Deployment**: Vercel
+The analytics dashboard degrades gracefully without AWS credentials —
+it shows an "isn't configured" state instead of crashing.
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 18.17 or later
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/wdonray/donray.dev.git
-   ```
-
-2. Navigate to the project directory:
-
-   ```bash
-   cd donray.dev
-   ```
-
-3. Install dependencies:
-
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
-
-4. Start the development server:
-
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
-
-5. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## 📁 Project Structure
+## Project structure
 
 ```
 src/
-├── app/                 # Next.js app directory
-├── components/         # React components
-│   ├── ui/            # shadcn/ui components
-│   ├── header.tsx     # Navigation header
-│   ├── hero.tsx       # Hero section
-│   ├── experience.tsx # Experience section
-│   ├── projects.tsx   # Projects section
-│   ├── skills.tsx     # Skills section
-│   └── footer.tsx     # Footer component
-├── lib/               # Utility functions
-└── styles/            # Global styles
+├── app/
+│   ├── page.tsx              # Homepage: Hero, Skills, Projects,
+│   │                         #   Experience, Open to conversations, FAQ
+│   ├── analytics/page.tsx    # Public analytics dashboard
+│   ├── version/page.tsx      # Running build vs latest release
+│   ├── api/track/route.ts    # Page-view ingestion endpoint
+│   ├── robots.ts             # /robots.txt (allows AI crawlers)
+│   └── sitemap.ts            # /sitemap.xml
+├── components/
+│   ├── ui/                   # shadcn/ui primitives
+│   ├── hero.tsx              # ...
+│   ├── open-to-conversations.tsx
+│   └── faq.tsx               # FAQ + FAQPage JSON-LD
+├── lib/
+│   ├── analytics.ts          # DynamoDB tracking + summary queries
+│   └── schema.ts             # JSON-LD builders (Person, FAQPage)
+e2e/
+└── a11y.spec.ts              # axe-core WCAG 2.2 AA scan of every page
 ```
 
-## 🎨 Customization
+## Design decisions
 
-### Theme
+- **Accessibility is a gate, not a goal.** Every page is axe-core scanned
+  against WCAG 2.2 AA in CI. It fails the build otherwise.
+- **Boring converts.** No decorative animation, no chat widgets — the
+  portfolio's job is to be found, read, and contacted.
+- **Analytics are public and honest.** The dashboard labels estimates as
+  estimates and separates real tracked page views from historical
+  CDN-request figures. See `src/lib/analytics.ts`.
+- **Screenshots are review artifacts.** They gate PRs locally but are never
+  committed to the repo.
 
-The website uses a custom theme with primary colors and dark mode support. You can modify the theme in `tailwind.config.js`.
+## Release flow
 
-### Content
+Version bumps (`npm version patch`) trigger an Amplify build automatically
+— `[skip-cd]` is never used on release commits. `/version` compares the
+running build against the latest GitHub release.
 
-Update the content in the respective component files:
+## Testing
 
-- `src/components/hero.tsx` - Hero section content
-- `src/components/experience.tsx` - Experience timeline
-- `src/components/projects.tsx` - Project showcase
-- `src/components/skills.tsx` - Skills and expertise
+- `npm run test:unit` — Vitest + Testing Library (`*.test.ts(x)` next to source)
+- `npm run test:e2e` — Playwright against a production build, including the
+  axe-core accessibility scan
+- `npm test` — both suites
+- `npm run lint` / `npm run format:check` / `npm run typecheck`
 
-## 📱 Responsive Design
+## Contact
 
-The website is fully responsive with breakpoints for:
-
-- Mobile: < 768px
-- Tablet: 768px - 1024px
-- Desktop: > 1024px
-
-## 🚀 Deployment
-
-The website is deployed on Vercel. To deploy your own version:
-
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Deploy with the following settings:
-   - Framework Preset: Next.js
-   - Build Command: `next build`
-   - Output Directory: `.next`
-
-## 🧪 Testing
-
-- `npm run test:unit` — Vitest + Testing Library unit tests (`*.test.ts(x)` next to the source)
-- `npm run test:e2e` — Playwright end-to-end tests in `e2e/` (run against a production build),
-  including `e2e/a11y.spec.ts`: an axe-core WCAG 2.2 AA scan of every page
-- `npm run test` — both suites
-- `npm run lint` — oxlint
-- `npm run format` / `npm run format:check` — oxfmt write / check
-- `npm run typecheck` — `tsc --noEmit`
-
-Every pull request runs lint, format check, typecheck, unit tests, a production
-build, and the Playwright suite via `.github/workflows/test.yml`, and merging is
-blocked until they pass.
-
-## 🤝 Contact
-
-- LinkedIn: [Donray Williams](https://www.linkedin.com/in/donrayxwilliams/)
-- GitHub: [wdonray](https://github.com/wdonray)
-- Website: [donray.dev](https://donray.dev)
+- [LinkedIn](https://www.linkedin.com/in/donrayxwilliams/)
+- [GitHub](https://github.com/wdonray)
