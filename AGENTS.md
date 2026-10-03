@@ -39,6 +39,20 @@ he decides, you execute. He verifies your work as a habit — be precise.
 - **The `/api/track` endpoint is rate-limited** (see `src/lib/analytics.ts`).
   Don't add unauthenticated write endpoints without abuse protection.
 
+## Blog
+
+Posts live in `src/content/blog/*.mdx` with frontmatter (`title`, `date`,
+`excerpt`). They render via `next-mdx-remote` with:
+
+- **Syntax highlighting** via `rehype-pretty-code` (Shiki, `github-light` theme)
+- **Anchor links** on h2/h3 via `rehype-slug` + `rehype-autolink-headings`
+- **Table of contents** via `getHeadings()` in `src/lib/blog.ts`
+- **Reading time** via the `reading-time` package
+
+To add a post: create the `.mdx` file, no code changes needed. The index,
+RSS feed, sitemap, and JSON-LD pick it up automatically. Element styling
+lives in `src/components/mdx-components.tsx`.
+
 ## Testing
 
 - `npm run test:unit` — Vitest (`*.test.ts(x)` next to source)

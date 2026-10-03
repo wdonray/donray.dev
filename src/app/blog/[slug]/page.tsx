@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { getPost, POSTS } from "@/lib/blog";
+import { ArrowLeft, Clock } from "lucide-react";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { getPost, getPostContent, getHeadings, POSTS } from "@/lib/blog";
 import { serializeJsonLd } from "@/lib/schema";
+import TableOfContents from "@/components/table-of-contents";
+import { mdxComponents } from "@/components/mdx-components";
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -63,6 +66,9 @@ export default async function BlogPostPage({
     );
   }
 
+  const mdxSource = await getPostContent(slug);
+  const headings = getHeadings(slug);
+
   return (
     <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
       <script
@@ -80,22 +86,26 @@ export default async function BlogPostPage({
       </Link>
       <article className="mt-8">
         <header className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            {new Date(post.date + "T12:00:00").toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
+          <p className="flex items-center gap-3 text-sm text-muted-foreground">
+            <span>
+              {new Date(post.date + "T12:00:00").toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
+            <span aria-hidden="true">·</span>
+            <span className="inline-flex items-center gap-1">
+              <Clock className="size-3.5" aria-hidden="true" />
+              {post.readingMinutes} min read
+            </span>
           </p>
           <h1 className="text-4xl font-bold tracking-tight">{post.title}</h1>
           <p className="text-lg text-muted-foreground">{post.excerpt}</p>
         </header>
-        <div className="mt-8 space-y-5">
-          {post.content.map((paragraph, i) => (
-            <p key={i} className="leading-relaxed text-foreground/90">
-              {paragraph}
-            </p>
-          ))}
+        <TableOfContents headings={headings} />
+        <div className="mt-4">
+          <MDXRemote source={mdxSource} components={mdxComponents} />
         </div>
       </article>
     </div>
