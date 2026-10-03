@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Uses | donray.dev",
@@ -69,14 +67,7 @@ const GROUPS: { title: string; items: { name: string; note: string }[] }[] = [
 export default function UsesPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 lg:px-8 py-12">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <ArrowLeft className="size-4" aria-hidden="true" />
-        Back home
-      </Link>
-      <div className="mt-8 space-y-2">
+      <div className="space-y-2">
         <div className="h-1 w-10 rounded-full bg-primary" aria-hidden="true" />
         <h1 className="text-3xl font-bold tracking-tight">Uses</h1>
         <p className="text-muted-foreground">

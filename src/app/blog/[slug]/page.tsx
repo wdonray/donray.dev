@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import {
   getPost,
@@ -107,13 +107,6 @@ export default async function BlogPostPage({
           }}
         />
       )}
-      <Link
-        href="/blog"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <ArrowLeft className="size-4" aria-hidden="true" />
-        All posts
-      </Link>
       <article className="mt-8">
         <header className="space-y-4">
           <p className="flex items-center gap-3 text-sm text-muted-foreground">

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Github } from "@/components/ui/brand-icons";
 import { Badge } from "@/components/ui/badge";
 import { getProject, PROJECTS } from "@/lib/projects";
@@ -42,15 +41,7 @@ export default async function ProjectPage({
 
   return (
     <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
-      <Link
-        href="/#projects"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <ArrowLeft className="size-4" aria-hidden="true" />
-        All projects
-      </Link>
-
-      <article className="mt-8 space-y-8">
+      <article className="space-y-8">
         <header className="space-y-4">
           <p className="text-sm font-medium text-primary uppercase tracking-wide">
             Project · {project.role}
