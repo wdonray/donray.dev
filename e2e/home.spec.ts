@@ -81,18 +81,16 @@ test.describe("home page", () => {
 
     const projects = page.locator("#projects");
     const picoCard = projects
-      .locator("article, div", {
-        has: page.getByText("pico.domains", { exact: true }),
-      })
+      .getByRole("listitem")
+      .filter({ has: page.getByText("pico.domains", { exact: true }) })
       .first();
     await expect(
       picoCard.getByRole("link", { name: /visit site/i }),
     ).toHaveAttribute("href", "https://www.pico.domains/");
 
     const devCard = projects
-      .locator("article, div", {
-        has: page.getByText("donray.dev", { exact: true }),
-      })
+      .getByRole("listitem")
+      .filter({ has: page.getByText("donray.dev", { exact: true }) })
       .first();
     await expect(
       devCard.getByRole("link", { name: /view on github/i }),
