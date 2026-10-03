@@ -5,6 +5,7 @@ import {
   clientIpFromHeaders,
   dayKey,
   getConfig,
+  getPageUniqueViews,
   hashVisitor,
   isBot,
   isRateLimited,
@@ -189,5 +190,12 @@ describe("isRateLimited", () => {
     }
     expect(isRateLimited("key-a", 2000)).toBe(true);
     expect(isRateLimited("key-b", 2000)).toBe(false);
+  });
+});
+
+describe("getPageUniqueViews", () => {
+  it("returns null when analytics is not configured", async () => {
+    // No ANALYTICS_* env vars set in test env.
+    await expect(getPageUniqueViews("/blog/test")).resolves.toBeNull();
   });
 });

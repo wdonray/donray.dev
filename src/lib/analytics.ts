@@ -6,6 +6,7 @@ import {
 import {
   DynamoDBDocumentClient,
   GetCommand,
+  QueryCommand,
   ScanCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
@@ -360,6 +361,56 @@ export async function getPageTotalViews(path: string): Promise<number | null> {
   );
   const item = res.Item as { views?: number } | undefined;
   return item?.views ?? 0;
+}
+
+/**
+ * Sum of daily unique visitors for a page over the last `days` days.
+ * Each day's `visitors` is a set of salted hashes (IP + UA + day), so a
+ * reader who visits on two different days counts twice. True all-time
+ * uniques are not recoverable because hashes rotate daily and expire.
+ * For a personal blog this is the standard estimate.
+ */
+export async function getPageUniqueViews(
+  path: string,
+  days = 365,
+  now: Date = new Date(),
+): Promise<number | null> {
+  const config = getConfig();
+  if (!config) return null;
+  const client = getClient(config);
+
+  const cutoff = new Date(now);
+  cutoff.setUTCDate(cutoff.getUTCDate() - (days - 1));
+  const cutoffDay = dayKey(cutoff);
+
+  let total = 0;
+  let exclusiveStartKey: Record<string, unknown> | undefined;
+  do {
+    const res = await client.send(
+      new QueryCommand({
+        TableName: config.table,
+        KeyConditionExpression: "pk = :pk AND sk >= :sk",
+        ExpressionAttributeValues: {
+          ":pk": pkFor(path),
+          ":sk": `DAY#${cutoffDay}`,
+        },
+        ExclusiveStartKey: exclusiveStartKey,
+      }),
+    );
+    for (const item of (res.Items ?? []) as Record<string, unknown>[]) {
+      const visitors = item.visitors as string[] | Set<string> | undefined;
+      total += Array.isArray(visitors)
+        ? visitors.length
+        : visitors instanceof Set
+          ? visitors.size
+          : 0;
+    }
+    exclusiveStartKey = res.LastEvaluatedKey as
+      | Record<string, unknown>
+      | undefined;
+  } while (exclusiveStartKey);
+
+  return total;
 }
 
 /* ------------------------------------------------------------------ */

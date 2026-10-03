@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   clientIpFromHeaders,
-  getPageTotalViews,
+  getPageUniqueViews,
   isRateLimited,
   normalizePath,
 } from "@/lib/analytics";
@@ -9,7 +9,7 @@ import {
 /**
  * GET /api/views?path=/blog/some-post
  *
- * Returns the all-time tracked view count for a path.
+ * Returns the summed daily unique readers for a path.
  * Used client-side so pages build without AWS credentials
  * and counts stay live instead of going stale at build time.
  */
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ views: null }, { status: 429 });
     }
 
-    const views = await getPageTotalViews(path);
+    const views = await getPageUniqueViews(path);
     return NextResponse.json(
       { views },
       {

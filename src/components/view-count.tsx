@@ -33,7 +33,7 @@ export default function ViewCount({ path }: { path: string }) {
     <span className="inline-flex items-center gap-1">
       <span aria-hidden="true">·</span>
       <Eye className="size-3.5" aria-hidden="true" />
-      {views} {views === 1 ? "view" : "views"}
+      {views} {views === 1 ? "reader" : "readers"}
     </span>
   );
 }
