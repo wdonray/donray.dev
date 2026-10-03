@@ -171,7 +171,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** Rare differentiator; "build in public" credibility. Public
   dashboards are cited in portfolio case studies as engagement drivers.
 - **Effort:** Small. **Value:** MEDIUM.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #50)
 
 ### 14. Per-project detail pages (/projects/[slug])
 

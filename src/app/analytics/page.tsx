@@ -295,6 +295,47 @@ export default async function AnalyticsPage() {
               </p>
             </CardContent>
           </Card>
+
+          {/* What the numbers taught me */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">What I&apos;ve learned</CardTitle>
+              <CardDescription>
+                Notes from running my own analytics
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <strong className="text-foreground">
+                    CDN requests are not page views.
+                  </strong>{" "}
+                  Before real tracking existed, CloudWatch showed ~560K
+                  requests over six months — but that counts every image,
+                  script, stylesheet, and bot. Real human page loads are a
+                  fraction of that. The dashboard keeps the two measurements
+                  visibly separate because conflating them would be
+                  dishonest.
+                </li>
+                <li>
+                  <strong className="text-foreground">
+                    Almost all traffic is the homepage.
+                  </strong>{" "}
+                  That&apos;s why there&apos;s no per-page breakdown here —
+                  it would be a table of one meaningful row. The site&apos;s
+                  job is to be found, read, and contacted from a single page.
+                </li>
+                <li>
+                  <strong className="text-foreground">
+                    Privacy-respecting analytics is a solved problem.
+                  </strong>{" "}
+                  One DynamoDB table, salted daily hashes, no cookies, no raw
+                  IPs — and the dashboard still answers every question I
+                  actually have about my traffic.
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
         </>
       )}
     </div>
