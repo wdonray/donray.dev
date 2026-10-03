@@ -90,9 +90,7 @@ export default async function AnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold">
-                  {summary.dailyTotals
-                    .reduce((sum, d) => sum + d.uniques, 0)
-                    .toLocaleString()}
+                  {summary.totalUniques.toLocaleString()}
                 </div>
                 <CardDescription className="mt-1">
                   Last 30 days · estimated
@@ -153,12 +151,12 @@ export default async function AnalyticsPage() {
                   })()}
                 </div>
                 <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                  <span>{formatDate(summary.dailyTotals[0].day)}</span>
                   <span>
                     {formatDate(
                       summary.dailyTotals[summary.dailyTotals.length - 1].day,
                     )}
                   </span>
-                  <span>{formatDate(summary.dailyTotals[0].day)}</span>
                 </div>
               </CardContent>
             </Card>
@@ -234,9 +232,12 @@ export default async function AnalyticsPage() {
                 </li>
                 <li>
                   <strong className="text-foreground">Unique visitors</strong>{" "}
-                  are estimated: each visit is hashed (IP + browser, salted and
-                  non-reversible) and counted once per day. Shared networks can
-                  undercount; changing IPs can overcount.
+                  are estimated: each visit is hashed (IP + browser, salted
+                  and non-reversible) and counted once per day. The headline
+                  number dedupes across pages — a visitor who reads three
+                  pages in one day counts once. Per-page numbers count that
+                  visitor once per page. Shared networks can undercount;
+                  changing IPs can overcount.
                 </li>
                 <li>
                   No cookies are set and no raw IP addresses are stored. Daily

@@ -17,6 +17,9 @@ import {
  * - One item per page for all-time totals:   pk = "PAGE#<path>", sk = "TOTAL"
  * - One item per page per day for uniques:   pk = "PAGE#<path>", sk = "DAY#<yyyy-mm-dd>"
  *   with a `visitors` string-set of salted visitor hashes and a TTL (`expiresAt`).
+ * - One item per day for site-wide uniques:  pk = "SITE", sk = "DAY#<yyyy-mm-dd>"
+ *   so the headline unique-visitor count dedupes across pages (a visitor who
+ *   reads three pages in a day counts once, not three times).
  * - Raw IPs are never stored. A visitor is identified by
  *   SHA-256(salt | ip | user-agent | date), so hashes rotate daily and
  *   cannot be reversed into an IP.
@@ -186,6 +189,26 @@ export async function recordPageView(
         },
       }),
     ),
+    // Site-wide daily uniques (same visitor hash, so a visitor who reads
+    // several pages in one day counts once here).
+    client.send(
+      new UpdateCommand({
+        TableName: config.table,
+        Key: { pk: "SITE", sk: `DAY#${day}` },
+        UpdateExpression:
+          "ADD #visitors :visitor SET #day = if_not_exists(#day, :day), #expires = if_not_exists(#expires, :expires)",
+        ExpressionAttributeNames: {
+          "#visitors": "visitors",
+          "#day": "day",
+          "#expires": "expiresAt",
+        },
+        ExpressionAttributeValues: {
+          ":visitor": new Set([visitor]),
+          ":day": day,
+          ":expires": expiresAt,
+        },
+      }),
+    ),
   ]);
   return true;
 }
@@ -206,6 +229,8 @@ export interface PageStat {
 export interface AnalyticsSummary {
   pages: PageStat[];
   totalViews: number;
+  /** Sum of site-wide daily unique visitors (deduped across pages). */
+  totalUniques: number;
   dailyTotals: DailyStat[];
   fetchedAt: string;
 }
@@ -251,10 +276,25 @@ export async function getAnalyticsSummary(
     }
     return stat;
   };
+  const countUniques = (item: Record<string, unknown>): number => {
+    const visitors = item.visitors as string[] | Set<string> | undefined;
+    return Array.isArray(visitors)
+      ? visitors.length
+      : visitors instanceof Set
+        ? visitors.size
+        : 0;
+  };
+
+  const siteDailyUniques = new Map<string, number>();
 
   for (const item of items) {
     const pk = item.pk as string | undefined;
     const sk = item.sk as string | undefined;
+    if (pk === "SITE" && sk?.startsWith("DAY#")) {
+      const day = sk.slice("DAY#".length);
+      if (day >= cutoffDay) siteDailyUniques.set(day, countUniques(item));
+      continue;
+    }
     if (!pk?.startsWith("PAGE#")) continue;
     const path = (item.path as string) ?? pk.slice("PAGE#".length);
     const stat = ensure(path);
@@ -263,16 +303,10 @@ export async function getAnalyticsSummary(
     } else if (sk?.startsWith("DAY#")) {
       const day = sk.slice("DAY#".length);
       if (day >= cutoffDay) {
-        const visitors = item.visitors as string[] | Set<string> | undefined;
-        const uniques = Array.isArray(visitors)
-          ? visitors.length
-          : visitors instanceof Set
-            ? visitors.size
-            : 0;
         stat.daily.push({
           day,
           views: (item.views as number) ?? 0,
-          uniques,
+          uniques: countUniques(item),
         });
       }
     }
@@ -305,6 +339,10 @@ export async function getAnalyticsSummary(
   return {
     pages,
     totalViews,
+    totalUniques: [...siteDailyUniques.values()].reduce(
+      (sum, n) => sum + n,
+      0,
+    ),
     dailyTotals: [...dailyTotals.values()].sort((a, b) =>
       a.day < b.day ? -1 : 1,
     ),
