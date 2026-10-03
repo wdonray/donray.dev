@@ -55,9 +55,7 @@ export default async function ProjectPage({
           <p className="text-sm font-medium text-primary uppercase tracking-wide">
             Project · {project.role}
           </p>
-          <h1 className="text-4xl font-bold tracking-tight">
-            {project.title}
-          </h1>
+          <h1 className="text-4xl font-bold tracking-tight">{project.title}</h1>
           <p className="text-lg text-muted-foreground">{project.subtitle}</p>
           <div
             className="flex flex-wrap gap-2"
@@ -107,10 +105,7 @@ export default async function ProjectPage({
 
         <div className="space-y-4">
           {project.details.map((paragraph, i) => (
-            <p
-              key={i}
-              className="text-muted-foreground leading-relaxed"
-            >
+            <p key={i} className="text-muted-foreground leading-relaxed">
               {paragraph}
             </p>
           ))}
