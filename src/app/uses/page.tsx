@@ -37,7 +37,10 @@ const GROUPS: { title: string; items: { name: string; note: string }[] }[] = [
       { name: "Vue", note: "Primary framework — Justworks and this site." },
       { name: "Vite", note: "Build tooling." },
       { name: "Vitest", note: "Unit testing." },
-      { name: "Playwright", note: "E2E testing, including accessibility scans." },
+      {
+        name: "Playwright",
+        note: "E2E testing, including accessibility scans.",
+      },
       { name: "Tailwind CSS", note: "Styling for this site." },
     ],
   },
@@ -54,7 +57,10 @@ const GROUPS: { title: string; items: { name: string; note: string }[] }[] = [
     title: "Infrastructure",
     items: [
       { name: "AWS", note: "Amplify for hosting, S3 for assets." },
-      { name: "GitHub Actions", note: "CI — build, lint, unit, and E2E on every PR." },
+      {
+        name: "GitHub Actions",
+        note: "CI — build, lint, unit, and E2E on every PR.",
+      },
       { name: "Datadog", note: "Observability at work." },
     ],
   },
