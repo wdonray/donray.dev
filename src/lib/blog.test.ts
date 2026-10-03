@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getPost, getHeadings, POSTS } from "./blog";
+import { getPost, getPostContent, getHeadings, POSTS } from "./blog";
 
 describe("blog", () => {
   it("has at least one post with required fields", () => {
@@ -28,5 +28,18 @@ describe("blog", () => {
       expect([2, 3]).toContain(h.level);
     }
     expect(headings[0].text).toBe("The numbers");
+  });
+
+  it("returns raw MDX source for next-mdx-remote/rsc", () => {
+    // Regression guard: the RSC MDXRemote serializes the source itself.
+    // Passing an already-serialized result made it render an empty body
+    // with no build or test failure.
+    const content = getPostContent("422-code-reviews");
+    expect(typeof content).toBe("string");
+    expect(content.length).toBeGreaterThan(0);
+    expect(content).toContain(
+      "Should engineering managers stay in code review",
+    );
+    expect(content).not.toContain("compiledSource");
   });
 });
