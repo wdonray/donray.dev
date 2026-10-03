@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import AnalyticsTracker from "@/components/analytics-tracker";
+import { getPersonJsonLd } from "@/lib/schema";
 
 export default function RootLayout({
   children,
@@ -41,6 +42,12 @@ export default function RootLayout({
         <meta
           name="description"
           content="Portfolio of Donray Williams, Engineering Manager building fast, accessible web experiences."
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(getPersonJsonLd()),
+          }}
         />
       </head>
       <body>

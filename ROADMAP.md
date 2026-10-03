@@ -27,7 +27,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Evidence:** Consensus across 2026 portfolio SEO guides; Google's own
   guidance (first-hand content + clean crawlable foundation).
 - **Effort:** Small. **Value:** HIGH.
-- **Status:** TODO
+- **Status:** DONE (PR #36)
 
 ### 2. JSON-LD Person schema
 
@@ -40,7 +40,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   JSON-LD + static rendering cited ~3x more by AI engines (Web Almanac 2025
   via Medium — treat as directional, not causal).
 - **Effort:** Small. **Value:** HIGH.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #37)
 
 ### 3. Richer title / meta / OG tags
 
