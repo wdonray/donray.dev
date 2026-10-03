@@ -20,27 +20,29 @@ describe("blog", () => {
   });
 
   it("finds posts by slug", () => {
-    const post = getPost("422-code-reviews");
-    expect(post?.title).toContain("422 code reviews");
+    const post = getPost("review-to-learn");
+    expect(post?.title).toContain("proved me wrong");
     expect(getPost("nonexistent")).toBeUndefined();
   });
 
   it("extracts headings for the table of contents", () => {
-    const headings = getHeadings("422-code-reviews");
+    const headings = getHeadings("review-to-learn");
     expect(headings.length).toBeGreaterThan(0);
     for (const h of headings) {
       expect(h.id).toBeTruthy();
       expect(h.text).toBeTruthy();
       expect([2, 3]).toContain(h.level);
     }
-    expect(headings[0].text).toBe("The numbers");
+    expect(headings[0].text).toBe(
+      "What does a review catch that nothing else does?",
+    );
   });
 
   it("returns raw MDX source for next-mdx-remote/rsc", () => {
     // Regression guard: the RSC MDXRemote serializes the source itself.
     // Passing an already-serialized result made it render an empty body
     // with no build or test failure.
-    const content = getPostContent("422-code-reviews");
+    const content = getPostContent("review-to-learn");
     expect(typeof content).toBe("string");
     expect(content.length).toBeGreaterThan(0);
     expect(content).toContain(
