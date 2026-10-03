@@ -180,7 +180,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** Programmatic pages = discoverability surface; per-page citable
   passages = GEO surface.
 - **Effort:** Medium. **Value:** MEDIUM.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #51)
 
 ### 15. Testimonial mini-stories
 

@@ -20,6 +20,7 @@ import Image from "next/image";
 import { itemVariants } from "@/lib/animations";
 
 interface Project {
+  slug: string;
   title: string;
   subtitle?: string;
   description: string;
@@ -145,6 +146,13 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                 </a>
               </Button>
             )}
+            <a
+              href={`/projects/${project.slug}`}
+              aria-label={`View details about ${project.title}`}
+              className="relative z-20 text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
+            >
+              Details →
+            </a>
           </CardFooter>
         )}
       </Card>
@@ -158,6 +166,7 @@ export default function Projects() {
 
   const projects: Project[] = [
     {
+      slug: "pico-domains",
       title: "pico.domains",
       subtitle: "Ultra-Short Domain Search Engine",
       description:
@@ -175,6 +184,7 @@ export default function Projects() {
       imageAlt: "Screenshot of pico.domains website",
     },
     {
+      slug: "cyclei",
       title: "Cyclei",
       subtitle: "Sustainability Made Simple",
       description:
@@ -185,6 +195,7 @@ export default function Projects() {
       imageAlt: "Screenshot of Cyclei application",
     },
     {
+      slug: "hide-zero-cards",
       title: "Hide Zero Cards",
       subtitle: "Educational Place Value Tool",
       description:
@@ -201,6 +212,7 @@ export default function Projects() {
       imageAlt: "Screenshot of Hide Zero Cards website",
     },
     {
+      slug: "donray-dev",
       title: "donray.dev",
       subtitle: "My Digital Home",
       description:

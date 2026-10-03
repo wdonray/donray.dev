@@ -27,5 +27,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.3,
     },
+    ...["pico-domains", "cyclei", "hide-zero-cards", "donray-dev"].map(
+      (slug) => ({
+        url: `${BASE_URL}/projects/${slug}`,
+        lastModified: now,
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      }),
+    ),
   ];
 }
