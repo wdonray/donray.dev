@@ -40,7 +40,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   JSON-LD + static rendering cited ~3x more by AI engines (Web Almanac 2025
   via Medium — treat as directional, not causal).
 - **Effort:** Small. **Value:** HIGH.
-- **Status:** IN PROGRESS (PR #37)
+- **Status:** DONE (PR #37)
 
 ### 3. Richer title / meta / OG tags
 
@@ -51,7 +51,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   LinkedIn/Twitter/Slack link previews — which is where recruiters first
   see it. Cheap, permanent.
 - **Effort:** Small. **Value:** MEDIUM-HIGH.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #38)
 
 ### 4. "Open to conversations" section
 

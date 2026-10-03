@@ -38,10 +38,49 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>Donray Williams — Engineering Manager</title>
+        <title>
+          Donray Williams — Engineering Manager | Frontend Leadership, New
+          Jersey
+        </title>
         <meta
           name="description"
-          content="Portfolio of Donray Williams, Engineering Manager building fast, accessible web experiences."
+          content="Donray Williams is a player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing. Portfolio, projects, and experience."
+        />
+        <link rel="canonical" href="https://www.donray.dev" />
+        <meta name="theme-color" content="#f7f3e8" />
+        <meta
+          property="og:title"
+          content="Donray Williams — Engineering Manager"
+        />
+        <meta
+          property="og:description"
+          content="Player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing. Portfolio, projects, and experience."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.donray.dev" />
+        <meta property="og:site_name" content="donray.dev" />
+        <meta
+          property="og:image"
+          content="https://www.donray.dev/og-image.png"
+        />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+          property="og:image:alt"
+          content="Donray Williams — Engineering Manager"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Donray Williams — Engineering Manager"
+        />
+        <meta
+          name="twitter:description"
+          content="Player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing."
+        />
+        <meta
+          name="twitter:image"
+          content="https://www.donray.dev/og-image.png"
         />
         <script
           type="application/ld+json"
