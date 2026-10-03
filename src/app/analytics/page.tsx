@@ -84,8 +84,21 @@ export default async function AnalyticsPage() {
         </Card>
       ) : (
         <>
-          {/* Headline stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Real tracking — the database-backed page views */}
+          <section aria-labelledby="tracked-heading" className="space-y-6">
+            <div className="space-y-1">
+              <h2
+                id="tracked-heading"
+                className="text-xl font-semibold tracking-tight"
+              >
+                Tracked page views
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Real page loads, measured from October 2026.
+              </p>
+            </div>
+            {/* Headline stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
@@ -165,6 +178,23 @@ export default async function AnalyticsPage() {
               </CardContent>
             </Card>
           )}
+          </section>
+
+          {/* Historical estimates — a different, older measurement */}
+          <section aria-labelledby="historical-heading" className="space-y-6">
+            <div className="space-y-1">
+              <h2
+                id="historical-heading"
+                className="text-xl font-semibold tracking-tight"
+              >
+                Before tracking started
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                CDN-request estimates from before page-view tracking existed
+                — a different measurement, not page views, and not comparable
+                to the tracked numbers above.
+              </p>
+            </div>
 
           {/* Historical traffic (estimated) */}
           <Card>
@@ -212,6 +242,7 @@ export default async function AnalyticsPage() {
               </p>
             </CardContent>
           </Card>
+          </section>
 
           {/* Methodology — the honesty section */}
           <Card>
@@ -226,12 +257,11 @@ export default async function AnalyticsPage() {
             <CardContent>
               <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
                 <li>
-                  A <strong className="text-foreground">page view</strong>
-                  &nbsp;is one real page load in a browser. Images, scripts, and
-                  stylesheets don&apos;t count — only the page itself.
-                </li>
-                <li>
-                  Known bots and crawlers are filtered out before counting.
+                  <strong className="text-foreground">Tracked page views</strong>{" "}
+                  are real page loads in a browser, recorded from October 2026.
+                  Images, scripts, and stylesheets don&apos;t count — only the
+                  page itself. Known bots and crawlers are filtered out before
+                  counting.
                 </li>
                 <li>
                   <strong className="text-foreground">Unique visitors</strong>{" "}
@@ -243,6 +273,16 @@ export default async function AnalyticsPage() {
                 <li>
                   No cookies are set and no raw IP addresses are stored. Daily
                   detail expires automatically after about a year.
+                </li>
+                <li>
+                  <strong className="text-foreground">
+                    Historical estimates
+                  </strong>{" "}
+                  are a separate, older measurement: approximate monthly CDN
+                  request counts from AWS CloudWatch, from before page-view
+                  tracking existed. They include images, scripts, stylesheets,
+                  and bots, so they are not page views and can&apos;t be
+                  compared with the tracked numbers.
                 </li>
               </ul>
               <p className="mt-4 text-xs text-muted-foreground">
