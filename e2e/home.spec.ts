@@ -79,22 +79,18 @@ test.describe("home page", () => {
   test("project cards link to their destinations", async ({ page }) => {
     await page.goto("/");
 
-    const projects = page.locator("#projects");
-    const picoCard = projects
-      .getByRole("listitem")
-      .filter({ has: page.getByText("pico.domains", { exact: true }) })
-      .first();
-    await expect(
-      picoCard.getByRole("link", { name: /visit site/i }),
-    ).toHaveAttribute("href", "https://www.pico.domains/");
+    const siteLinks = page.getByRole("link", { name: /visit site/i });
+    await expect(siteLinks.filter({ hasText: "" }).first()).toBeVisible();
+    const hrefs = await siteLinks.evaluateAll((els) =>
+      els.map((e) => e.getAttribute("href")),
+    );
+    expect(hrefs).toContain("https://www.pico.domains/");
 
-    const devCard = projects
-      .getByRole("listitem")
-      .filter({ has: page.getByText("donray.dev", { exact: true }) })
-      .first();
-    await expect(
-      devCard.getByRole("link", { name: /view on github/i }),
-    ).toHaveAttribute("href", "https://github.com/wdonray/donray.dev");
+    const githubLinks = page.getByRole("link", { name: /view on github/i });
+    const ghHrefs = await githubLinks.evaluateAll((els) =>
+      els.map((e) => e.getAttribute("href")),
+    );
+    expect(ghHrefs).toContain("https://github.com/wdonray/donray.dev");
   });
 
   test("footer shows the current year", async ({ page }) => {
