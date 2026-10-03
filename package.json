@@ -8,7 +8,7 @@
     "lint": "oxlint .",
     "typecheck": "tsc --noEmit",
     "test": "npm run test:unit && npm run test:e2e",
-    "test:unit": "vitest run",
+    "test:unit": "vitest run --coverage",
     "test:e2e": "playwright test",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check ."
@@ -51,6 +51,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.1.1",
+    "@vitest/coverage-v8": "^5.0.3",
     "jsdom": "^30.1.1",
     "oxfmt": "^0.71.0",
     "oxlint": "^1.86.0",
