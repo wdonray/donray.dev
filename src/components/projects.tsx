@@ -149,7 +149,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             <a
               href={`/projects/${project.slug}`}
               aria-label={`View details about ${project.title}`}
-              className="relative z-20 text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
+              className="relative z-20 inline-flex min-h-6 items-center text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
             >
               Details →
             </a>
