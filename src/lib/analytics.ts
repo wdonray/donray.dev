@@ -17,14 +17,16 @@ import {
  * Design:
  * - One item per page for all-time totals:   pk = "PAGE#<path>", sk = "TOTAL"
  * - One item per page per day for uniques:   pk = "PAGE#<path>", sk = "DAY#<yyyy-mm-dd>"
- *   with a `visitors` string-set of salted visitor hashes and a TTL (`expiresAt`).
+ *   with a `visitors` string-set of salted visitor hashes (kept permanently).
  * - One item per day for site-wide uniques:  pk = "SITE", sk = "DAY#<yyyy-mm-dd>"
  *   so the headline unique-visitor count dedupes across pages (a visitor who
  *   reads three pages in a day counts once, not three times).
  * - Raw IPs are never stored. A visitor is identified by
  *   SHA-256(salt | ip | user-agent | date), so hashes rotate daily and
  *   cannot be reversed into an IP.
- * - Known bots/crawlers are filtered before recording.
+ * - Daily records are kept permanently (no TTL). The table is tiny and
+ *   storage costs are negligible; permanent history is what makes
+ *   cumulative unique-reader counts possible.
  */
 
 const TABLE_ENV = "ANALYTICS_TABLE";
@@ -32,8 +34,6 @@ const REGION_ENV = "ANALYTICS_AWS_REGION";
 const KEY_ENV = "ANALYTICS_AWS_ACCESS_KEY_ID";
 const SECRET_ENV = "ANALYTICS_AWS_SECRET_ACCESS_KEY";
 const SALT_ENV = "ANALYTICS_SALT";
-
-const DAY_TTL_SECONDS = 400 * 24 * 60 * 60; // ~13 months of daily history
 
 const BOT_PATTERN =
   /(bot|crawl|spider|slurp|mediapartners|baidu|yandex|sogou|duckduck|ahrefs|semrush|mj12|dotbot|petal|facebookexternalhit|twitterbot|linkedinbot|embedly|quora|pinterest|slackbot|discordbot|telegrambot|whatsapp|google-inspection|chrome-lighthouse|headless)/i;
@@ -153,7 +153,6 @@ export async function recordPageView(
   const client = getClient(config);
   const day = dayKey(now);
   const visitor = hashVisitor(config.salt, ip, userAgent, day);
-  const expiresAt = Math.floor(now.getTime() / 1000) + DAY_TTL_SECONDS;
 
   await Promise.all([
     // All-time total for the page.
@@ -173,20 +172,18 @@ export async function recordPageView(
         TableName: config.table,
         Key: { pk: pkFor(path), sk: `DAY#${day}` },
         UpdateExpression:
-          "ADD #views :one, #visitors :visitor SET #path = if_not_exists(#path, :path), #day = if_not_exists(#day, :day), #expires = if_not_exists(#expires, :expires)",
+          "ADD #views :one, #visitors :visitor SET #path = if_not_exists(#path, :path), #day = if_not_exists(#day, :day)",
         ExpressionAttributeNames: {
           "#views": "views",
           "#visitors": "visitors",
           "#path": "path",
           "#day": "day",
-          "#expires": "expiresAt",
         },
         ExpressionAttributeValues: {
           ":one": 1,
           ":visitor": new Set([visitor]),
           ":path": path,
           ":day": day,
-          ":expires": expiresAt,
         },
       }),
     ),
@@ -197,16 +194,14 @@ export async function recordPageView(
         TableName: config.table,
         Key: { pk: "SITE", sk: `DAY#${day}` },
         UpdateExpression:
-          "ADD #visitors :visitor SET #day = if_not_exists(#day, :day), #expires = if_not_exists(#expires, :expires)",
+          "ADD #visitors :visitor SET #day = if_not_exists(#day, :day)",
         ExpressionAttributeNames: {
           "#visitors": "visitors",
           "#day": "day",
-          "#expires": "expiresAt",
         },
         ExpressionAttributeValues: {
           ":visitor": new Set([visitor]),
           ":day": day,
-          ":expires": expiresAt,
         },
       }),
     ),
@@ -364,24 +359,24 @@ export async function getPageTotalViews(path: string): Promise<number | null> {
 }
 
 /**
- * Sum of daily unique visitors for a page over the last `days` days.
- * Each day's `visitors` is a set of salted hashes (IP + UA + day), so a
- * reader who visits on two different days counts twice. True all-time
- * uniques are not recoverable because hashes rotate daily and expire.
- * For a personal blog this is the standard estimate.
+ * Sum of daily unique visitors for a page. Each day's `visitors` is a set
+ * of salted hashes (IP + UA + day), so a reader who visits on two different
+ * days counts twice. Pass `days` to limit to a recent window; defaults to
+ * all history (daily records are kept permanently).
  */
 export async function getPageUniqueViews(
   path: string,
-  days = 365,
+  days?: number,
   now: Date = new Date(),
 ): Promise<number | null> {
   const config = getConfig();
   if (!config) return null;
   const client = getClient(config);
 
-  const cutoff = new Date(now);
-  cutoff.setUTCDate(cutoff.getUTCDate() - (days - 1));
-  const cutoffDay = dayKey(cutoff);
+  const skStart =
+    days === undefined
+      ? "DAY#"
+      : `DAY#${dayKey(new Date(now.getTime() - (days - 1) * 86400000))}`;
 
   let total = 0;
   let exclusiveStartKey: Record<string, unknown> | undefined;
@@ -392,7 +387,7 @@ export async function getPageUniqueViews(
         KeyConditionExpression: "pk = :pk AND sk >= :sk",
         ExpressionAttributeValues: {
           ":pk": pkFor(path),
-          ":sk": `DAY#${cutoffDay}`,
+          ":sk": skStart,
         },
         ExclusiveStartKey: exclusiveStartKey,
       }),
