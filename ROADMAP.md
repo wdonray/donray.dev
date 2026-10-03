@@ -118,7 +118,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   2026 Agentic Browsing audit checks for it. ~1 hour of work, so cheap
   insurance. Never pay a vendor for this.
 - **Effort:** Small. **Value:** LOW-MEDIUM.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #41)
 
 ### 9. Cal.com / Calendly coffee-chat link
 
