@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Clock, Eye } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getPost, getPostContent, getHeadings, POSTS } from "@/lib/blog";
-import { getPageTotalViews } from "@/lib/analytics";
 import { serializeJsonLd } from "@/lib/schema";
 import TableOfContents from "@/components/table-of-contents";
 import { mdxComponents } from "@/components/mdx-components";
+import ViewCount from "@/components/view-count";
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -83,7 +83,6 @@ export default async function BlogPostPage({
   const mdxSource = await getPostContent(slug);
   const headings = getHeadings(slug);
   const faqJsonLd = faqPageJsonLd(post);
-  const totalViews = await getPageTotalViews(`/blog/${slug}`);
 
   return (
     <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
@@ -123,15 +122,7 @@ export default async function BlogPostPage({
               <Clock className="size-3.5" aria-hidden="true" />
               {post.readingMinutes} min read
             </span>
-            {totalViews !== null && totalViews > 0 && (
-              <>
-                <span aria-hidden="true">·</span>
-                <span className="inline-flex items-center gap-1">
-                  <Eye className="size-3.5" aria-hidden="true" />
-                  {totalViews} {totalViews === 1 ? "view" : "views"}
-                </span>
-              </>
-            )}
+            <ViewCount path={`/blog/${slug}`} />
           </p>
           <h1 className="text-4xl font-bold tracking-tight">{post.title}</h1>
           <p className="text-lg text-muted-foreground">{post.excerpt}</p>
