@@ -34,7 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/blog/422-code-reviews`,
+      url: `${BASE_URL}/blog/review-to-learn`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.6,
