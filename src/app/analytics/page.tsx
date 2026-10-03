@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Eye, Users, FileText } from "lucide-react";
+import { Eye, Users } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +32,27 @@ function formatDateTime(iso: string): string {
     minute: "2-digit",
   });
 }
+
+/**
+ * Approximate CDN request counts from AWS CloudWatch (Amplify Hosting,
+ * Requests metric), pulled Oct 2, 2026. These count every CDN hit — page
+ * loads plus images, scripts, stylesheets, and bots — so they are NOT page
+ * views. Shown for rough historical scale only, from before page-view
+ * tracking started.
+ */
+const HISTORICAL_CDN_REQUESTS: {
+  month: string;
+  requests: number;
+  partial?: boolean;
+}[] = [
+  { month: "Apr 2026", requests: 88000 },
+  { month: "May 2026", requests: 55000 },
+  { month: "Jun 2026", requests: 75000 },
+  { month: "Jul 2026", requests: 95000 },
+  { month: "Aug 2026", requests: 128000 },
+  { month: "Sep 2026", requests: 118000 },
+  { month: "Oct 2026", requests: 15000, partial: true },
+];
 
 export default async function AnalyticsPage() {
   const summary = await getAnalyticsSummary(30);
@@ -64,7 +85,7 @@ export default async function AnalyticsPage() {
       ) : (
         <>
           {/* Headline stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
@@ -94,23 +115,6 @@ export default async function AnalyticsPage() {
                 </div>
                 <CardDescription className="mt-1">
                   Last 30 days · estimated
-                </CardDescription>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <FileText
-                    className="size-4 text-primary"
-                    aria-hidden="true"
-                  />
-                  Pages tracked
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold">{summary.pages.length}</div>
-                <CardDescription className="mt-1">
-                  Across the whole site
                 </CardDescription>
               </CardContent>
             </Card>
@@ -162,51 +166,50 @@ export default async function AnalyticsPage() {
             </Card>
           )}
 
-          {/* Per-page table */}
+          {/* Historical traffic (estimated) */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Views by page</CardTitle>
+              <CardTitle className="text-base">
+                Historical traffic (estimated)
+              </CardTitle>
               <CardDescription>
-                All-time totals and estimated unique visitors (last 30 days)
+                CDN requests per month — includes page loads, images, scripts,
+                stylesheets, and bots. Not page views; approximate, for rough
+                scale only.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border text-left text-muted-foreground">
-                      <th scope="col" className="py-2 pr-4 font-medium">
-                        Page
-                      </th>
-                      <th
-                        scope="col"
-                        className="py-2 pr-4 font-medium text-right"
-                      >
-                        Views
-                      </th>
-                      <th scope="col" className="py-2 font-medium text-right">
-                        Unique visitors
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {summary.pages.map((page) => (
-                      <tr
-                        key={page.path}
-                        className="border-b border-border/50 last:border-0"
-                      >
-                        <td className="py-2.5 pr-4 font-mono">{page.path}</td>
-                        <td className="py-2.5 pr-4 text-right tabular-nums">
-                          {page.totalViews.toLocaleString()}
-                        </td>
-                        <td className="py-2.5 text-right tabular-nums">
-                          {page.uniquesLast30d.toLocaleString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="space-y-2.5">
+                {(() => {
+                  const max = Math.max(
+                    ...HISTORICAL_CDN_REQUESTS.map((m) => m.requests),
+                  );
+                  return HISTORICAL_CDN_REQUESTS.map((m) => (
+                    <div key={m.month} className="flex items-center gap-3">
+                      <span className="w-20 shrink-0 text-xs text-muted-foreground">
+                        {m.month}
+                        {m.partial ? "*" : ""}
+                      </span>
+                      <div className="h-5 flex-1 overflow-hidden rounded-sm bg-muted">
+                        <div
+                          className="h-full rounded-sm bg-primary/50"
+                          style={{
+                            width: `${(m.requests / max) * 100}%`,
+                          }}
+                        />
+                      </div>
+                      <span className="w-20 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
+                        ≈{m.requests.toLocaleString()}
+                      </span>
+                    </div>
+                  ));
+                })()}
               </div>
+              <p className="mt-4 text-xs text-muted-foreground">
+                * Oct 2026 covers Oct 1–2 only. Source: AWS CloudWatch
+                (Amplify Hosting requests), pulled Oct 2, 2026. Page-view
+                tracking started Oct 2026.
+              </p>
             </CardContent>
           </Card>
 
@@ -223,8 +226,8 @@ export default async function AnalyticsPage() {
             <CardContent>
               <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
                 <li>
-                  A <strong className="text-foreground">page view</strong> is
-                  one real page load in a browser. Images, scripts, and
+                  A <strong className="text-foreground">page view</strong>{" "}
+                  is one real page load in a browser. Images, scripts, and
                   stylesheets don&apos;t count — only the page itself.
                 </li>
                 <li>
@@ -233,11 +236,9 @@ export default async function AnalyticsPage() {
                 <li>
                   <strong className="text-foreground">Unique visitors</strong>{" "}
                   are estimated: each visit is hashed (IP + browser, salted and
-                  non-reversible) and counted once per day. The headline number
-                  dedupes across pages — a visitor who reads three pages in one
-                  day counts once. Per-page numbers count that visitor once per
-                  page. Shared networks can undercount; changing IPs can
-                  overcount.
+                  non-reversible) and counted once per day. A visitor who
+                  reads several pages in one day counts once. Shared networks
+                  can undercount; changing IPs can overcount.
                 </li>
                 <li>
                   No cookies are set and no raw IP addresses are stored. Daily
