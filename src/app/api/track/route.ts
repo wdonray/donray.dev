@@ -10,7 +10,7 @@ import {
  * POST /api/track { path: "/some/page" }
  *
  * Records one page view. Bots are filtered, and the client dedupes to one
- * hit per page per browsing session — this endpoint is the last line of
+ * hit per page per browsing session: this endpoint is the last line of
  * defense, not the only one.
  */
 export async function POST(request: Request) {
