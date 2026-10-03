@@ -106,7 +106,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** The evidence-backed AEO play: FAQ schema + direct-answer-first
   formatting targets featured snippets and AI-answer extraction.
 - **Effort:** Small. **Value:** MEDIUM-HIGH.
-- **Status:** TODO
+- **Status:** DONE (PR #47)
 
 ### 8. llms.txt (+ llms-full.txt)
 
@@ -161,7 +161,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** Low-effort traffic magnet; quotable for "what does X use" AI
   queries.
 - **Effort:** Small. **Value:** LOW-MEDIUM.
-- **Status:** TODO
+- **Status:** DONE (PR #49)
 
 ### 13. Analytics write-up
 
@@ -171,7 +171,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** Rare differentiator; "build in public" credibility. Public
   dashboards are cited in portfolio case studies as engagement drivers.
 - **Effort:** Small. **Value:** MEDIUM.
-- **Status:** TODO
+- **Status:** DONE (PR #50)
 
 ### 14. Per-project detail pages (/projects/[slug])
 
@@ -200,8 +200,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** "The portfolio converts; LinkedIn/GitHub discover" — backlinks
   from profiles matter more than new channels.
 - **Effort:** Small, ongoing. **Value:** MEDIUM.
-- **Status:** TODO (repo-side parts doable now; profile edits need Donray
-  or a browser session)
+- **Status:** PARTIAL 2026-10-03 — repo-side done via API: description set, homepage URL set (donray.dev), topics added (portfolio, nextjs, typescript, tailwindcss). Remaining (need Donray or browser): GitHub profile README link, LinkedIn Featured + About, dev.to cross-post, pinned repos.
 
 ---
 

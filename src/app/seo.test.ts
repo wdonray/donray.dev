@@ -29,6 +29,7 @@ describe("sitemap.xml", () => {
     expect(urls).toContain("https://www.donray.dev");
     expect(urls).toContain("https://www.donray.dev/analytics");
     expect(urls).toContain("https://www.donray.dev/version");
+    expect(urls).toContain("https://www.donray.dev/uses");
     expect(urls).toContain("https://www.donray.dev/projects/cyclei");
     expect(urls).toContain("https://www.donray.dev/projects/donray-dev");
   });
