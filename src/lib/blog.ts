@@ -9,7 +9,8 @@ export interface BlogPost {
 export const POSTS: BlogPost[] = [
   {
     slug: "422-code-reviews",
-    title: "What 422 code reviews taught me about staying technical as a manager",
+    title:
+      "What 422 code reviews taught me about staying technical as a manager",
     date: "2026-10-03",
     excerpt:
       "Between June and October 2026, I reviewed 422 pull requests while managing a team of 3. Here's what review-at-scale actually teaches you — and what it costs.",
