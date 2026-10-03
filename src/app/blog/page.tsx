@@ -38,7 +38,8 @@ export default function BlogIndexPage() {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
-              })}
+              })}{" "}
+              · {post.readingMinutes} min read
             </p>
             <h2 className="mt-2 text-xl font-bold tracking-tight">
               <Link
