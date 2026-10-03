@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Clock } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getPost, getPostContent, getHeadings, POSTS } from "@/lib/blog";
+import {
+  getPost,
+  getPostContent,
+  getMdxOptions,
+  getHeadings,
+  POSTS,
+} from "@/lib/blog";
 import { serializeJsonLd } from "@/lib/schema";
 import TableOfContents from "@/components/table-of-contents";
 import { mdxComponents } from "@/components/mdx-components";
@@ -80,7 +86,8 @@ export default async function BlogPostPage({
     );
   }
 
-  const mdxSource = await getPostContent(slug);
+  const mdxSource = getPostContent(slug);
+  const mdxOptions = getMdxOptions();
   const headings = getHeadings(slug);
   const faqJsonLd = faqPageJsonLd(post);
 
@@ -129,7 +136,11 @@ export default async function BlogPostPage({
         </header>
         <TableOfContents headings={headings} />
         <div className="mt-4">
-          <MDXRemote source={mdxSource} components={mdxComponents} />
+          <MDXRemote
+            source={mdxSource}
+            options={mdxOptions}
+            components={mdxComponents}
+          />
         </div>
       </article>
     </div>
