@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Eye } from "lucide-react";
 import { POSTS } from "@/lib/blog";
+import { getPageTotalViews } from "@/lib/analytics";
 
 export const metadata: Metadata = {
   title: "Blog | donray.dev",
@@ -9,7 +10,10 @@ export const metadata: Metadata = {
     "Notes from Donray Williams on engineering management, frontend leadership, and shipping software.",
 };
 
-export default function BlogIndexPage() {
+export default async function BlogIndexPage() {
+  const views = await Promise.all(
+    POSTS.map((post) => getPageTotalViews(`/blog/${post.slug}`)),
+  );
   return (
     <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
       <Link
@@ -28,18 +32,27 @@ export default function BlogIndexPage() {
         </p>
       </div>
       <div className="mt-10 space-y-6">
-        {POSTS.map((post) => (
+        {POSTS.map((post, i) => (
           <article
             key={post.slug}
             className="rounded-xl border bg-card p-6 shadow-sm"
           >
-            <p className="text-sm text-muted-foreground">
-              {new Date(post.date + "T12:00:00").toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}{" "}
-              · {post.readingMinutes} min read
+            <p className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span>
+                {new Date(post.date + "T12:00:00").toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}{" "}
+                · {post.readingMinutes} min read
+              </span>
+              {views[i] !== null && views[i]! > 0 && (
+                <span className="inline-flex items-center gap-1">
+                  <span aria-hidden="true">·</span>
+                  <Eye className="size-3.5" aria-hidden="true" />
+                  {views[i]} {views[i] === 1 ? "view" : "views"}
+                </span>
+              )}
             </p>
             <h2 className="mt-2 text-xl font-bold tracking-tight">
               <Link
