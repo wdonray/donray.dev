@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { POSTS } from "@/lib/blog";
 import ViewCount from "@/components/view-count";
 
@@ -13,14 +13,7 @@ export const metadata: Metadata = {
 export default function BlogIndexPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-12">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-      >
-        <ArrowLeft className="size-4" aria-hidden="true" />
-        Back home
-      </Link>
-      <div className="mt-8 space-y-2">
+      <div className="space-y-2">
         <div className="h-1 w-10 rounded-full bg-primary" aria-hidden="true" />
         <h1 className="text-3xl font-bold tracking-tight">Blog</h1>
         <p className="text-muted-foreground">
