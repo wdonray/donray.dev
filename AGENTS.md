@@ -8,6 +8,9 @@ he decides, you execute. He verifies your work as a habit — be precise.
 - **One PR per task.** Small, focused PRs. Merge once CI is green — no
   extra review pass needed from Donray.
 - **Run formatting before the first push:** `npx oxfmt .`
+- **PR bodies must follow `.github/pull_request_template.md`** (What / Why /
+  How). The API does not auto-apply the template the way the web UI does,
+  so include it by hand when creating a PR programmatically.
 - **Screenshots gate PRs but are never committed.** Take local Playwright
   screenshots to review UI changes, show them in chat, keep them out of
   the repo.
