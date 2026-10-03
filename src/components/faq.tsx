@@ -30,8 +30,7 @@ const FAQS: FaqItem[] = [
   },
   {
     question: "What's the fastest way to reach you?",
-    answer:
-      "Email — donrayxwilliams@gmail.com. I read everything.",
+    answer: "Email — donrayxwilliams@gmail.com. I read everything.",
   },
 ];
 
