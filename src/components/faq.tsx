@@ -16,7 +16,7 @@ const FAQS: FaqItem[] = [
   {
     question: "Are you open to new roles?",
     answer:
-      "No — I'm happily at Justworks and not looking for a new role. I am open to conversations: EM coffee chats, frontend mentorship, conference speaking, and podcast guesting.",
+      "No. I'm happily at Justworks and not looking for a new role. I am open to conversations: EM coffee chats, frontend mentorship, conference speaking, and podcast guesting.",
   },
   {
     question: "What's your technical background?",
@@ -30,7 +30,7 @@ const FAQS: FaqItem[] = [
   },
   {
     question: "What's the fastest way to reach you?",
-    answer: "Email — donrayxwilliams@gmail.com. I read everything.",
+    answer: "Email: donrayxwilliams@gmail.com. I read everything.",
   },
 ];
 

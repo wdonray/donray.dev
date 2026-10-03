@@ -7,7 +7,7 @@ import VersionInfo, {
 } from "@/components/version-info";
 
 export const metadata: Metadata = {
-  title: "Version — donray.dev",
+  title: "Version | donray.dev",
   description:
     "The build currently running on donray.dev, compared against the latest published release.",
 };

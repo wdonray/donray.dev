@@ -11,7 +11,7 @@ import { Eye, Users } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Analytics — donray.dev",
+  title: "Analytics | donray.dev",
   description: "Public, privacy-respecting traffic statistics for donray.dev.",
 };
 
@@ -35,9 +35,10 @@ function formatDateTime(iso: string): string {
 
 /**
  * Approximate CDN request counts from AWS CloudWatch (Amplify Hosting,
- * Requests metric), pulled Oct 2, 2026. These count every CDN hit — page
- * loads plus images, scripts, stylesheets, and bots — so they are NOT page
- * views. Shown for rough historical scale only, from before page-view
+ * Requests metric), pulled Oct 2, 2026. These count every CDN hit:
+ * page loads plus images, scripts, stylesheets, and bots. So they are
+ * NOT page views. Shown for rough historical scale only, from before
+ * page-view
  * tracking started.
  */
 const HISTORICAL_CDN_REQUESTS: {
@@ -59,13 +60,13 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 md:px-8 pt-28 pb-16 space-y-8">
-      {/* Heading — mirrors the SectionHeader accent bar + title */}
+      {/* Heading: mirrors the SectionHeader accent bar + title */}
       <div className="space-y-2">
         <div className="h-1 w-10 rounded-full bg-primary" aria-hidden="true" />
         <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
         <p className="text-muted-foreground">
           Public, privacy-respecting traffic stats for donray.dev. No cookies,
-          no raw IP addresses stored — ever.
+          no raw IP addresses stored. Ever.
         </p>
       </div>
 
@@ -84,7 +85,7 @@ export default async function AnalyticsPage() {
         </Card>
       ) : (
         <>
-          {/* Real tracking — the database-backed page views */}
+          {/* Real tracking: the database-backed page views */}
           <section aria-labelledby="tracked-heading" className="space-y-6">
             <div className="space-y-1">
               <h2
@@ -182,7 +183,7 @@ export default async function AnalyticsPage() {
             )}
           </section>
 
-          {/* Historical estimates — a different, older measurement */}
+          {/* Historical estimates: a different, older measurement */}
           <section aria-labelledby="historical-heading" className="space-y-6">
             <div className="space-y-1">
               <h2
@@ -192,7 +193,7 @@ export default async function AnalyticsPage() {
                 Before tracking started
               </h2>
               <p className="text-sm text-muted-foreground">
-                CDN-request estimates from before page-view tracking existed — a
+                CDN-request estimates from before page-view tracking existed: a
                 different measurement, not page views, and not comparable to the
                 tracked numbers above.
               </p>
@@ -205,7 +206,7 @@ export default async function AnalyticsPage() {
                   Historical traffic (estimated)
                 </CardTitle>
                 <CardDescription>
-                  CDN requests per month — includes page loads, images, scripts,
+                  CDN requests per month: includes page loads, images, scripts,
                   stylesheets, and bots. Not page views; approximate, for rough
                   scale only.
                 </CardDescription>
@@ -246,14 +247,14 @@ export default async function AnalyticsPage() {
             </Card>
           </section>
 
-          {/* Methodology — the honesty section */}
+          {/* Methodology: the honesty section */}
           <Card>
             <CardHeader>
               <CardTitle className="text-base">
                 How it&apos;s measured
               </CardTitle>
               <CardDescription>
-                What these numbers are — and what they aren&apos;t
+                What these numbers are (and aren&apos;t)
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -263,7 +264,7 @@ export default async function AnalyticsPage() {
                     Tracked page views
                   </strong>{" "}
                   are real page loads in a browser, recorded from October 2026.
-                  Images, scripts, and stylesheets don&apos;t count — only the
+                  Images, scripts, and stylesheets don&apos;t count. Only the
                   page itself. Known bots and crawlers are filtered out before
                   counting.
                 </li>
@@ -313,7 +314,7 @@ export default async function AnalyticsPage() {
                     CDN requests are not page views.
                   </strong>{" "}
                   Before real tracking existed, CloudWatch showed ~560K requests
-                  over six months — but that counts every image, script,
+                  over six months. But that counts every image, script,
                   stylesheet, and bot. Real human page loads are a fraction of
                   that. The dashboard keeps the two measurements visibly
                   separate because conflating them would be dishonest.
@@ -322,7 +323,7 @@ export default async function AnalyticsPage() {
                   <strong className="text-foreground">
                     Almost all traffic is the homepage.
                   </strong>{" "}
-                  That&apos;s why there&apos;s no per-page breakdown here — it
+                  That&apos;s why there&apos;s no per-page breakdown here: it
                   would be a table of one meaningful row. The site&apos;s job is
                   to be found, read, and contacted from a single page.
                 </li>
@@ -331,8 +332,8 @@ export default async function AnalyticsPage() {
                     Privacy-respecting analytics is a solved problem.
                   </strong>{" "}
                   One DynamoDB table, salted daily hashes, no cookies, no raw
-                  IPs — and the dashboard still answers every question I
-                  actually have about my traffic.
+                  IPs. And the dashboard still answers every question I actually
+                  have about my traffic.
                 </li>
               </ul>
             </CardContent>

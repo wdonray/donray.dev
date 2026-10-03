@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { POSTS } from "@/lib/blog";
 
 export const metadata: Metadata = {
-  title: "Blog — donray.dev",
+  title: "Blog | donray.dev",
   description:
     "Notes from Donray Williams on engineering management, frontend leadership, and shipping software.",
 };

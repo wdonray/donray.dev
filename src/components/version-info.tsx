@@ -128,7 +128,7 @@ export default function VersionInfo({
 
   return (
     <div className="w-full max-w-lg space-y-8">
-      {/* Heading — mirrors the SectionHeader accent bar + title */}
+      {/* Heading: mirrors the SectionHeader accent bar + title */}
       <motion.div className="space-y-2" {...fadeInUp}>
         <div className="h-1 w-10 rounded-full bg-primary" aria-hidden="true" />
         <h1 className="text-3xl font-bold tracking-tight">Version</h1>

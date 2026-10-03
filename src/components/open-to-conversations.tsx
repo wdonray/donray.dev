@@ -12,7 +12,7 @@ const CONVERSATIONS = [
     icon: Coffee,
     title: "EM coffee chats",
     description:
-      "Talking shop with other engineering managers — player-coach life, frontend leadership, growing engineers.",
+      "Talking shop with other engineering managers: player-coach life, frontend leadership, growing engineers.",
   },
   {
     icon: GraduationCap,
@@ -43,7 +43,7 @@ const CONVERSATIONS = [
 const EMAIL = "donrayxwilliams@gmail.com";
 
 /**
- * "Open to conversations" — a specific, non-job-seeking availability
+ * "Open to conversations": a specific, non-job-seeking availability
  * section. Donray is employed at Justworks; this routes the right inbound
  * (collaboration, mentorship, speaking) instead of recruiter spam.
  */
@@ -71,7 +71,7 @@ export default function OpenToConversations() {
           variants={fadeInUp}
           className="text-muted-foreground max-w-2xl"
         >
-          I&apos;m happily at Justworks — not looking for a new role. But I am
+          I&apos;m happily at Justworks. Not looking for a new role, but I am
           always up for good conversations with peers, mentees, and conference
           organizers. Based in the NYC metro area (ET), working hybrid.
         </motion.p>
@@ -98,7 +98,7 @@ export default function OpenToConversations() {
                 <Mail className="size-5 text-primary" aria-hidden="true" />
                 <h3 className="font-semibold">Say hello</h3>
                 <p className="text-sm text-muted-foreground">
-                  The fastest way to reach me is email — I read everything.
+                  The fastest way to reach me is email. I read everything.
                 </p>
                 <a
                   href={`mailto:${EMAIL}`}
