@@ -19,6 +19,15 @@ const Experience = dynamic(() => import("@/components/experience"), {
   ),
 });
 
+const OpenToConversations = dynamic(
+  () => import("@/components/open-to-conversations"),
+  {
+    loading: () => (
+      <div className="h-[400px] animate-pulse bg-muted rounded-lg" />
+    ),
+  },
+);
+
 export default function Home() {
   return (
     <div className="flex flex-col gap-24 max-w-7xl mx-auto px-6 lg:px-8">
@@ -26,6 +35,7 @@ export default function Home() {
       <Skills />
       <Projects />
       <Experience />
+      <OpenToConversations />
     </div>
   );
 }

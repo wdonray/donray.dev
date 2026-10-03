@@ -51,7 +51,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   LinkedIn/Twitter/Slack link previews — which is where recruiters first
   see it. Cheap, permanent.
 - **Effort:** Small. **Value:** MEDIUM-HIGH.
-- **Status:** IN PROGRESS (PR #38)
+- **Status:** DONE (PR #38)
 
 ### 4. "Open to conversations" section
 
@@ -63,7 +63,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   for" section beats a bare badge — it routes the right inbound in and
   filters noise out. Directly serves the "reach out to me faster" goal.
 - **Effort:** Small. **Value:** MEDIUM-HIGH.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #39)
 
 ### 5. Site index for hidden public pages
 
