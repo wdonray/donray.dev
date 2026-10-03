@@ -5,6 +5,7 @@ import readingTime from "reading-time";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import remarkGfm from "remark-gfm";
 
 const CONTENT_DIR = path.join(process.cwd(), "src/content/blog");
 
@@ -68,10 +69,11 @@ export function getPostContent(slug: string): string {
   return content;
 }
 
-/** Shared MDX compile options (syntax highlighting, heading anchors). */
+/** Shared MDX compile options (GFM tables, syntax highlighting, heading anchors). */
 export function getMdxOptions() {
   return {
     mdxOptions: {
+      remarkPlugins: [remarkGfm],
       rehypePlugins: [
         rehypeSlug,
         [rehypePrettyCode, { theme: "github-light" }],
