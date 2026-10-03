@@ -12,7 +12,9 @@ test.describe("uses page", () => {
     // rendering regression that empties the page fails here.
     const groups = ["Editors & AI", "Languages", "Frontend"];
     for (const name of groups) {
-      const section = page.getByRole("region", { name });
+      const section = page.locator("section", {
+        has: page.getByRole("heading", { name }),
+      });
       await expect(section).toBeVisible();
       await expect(section.locator("dt").first()).not.toBeEmpty();
     }
