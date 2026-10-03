@@ -1,6 +1,6 @@
 // Motion is intentionally fast and subtle: short travel, quick easing, no
 // compounding per-item delays. Reduced-motion is handled globally via
-// <MotionConfig reducedMotion="user"> — transforms are dropped and only
+// <MotionConfig reducedMotion="user">, transforms are dropped and only
 // opacity remains for users who request reduced motion.
 
 const DURATION = 0.25;

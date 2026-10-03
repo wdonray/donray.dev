@@ -188,7 +188,7 @@ describe("isRateLimited", () => {
       isRateLimited("test-key", 1000 + i);
     }
     expect(isRateLimited("test-key", 2000)).toBe(true);
-    // 61 seconds later — window has slid past the burst.
+    // 61 seconds later: window has slid past the burst.
     expect(isRateLimited("test-key", 62_000)).toBe(false);
   });
 
