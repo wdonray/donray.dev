@@ -19,7 +19,10 @@ a Next.js app with a public analytics dashboard backed by DynamoDB.
   bots filtered, daily uniques via salted SHA-256(IP + UA + day) — raw IPs
   never stored, ~400-day TTL.
 - **SEO/AI visibility:** `robots.txt` + `sitemap.xml` (Next.js routes),
-  Person + FAQPage JSON-LD, Open Graph/Twitter cards, `llms.txt`
+  Person + FAQPage + BlogPosting JSON-LD, Open Graph/Twitter cards,
+  `llms.txt`, RSS feed
+- **Security:** HSTS, CSP, X-Frame-Options DENY, and other hardening headers
+  in `next.config.ts`; per-IP rate limiting on `/api/track`
 - **Hosting:** AWS Amplify (us-east-1), auto-builds on every release
 - **CI:** GitHub Actions — Build, Lint (oxlint + oxfmt), Unit (Vitest),
   E2E (Playwright + axe-core WCAG 2.2 AA). All four required to merge.
@@ -42,10 +45,17 @@ src/
 │   ├── page.tsx              # Homepage: Hero, Skills, Projects,
 │   │                         #   Experience, Open to conversations, FAQ
 │   ├── analytics/page.tsx    # Public analytics dashboard
+│   ├── blog/
+│   │   ├── page.tsx          # Blog index
+│   │   └── [slug]/page.tsx   # Individual posts + BlogPosting JSON-LD
+│   ├── projects/[slug]/page.tsx  # Per-project detail pages
+│   ├── uses/page.tsx         # /uses: tools and setup
 │   ├── version/page.tsx      # Running build vs latest release
-│   ├── api/track/route.ts    # Page-view ingestion endpoint
+│   ├── api/track/route.ts    # Page-view ingestion endpoint (rate-limited)
 │   ├── robots.ts             # /robots.txt (allows AI crawlers)
-│   └── sitemap.ts            # /sitemap.xml
+│   ├── rss.xml/route.ts      # /rss.xml feed
+│   ├── sitemap.ts            # /sitemap.xml
+│   └── llms.txt/route.ts     # /llms.txt for AI crawlers
 ├── components/
 │   ├── ui/                   # shadcn/ui primitives
 │   ├── hero.tsx              # ...
@@ -53,9 +63,12 @@ src/
 │   └── faq.tsx               # FAQ + FAQPage JSON-LD
 ├── lib/
 │   ├── analytics.ts          # DynamoDB tracking + summary queries
-│   └── schema.ts             # JSON-LD builders (Person, FAQPage)
+│   ├── blog.ts               # Blog post definitions
+│   ├── projects.ts           # Project definitions
+│   └── schema.ts             # JSON-LD builders (Person, FAQPage, BlogPosting)
 e2e/
-└── a11y.spec.ts              # axe-core WCAG 2.2 AA scan of every page
+├── a11y.spec.ts              # axe-core WCAG 2.2 AA scan of every page
+└── security.spec.ts          # Security header assertions
 ```
 
 ## Design decisions
