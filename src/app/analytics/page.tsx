@@ -226,8 +226,8 @@ export default async function AnalyticsPage() {
             <CardContent>
               <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
                 <li>
-                  A <strong className="text-foreground">page view</strong> is
-                  one real page load in a browser. Images, scripts, and
+                  A <strong className="text-foreground">page view</strong>
+                  &nbsp;is one real page load in a browser. Images, scripts, and
                   stylesheets don&apos;t count — only the page itself.
                 </li>
                 <li>
