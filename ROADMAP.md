@@ -17,6 +17,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 ## Tier 1 — Do first (small effort, high leverage)
 
 ### 1. robots.txt + sitemap.xml
+
 - **What:** Add `app/robots.ts` and `app/sitemap.ts` (Next.js built-ins).
   Sitemap lists `/`, `/analytics`, `/version` (+ future pages). Robots allows
   all crawlers including AI crawlers (GPTBot, ClaudeBot, PerplexityBot).
@@ -29,6 +30,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 2. JSON-LD Person schema
+
 - **What:** Embed `Person` structured data in the homepage `<head>`:
   name, jobTitle "Engineering Manager", worksFor Justworks, `sameAs`
   GitHub + LinkedIn, `knowsAbout` skill list.
@@ -41,6 +43,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 3. Richer title / meta / OG tags
+
 - **What:** Per-page `<title>`, meta description, Open Graph + Twitter card
   tags. Homepage title gains location ("New York / New Jersey") and
   player-coach / frontend-leadership keywords. Add OG image.
@@ -51,6 +54,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 4. "Open to conversations" section
+
 - **What:** A compact homepage section (not a job-seeking badge — Donray is
   employed and the job search is on hold): EM coffee chats, frontend
   mentorship, conference speaking, podcast guesting, peer conversations.
@@ -62,6 +66,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 5. Site index for hidden public pages
+
 - **What:** Make `/analytics` and `/version` discoverable. Footer already
   links `/analytics`; add `/version` alongside it (and confirm both are in
   the sitemap from item 1). Consider a small "Site" footer cluster.
@@ -75,6 +80,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 ## Tier 2 — Do next (medium effort, highest citation/inbound value)
 
 ### 6. Justworks case study page (metric-led)
+
 - **What:** Dedicated `/work/justworks-onboarding` (or `/projects/...`)
   page: problem → Donray's role/decisions → architecture → outcomes.
   Verified metrics available: new member onboarding flow — 6,800+ people
@@ -92,6 +98,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 7. FAQ section + FAQPage schema
+
 - **What:** Homepage or dedicated FAQ block: "What do you do at Justworks?",
   "Are you open to consulting / speaking / mentoring?", "What's your
   stack?", "Where are you based?" — direct answers first (40–60 words),
@@ -102,6 +109,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 8. llms.txt (+ llms-full.txt)
+
 - **What:** Add `/llms.txt` following the llmstxt.org spec (H1 header,
   link map of key pages).
 - **Why (honest):** Mostly hype — Google ignores it for Search, one study
@@ -113,6 +121,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 9. Cal.com / Calendly coffee-chat link
+
 - **What:** 15–30 min booking link next to the email CTA.
 - **Why:** Practitioner consensus ("zero friction") for collaborators and
   mentees; hard conversion data is thin.
@@ -121,6 +130,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   ship a dead placeholder.
 
 ### 10. donray.dev README quality pass
+
 - **What:** Restructure the repo README: one-liner → problem → demo →
   stack & why → setup → "what I'd do differently." Add architecture notes
   (analytics pipeline, release flow).
@@ -135,6 +145,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 ## Tier 3 — Content engine (compounding returns, larger effort)
 
 ### 11. Blog (infrastructure + first post)
+
 - **What:** `/blog` index + `/blog/[slug]` pages with `BlogPosting`
   JSON-LD, RSS. First post drafted from verified experience (EM
   player-coach topics, frontend onboarding/billing lessons).
@@ -145,6 +156,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 12. /uses page
+
 - **What:** The classic uses page: editor, stack, desk, tools.
 - **Why:** Low-effort traffic magnet; quotable for "what does X use" AI
   queries.
@@ -152,6 +164,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 13. Analytics write-up
+
 - **What:** Short write-up of the public analytics page: what is tracked,
   what was learned, decisions it drove (e.g., the CloudWatch vs real
   page-view distinction).
@@ -161,6 +174,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 14. Per-project detail pages (/projects/[slug])
+
 - **What:** Detail pages for each project instead of cards-only: problem,
   role, decisions, metrics, quotable stat lines.
 - **Why:** Programmatic pages = discoverability surface; per-page citable
@@ -169,6 +183,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Status:** TODO
 
 ### 15. Testimonial mini-stories
+
 - **What:** 2–3 verifiable testimonials (former reports, peers): before →
   what changed → outcome, with name/role/LinkedIn link. Placed near the
   contact CTA.
@@ -179,6 +194,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   2–3 (or introductions). Will not fabricate.
 
 ### 16. Distribution hygiene
+
 - **What:** Link donray.dev from GitHub profile + pinned repos, LinkedIn
   Featured + About, dev.to profile (cross-post blog), Peerlist/Wellfound.
 - **Why:** "The portfolio converts; LinkedIn/GitHub discover" — backlinks
