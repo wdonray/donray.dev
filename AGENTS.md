@@ -61,6 +61,7 @@ If not, don't publish. AI can write generic advice; only he has his
 experience.
 
 **Structure (for humans and AI engines):**
+
 - Answer the core question in the first 40-60 words (featured snippets + AI citations).
 - Direct, self-contained answer in the first sentence or two of every section, before context or story. Each section should be quotable standalone.
 - 3-5 H2 sections, 1,000-2,000 words. Table of contents is automatic.
@@ -68,6 +69,7 @@ experience.
 - A "Citable Statistics" table where real numbers exist (his onboarding metrics, review counts). Statistics lift AI citation visibility ~30-40%.
 
 **Voice (anti-slop):**
+
 - First person, specific stories, real constraints (team size, deadlines, trade-offs). "With a team of 3 owning onboarding for 1,365 companies" beats generic advice every time.
 - No AI tells: no em dashes, no "delve/landscape/tapestry", no "not just X, but Y", no rule-of-three adjective lists, no throat-clearing intros.
 - Opinions with teeth beat safe takes. Failures and retrospectives are un-sloppable.
