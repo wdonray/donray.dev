@@ -95,7 +95,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Evidence:** 2026 portfolio guides consensus; Princeton GEO paper
   (Aggarwal et al., KDD 2024).
 - **Effort:** Medium. **Value:** HIGH.
-- **Status:** TODO
+- **Status:** IN PROGRESS (PR #43)
 
 ### 7. FAQ section + FAQPage schema
 
@@ -118,7 +118,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   2026 Agentic Browsing audit checks for it. ~1 hour of work, so cheap
   insurance. Never pay a vendor for this.
 - **Effort:** Small. **Value:** LOW-MEDIUM.
-- **Status:** IN PROGRESS (PR #41)
+- **Status:** DONE (PR #41)
 
 ### 9. Cal.com / Calendly coffee-chat link
 

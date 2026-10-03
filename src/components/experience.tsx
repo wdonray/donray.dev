@@ -18,6 +18,7 @@ interface ExperienceItem {
     title: string;
     period: string;
     description?: string;
+    caseStudyUrl?: string;
   }[];
 }
 
@@ -97,6 +98,14 @@ function JobEntry({
                   {pos.description}
                 </p>
               )}
+              {pos.caseStudyUrl && (
+                <a
+                  href={pos.caseStudyUrl}
+                  className="mt-2 inline-block text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
+                >
+                  Read the case study →
+                </a>
+              )}
             </div>
           ))}
         </div>
@@ -158,6 +167,7 @@ export default function Experience() {
           period: "Jun 2026 – Present",
           description:
             "Player-coach leading frontend for onboarding and billing (team of 3). Shipped the member onboarding flow used by 6,800+ people across 1,365 companies in 30 days.",
+          caseStudyUrl: "/work/justworks-onboarding",
         },
         {
           title: "Senior Software Engineer",
