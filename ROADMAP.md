@@ -153,7 +153,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   decent post every 2–3 weeks compounds"). Google's guidance rewards
   first-hand, non-commodity expertise — Donray's natural lane.
 - **Effort:** Medium-Large. **Value:** HIGH.
-- **Status:** IN PROGRESS (PR #52)
+- **Status:** DONE (PR #52)
 
 ### 12. /uses page
 
@@ -180,7 +180,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
 - **Why:** Programmatic pages = discoverability surface; per-page citable
   passages = GEO surface.
 - **Effort:** Medium. **Value:** MEDIUM.
-- **Status:** IN PROGRESS (PR #51)
+- **Status:** DONE (PR #51)
 
 ### 15. Testimonial mini-stories
 
