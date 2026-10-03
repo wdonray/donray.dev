@@ -79,7 +79,7 @@ export default function OpenToConversations() {
           {CONVERSATIONS.map((item, index) => (
             <motion.div key={item.title} variants={fadeInUp} custom={index}>
               <Card className="h-full">
-                <CardContent className="pt-6 space-y-2">
+                <CardContent className="space-y-2">
                   <item.icon
                     className="size-5 text-primary"
                     aria-hidden="true"
@@ -94,7 +94,7 @@ export default function OpenToConversations() {
           ))}
           <motion.div variants={fadeInUp} custom={CONVERSATIONS.length}>
             <Card className="h-full border-primary/50 bg-primary/5">
-              <CardContent className="pt-6 space-y-2">
+              <CardContent className="space-y-2">
                 <Mail className="size-5 text-primary" aria-hidden="true" />
                 <h3 className="font-semibold">Say hello</h3>
                 <p className="text-sm text-muted-foreground">
