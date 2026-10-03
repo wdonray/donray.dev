@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Uses — donray.dev",
+  title: "Uses | donray.dev",
   description:
     "The tools Donray Williams uses to build: editors, languages, frameworks, and infrastructure.",
 };
@@ -34,7 +34,7 @@ const GROUPS: { title: string; items: { name: string; note: string }[] }[] = [
   {
     title: "Frontend",
     items: [
-      { name: "Vue", note: "Primary framework — Justworks and this site." },
+      { name: "Vue", note: "Primary framework: Justworks and this site." },
       { name: "Vite", note: "Build tooling." },
       { name: "Vitest", note: "Unit testing." },
       {
@@ -59,7 +59,7 @@ const GROUPS: { title: string; items: { name: string; note: string }[] }[] = [
       { name: "AWS", note: "Amplify for hosting, S3 for assets." },
       {
         name: "GitHub Actions",
-        note: "CI — build, lint, unit, and E2E on every PR.",
+        note: "CI: build, lint, unit, and E2E on every PR.",
       },
       { name: "Datadog", note: "Observability at work." },
     ],

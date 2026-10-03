@@ -43,8 +43,8 @@ export default function Hero() {
             className={`${pSize} text-muted-foreground max-w-xl`}
             {...fadeInUpWithDelay(0.1)}
           >
-            I lead frontend for onboarding and billing at Justworks — a
-            player-coach for a team of 3, with{" "}
+            I lead frontend for all things onboarding and billing at Justworks,
+            a player-coach for a team of 3, with{" "}
             <span className="font-bold">{yearsSince2019}+ years</span> turning
             ideas into polished products.
           </motion.p>

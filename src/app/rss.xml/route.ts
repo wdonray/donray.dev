@@ -14,7 +14,7 @@ export async function GET() {
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>donray.dev — Blog</title>
+    <title>donray.dev | Blog</title>
     <link>https://www.donray.dev/blog</link>
     <description>Notes from Donray Williams on engineering management, frontend leadership, and shipping software.</description>
     <language>en-us</language>

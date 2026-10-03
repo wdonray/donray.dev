@@ -16,7 +16,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <title>
-          Donray Williams — Engineering Manager | Frontend Leadership, NYC Metro
+          Donray Williams | Engineering Manager | Frontend Leadership, NYC Metro
         </title>
         <meta
           name="description"
@@ -26,7 +26,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#f7f3e8" />
         <meta
           property="og:title"
-          content="Donray Williams — Engineering Manager"
+          content="Donray Williams | Engineering Manager"
         />
         <meta
           property="og:description"
@@ -43,12 +43,12 @@ export default function RootLayout({
         <meta property="og:image:height" content="630" />
         <meta
           property="og:image:alt"
-          content="Donray Williams — Engineering Manager"
+          content="Donray Williams | Engineering Manager"
         />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Donray Williams — Engineering Manager"
+          content="Donray Williams | Engineering Manager"
         />
         <meta
           name="twitter:description"

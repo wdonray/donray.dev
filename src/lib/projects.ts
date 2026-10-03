@@ -25,7 +25,7 @@ export const PROJECTS: ProjectDetail[] = [
     image: "/pico-domains.png",
     imageAlt: "Screenshot of pico.domains website",
     details: [
-      "Short domains are scarce and hard to shop for — most search tools are built for full-length names. pico.domains is a focused search engine for the ultra-short end of the market.",
+      "Short domains are scarce and hard to shop for. Most search tools are built for full-length names. pico.domains is a focused search engine for the ultra-short end of the market.",
       "It curates available concise domains and hands off to trusted marketplaces for purchase, keeping the search experience fast and the commercial side with the specialists.",
       "Built with Nuxt.js and TypeScript on Vite, with internal libraries for the domain-data pipeline.",
     ],
@@ -43,7 +43,7 @@ export const PROJECTS: ProjectDetail[] = [
     imageAlt: "Screenshot of Cyclei application",
     details: [
       "Cyclei tackles the reusable-packaging problem: getting people to actually return containers. The product pairs curbside collection of reusables with regular waste pickup.",
-      "As the founding frontend engineer, Donray built the customer-facing application — the interface through which users schedule pickups and track their impact.",
+      "As the founding frontend engineer, Donray built the customer-facing application: the interface through which users schedule pickups and track their impact.",
       "Vue 3 with TypeScript and GraphQL, built on Vite.",
     ],
   },
@@ -60,7 +60,7 @@ export const PROJECTS: ProjectDetail[] = [
     imageAlt: "Screenshot of Hide Zero Cards website",
     details: [
       "A hands-on math tool for fourth graders learning place value. Students drag number cards and see color-coded place-value components respond.",
-      "Built with Next.js, React, and shadcn/ui — the interaction design carries the pedagogy, so the UI had to be immediate and forgiving.",
+      "Built with Next.js, React, and shadcn/ui. The interaction design carries the pedagogy, so the UI had to be immediate and forgiving.",
     ],
   },
   {
@@ -73,7 +73,7 @@ export const PROJECTS: ProjectDetail[] = [
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
     github: "https://github.com/wdonray/donray.dev",
     details: [
-      "This site. Static-first Next.js with a public, privacy-respecting analytics dashboard backed by DynamoDB — one page load per page per session, bots filtered, no cookies, no raw IPs stored.",
+      "This site. Static-first Next.js with a public, privacy-respecting analytics dashboard backed by DynamoDB: one page load per page per session, bots filtered, no cookies, no raw IPs stored.",
       "Accessibility is a CI gate: every page is axe-core scanned against WCAG 2.2 AA, and merging is blocked until it passes.",
       "Discovery layer: robots.txt and sitemap.xml, Person and FAQPage JSON-LD, Open Graph cards, and llms.txt.",
     ],
