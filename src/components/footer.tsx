@@ -41,6 +41,12 @@ export default function Footer() {
             >
               Analytics
             </Link>
+            <Link
+              href="/version"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Version
+            </Link>
             <nav aria-label="Social links">
               <div className="flex items-center gap-4">
                 {socialLinks.map((social) => (

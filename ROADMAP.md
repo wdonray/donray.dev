@@ -63,7 +63,7 @@ Scrapped items list the reason. Blocked items list exactly what is needed.
   for" section beats a bare badge — it routes the right inbound in and
   filters noise out. Directly serves the "reach out to me faster" goal.
 - **Effort:** Small. **Value:** MEDIUM-HIGH.
-- **Status:** IN PROGRESS (PR #39)
+- **Status:** DONE (PR #39)
 
 ### 5. Site index for hidden public pages
 
