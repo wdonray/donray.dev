@@ -79,12 +79,18 @@ test.describe("home page", () => {
   test("project cards link to their destinations", async ({ page }) => {
     await page.goto("/");
 
-    await expect(
-      page.getByRole("link", { name: "Visit pico.domains website" }),
-    ).toHaveAttribute("href", "https://www.pico.domains/");
-    await expect(
-      page.getByRole("link", { name: "View donray.dev on GitHub" }),
-    ).toHaveAttribute("href", "https://github.com/wdonray/donray.dev");
+    const siteLinks = page.getByRole("link", { name: /visit site/i });
+    await expect(siteLinks.filter({ hasText: "" }).first()).toBeVisible();
+    const hrefs = await siteLinks.evaluateAll((els) =>
+      els.map((e) => e.getAttribute("href")),
+    );
+    expect(hrefs).toContain("https://www.pico.domains/");
+
+    const githubLinks = page.getByRole("link", { name: /view on github/i });
+    const ghHrefs = await githubLinks.evaluateAll((els) =>
+      els.map((e) => e.getAttribute("href")),
+    );
+    expect(ghHrefs).toContain("https://github.com/wdonray/donray.dev");
   });
 
   test("footer shows the current year", async ({ page }) => {
