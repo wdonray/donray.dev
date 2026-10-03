@@ -79,11 +79,23 @@ test.describe("home page", () => {
   test("project cards link to their destinations", async ({ page }) => {
     await page.goto("/");
 
+    const projects = page.locator("#projects");
+    const picoCard = projects
+      .locator("article, div", {
+        has: page.getByText("pico.domains", { exact: true }),
+      })
+      .first();
     await expect(
-      page.getByRole("link", { name: "Visit pico.domains website" }),
+      picoCard.getByRole("link", { name: /visit site/i }),
     ).toHaveAttribute("href", "https://www.pico.domains/");
+
+    const devCard = projects
+      .locator("article, div", {
+        has: page.getByText("donray.dev", { exact: true }),
+      })
+      .first();
     await expect(
-      page.getByRole("link", { name: "View donray.dev on GitHub" }),
+      devCard.getByRole("link", { name: /view on github/i }),
     ).toHaveAttribute("href", "https://github.com/wdonray/donray.dev");
   });
 
