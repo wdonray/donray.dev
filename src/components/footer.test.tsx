@@ -10,6 +10,15 @@ describe("Footer", () => {
     ).toBeInTheDocument();
   });
 
+  it("links to the site pages", () => {
+    render(<Footer />);
+    const analytics = screen.getByRole("link", { name: "Analytics" });
+    expect(analytics).toHaveAttribute("href", "/analytics");
+
+    const version = screen.getByRole("link", { name: "Version" });
+    expect(version).toHaveAttribute("href", "/version");
+  });
+
   it("links to social profiles", () => {
     render(<Footer />);
     const github = screen.getByRole("link", { name: "Visit GitHub profile" });
