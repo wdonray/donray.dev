@@ -29,12 +29,12 @@ export default function Footer() {
       className="border-t border-border mt-16 bg-background"
       role="contentinfo"
     >
-      <div className="w-full px-4 md:px-8 py-4">
-        <div className="flex flex-row items-center justify-between gap-4">
+      <div className="w-full px-4 md:px-8 py-6 md:py-4">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-4">
           <div className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Donray Williams
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6 md:gap-4">
             <Link
               href="/analytics"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
