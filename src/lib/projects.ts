@@ -64,15 +64,15 @@ export const PROJECTS: ProjectDetail[] = [
       "Interactive place-value tool for fourth-grade students. Type any number up to one billion and break it into draggable, color-coded digit cards, with a dedicated mode for investigating what zero digits really mean.",
     role: "Builder",
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui"],
+    url: "https://hidezerocards.org",
     github: "https://github.com/wdonray/c-hide-zero-cards",
-    status: "discontinued",
     image: "/hide-zero-cards.png",
     imageAlt: "Screenshot of Hide Zero Cards website",
     details: [
       "Hide Zero Cards turns any whole number from 1 to one billion into a set of draggable cards, one per digit, each labeled with the digit's true value. Type 5,432 and you get cards reading 5,000, 400, 30, and 2, color-coded by place group: reds for ones through hundreds, yellow for thousands, green for millions, blue for billions. Dragging the cards apart physically separates a number into its place-value components.",
       "The namesake interaction is the zero toggle. A zero digit becomes a placeholder card reading 0,000 instead of a value card, and the Zero toolbar button hides or shows those placeholders, framing the difference between having no digit and having a zero digit. A dice button rolls random numbers with an adjustable range and a Zero-focus mode that keeps re-rolling until the number contains a zero, so practice deliberately exercises the concept.",
       "A Number Forms dialog renders the same number four ways: Standard, Word (through a hand-rolled number-to-words converter), Unit (5 thousands, 4 hundreds, 3 tens, 2 ones), and Expanded (5,000 + 400 + 30 + 2). An in-app guide adds five classroom activities and assessment checks, with a first-visit welcome dialog and a celebratory toast when a student builds their first number.",
-      "Built with Next.js 15, React 19, TypeScript, and shadcn/ui. Dragging is a hand-rolled hook on Pointer Events with pointer capture rather than a drag-and-drop library, so cards respond identically to mouse, touch, and stylus. The site has been discontinued; the full source remains public on GitHub.",
+      "Built with Next.js 15, React 19, TypeScript, and shadcn/ui. Dragging is a hand-rolled hook on Pointer Events with pointer capture rather than a drag-and-drop library, so cards respond identically to mouse, touch, and stylus. The full source is public on GitHub.",
     ],
     features: [
       "Number input from 1 to 1,000,000,000 with a mobile numeric keyboard and thousands separators",
@@ -108,7 +108,7 @@ export const PROJECTS: ProjectDetail[] = [
       {
         question: "Is Hide Zero Cards still available?",
         answer:
-          "No, the site has been discontinued. The full source code remains public on GitHub.",
+          "Yes, the site is live at hidezerocards.org, and the full source code is public on GitHub.",
       },
     ],
   },

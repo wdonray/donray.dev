@@ -207,6 +207,7 @@ export default function Projects() {
       subtitle: "Educational Place Value Tool",
       description:
         "Interactive place-value tool for fourth-grade students. Type any number up to one billion and break it into draggable, color-coded digit cards.",
+      url: "https://hidezerocards.org",
       github: "https://github.com/wdonray/c-hide-zero-cards",
       technologies: [
         "Next.js",
