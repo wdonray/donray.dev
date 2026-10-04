@@ -26,12 +26,10 @@ export interface BlogHeading {
 
 /** All posts, newest first. */
 export function getPosts(): BlogPostMeta[] {
-  const files = fs
-    .readdirSync(CONTENT_DIR)
-    .filter((f) => f.endsWith(".mdx"))
-    .sort()
-    .reverse();
-  return files.map((file) => getPostMeta(file.replace(/\.mdx$/, "")));
+  const files = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith(".mdx"));
+  return files
+    .map((file) => getPostMeta(file.replace(/\.mdx$/, "")))
+    .sort((a, b) => b.date.localeCompare(a.date));
 }
 
 export const POSTS = getPosts();

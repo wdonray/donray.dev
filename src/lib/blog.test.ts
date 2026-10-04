@@ -25,6 +25,11 @@ describe("blog", () => {
     expect(getPost("nonexistent")).toBeUndefined();
   });
 
+  it("sorts POSTS newest first by frontmatter date", () => {
+    const dates = POSTS.map((p) => p.date);
+    expect([...dates].sort().reverse()).toEqual(dates);
+  });
+
   it("extracts headings for the table of contents", () => {
     const headings = getHeadings("review-to-learn");
     expect(headings.length).toBeGreaterThan(0);
