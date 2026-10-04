@@ -37,13 +37,13 @@ describe("Projects", () => {
 
   it("links the repo-only project to GitHub", () => {
     render(<Projects />);
-    const repo = screen.getByRole("link", {
+    const links = screen.getAllByRole("link", {
       name: /view on github/i,
     });
-    expect(repo).toHaveAttribute(
-      "href",
-      "https://github.com/wdonray/donray.dev",
+    const repo = links.find(
+      (l) => l.getAttribute("href") === "https://github.com/wdonray/donray.dev",
     );
+    expect(repo).toBeDefined();
   });
 
   it("renders technology badges", () => {
