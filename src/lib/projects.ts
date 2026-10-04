@@ -14,8 +14,8 @@ export interface ProjectDetail {
   github?: string;
   image?: string;
   imageAlt?: string;
-  /** Omitted for active projects; "discontinued" renders a status badge. */
-  status?: "discontinued";
+  /** Omitted for active projects. */
+  status?: "discontinued" | "maintenance";
   details: string[];
   features?: string[];
   faq?: ProjectFaq[];
@@ -42,18 +42,53 @@ export const PROJECTS: ProjectDetail[] = [
   {
     slug: "cyclei",
     title: "Cyclei",
-    subtitle: "Sustainability Made Simple",
+    subtitle: "Reusable Packaging Pickup Service",
     description:
-      "Curbside collection for reusable containers alongside regular waste. Increases adoption and return rates for sustainable packaging.",
+      "Customer web app for a curbside reusable-packaging pickup service. Covers the full lifecycle: onboarding and activation, bag tracking, an impact dashboard, a rewards wallet with payouts, and account management.",
     role: "Founding Frontend Engineer",
     stack: ["Vue 3", "TypeScript", "Vite", "GraphQL", "CSS", "HTML5"],
-    url: "https://app.cyclei.eco/",
+    status: "discontinued",
     image: "/cyclei.png",
     imageAlt: "Screenshot of Cyclei application",
     details: [
-      "Cyclei tackles the reusable-packaging problem: getting people to actually return containers. The product pairs curbside collection of reusables with regular waste pickup.",
-      "As the founding frontend engineer, Donray built the customer-facing application: the interface through which users schedule pickups and track their impact.",
-      "Vue 3 with TypeScript and GraphQL, built on Vite.",
+      "Cyclei pairs curbside collection of reusable containers with regular waste pickup. Customers sign up, pay a one-time activation fee, buy from partner businesses offering reusable packaging, fill a Cyclei bag, and clip it to their recycling bin handle on trash day. A fresh return bag is delivered to their door, and the account shows returned reusables plus deposits or rewards.",
+      "As the founding frontend engineer, Donray built the customer-facing web app: multi-step onboarding with address validation and Stripe setup intents, a dashboard with an impact tracker counting single-use containers saved and a wallet balance card, bag tracking across collected, sorted, and lost states, cart checkout with coupons and invoices, wallet payouts with pending, paid, and failed statuses, and account management with pickup pause and resume.",
+      "The app is Vue 3.5 with Vite 7 and TypeScript, using Apollo Client GraphQL against a Django backend, vee-validate forms with a custom input component library, and a published Vue component library for the UI system. Vitest unit tests and ESLint/Stylelint gates run in CI. The service has since been discontinued.",
+    ],
+    features: [
+      "Multi-step onboarding: email, address validation, confirmation, Stripe payment",
+      "Dashboard with impact tracker (single-use containers saved) and wallet balance",
+      "Bag tracking across collected, sorted, lost, assigned, and delivered states",
+      "Cart checkout with activation fees, coupon codes, and invoices",
+      "Wallet payouts with pending, paid, and failed statuses",
+      "Account management: settings, addresses, pickup pause and resume",
+      "Staff admin section with route management and QR-code bag scanning",
+    ],
+    faq: [
+      {
+        question: "How did Cyclei's pickup service work?",
+        answer:
+          "Customers signed up for curbside collection, paid a one-time activation fee, bought from partner businesses offering reusable packaging, filled a Cyclei bag, and clipped it to their recycling bin handle on trash day. A fresh return bag was then delivered to their door.",
+      },
+      {
+        question: "How did customers track their environmental impact?",
+        answer:
+          "The dashboard showed a running count of single-use containers saved, alongside a wallet balance reflecting deposits and rewards earned from returned containers.",
+      },
+      {
+        question: "Could customers cash out their rewards?",
+        answer:
+          "Yes. The payout section let users request payouts of their wallet balance to a chosen destination, with request statuses of pending, paid, or failed.",
+      },
+      {
+        question: "What was the app built with?",
+        answer:
+          "Vue 3 and Vite with TypeScript, GraphQL via Apollo Client, Stripe for payments, vee-validate forms, and a published Vue component library, with Vitest unit tests and ESLint/Stylelint gates.",
+      },
+      {
+        question: "Is Cyclei still operating?",
+        answer: "No, the service has been discontinued.",
+      },
     ],
   },
   {

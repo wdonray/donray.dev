@@ -193,9 +193,9 @@ export default function Projects() {
     {
       slug: "cyclei",
       title: "Cyclei",
-      subtitle: "Sustainability Made Simple",
+      subtitle: "Reusable Packaging Pickup Service",
       description:
-        "Curbside collection for reusable containers alongside regular waste. Increases adoption and return rates for sustainable packaging.",
+        "Customer web app for a curbside reusable-packaging pickup service. Onboarding, bag tracking, impact dashboard, and a rewards wallet with payouts.",
       url: "https://app.cyclei.eco/",
       technologies: ["Vue3", "CSS", "HTML5", "TypeScript", "Vite", "GraphQL"],
       image: "/cyclei.png",
