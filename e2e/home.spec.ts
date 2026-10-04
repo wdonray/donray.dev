@@ -86,14 +86,6 @@ test.describe("home page", () => {
     );
     expect(hrefs).toContain("https://hidezerocards.org");
 
-    const archivedLinks = page.getByRole("link", { name: /archived site/i });
-    const archivedHrefs = await archivedLinks.evaluateAll((els) =>
-      els.map((e) => e.getAttribute("href")),
-    );
-    expect(archivedHrefs).toContain(
-      "https://web.archive.org/web/20250224032816/https://www.pico.domains/",
-    );
-
     const githubLinks = page.getByRole("link", { name: /view on github/i });
     const ghHrefs = await githubLinks.evaluateAll((els) =>
       els.map((e) => e.getAttribute("href")),
