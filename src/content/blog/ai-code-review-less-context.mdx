@@ -1,0 +1,95 @@
+---
+title: "I Made Our AI Code Reviewer Dumber. It Got Better."
+date: "2026-10-04"
+excerpt: "I rolled out Claude code review to my team of 3. The highest-leverage change was subtraction: a shorter checklist, less context, and every rule shipped with its own off-switch."
+---
+
+I rolled out Claude code review to my team, and the most useful thing I did was make the bot dumber. Shorter checklist, walled off from our author guide, everything lint could catch removed from its list. Noise dropped. Most teams do the opposite: more context, more rules, then wonder why every PR comes back with confident suggestions about code it doesn't understand.
+
+## Give the bot less, not more
+
+If your AI reviewer is noisy, the fix is almost never a better prompt. It's a shorter list. Ours reads one short checklist and nothing else, and the list itself says: don't invent rules that aren't here.
+
+In September I replaced open-ended review guidance with that single checklist. The top tells the bot what it reads and what it skips: skip anything lint already reports, skip e2e-only concerns, comment inline, and never flag something because it looks suspicious. That last line is the whole game. A bot with permission to freelance will freelance.
+
+A month earlier I'd learned the other half. We added two ESLint rules and wrote the guidance in the author guide, the doc humans read. The bot's list stayed untouched. Taste rules live in the author guide or nowhere at all. One product-specific block got deleted outright rather than taught to the bot. The principle: when a deterministic tool can catch it, keep it off the bot's list. The bot should never compete with lint.
+
+What surprised me is that I'd started by assuming a good base prompt was enough. It was sure and wrong about our code. A generic reviewer once told us to wrap something in try/catch because it didn't know our stack. Every round of added context made the suggestions more confident, not more correct. So I went the other way and walled the bot off from the author guide entirely. Noise dropped when it read less.
+
+To be clear about the boundary: the generator gets the full picture. The agent writing the code should have our stack, our conventions, everything. The reviewer is a different job with a different context budget: the short list, nothing else.
+
+This matches what researchers found this year. A study of repository context files for coding agents (Gloaguen et al., 2026) found they don't generally improve task success rates, while raising inference cost over 20%. Their sharpest negative finding was about overviews specifically: repository overviews didn't help agents find relevant files any faster. Our author guide is exactly that kind of overview, which is why walling it off wasn't just a hunch.
+
+But the same study found that specific, non-standard instructions are well followed. Agents used a mentioned tool 1.6 times per task versus almost never when it went unmentioned. That's the mechanism behind the short list: the bot obeys everything on it, including the bad lines. Every rule also has a measured price, 10 to 22 percent more reasoning tokens. And hand-tuned beats generated: developer-written files beat LLM-generated ones by 7 percent on task success. Our list was tuned from eight months of real noise. An auto-generated review prompt is the thing that doesn't work.
+
+## Every rule ships with its own off-switch
+
+Every rule on the bot's list carries an explicit when-not-to-flag. The guard ships with the rule, the same day the noise appears, not as cleanup later.
+
+The rule that taught me this fired twice in twenty minutes. On a banner PR, the bot flagged our data fetch as firing on page mount unless we passed an opt-out flag. It said the page would hit the endpoint on every load, even for viewers who shouldn't trigger it. That premise was wrong. Our fetch helper stays idle until you call it. There was no eager request to opt out of.
+
+Twenty minutes later, same wrong flag on a second PR. Repeating noise, not a one-off. And here's the uncomfortable part: a human had made the same wrong call weeks earlier, so the wrong expectation was already in the air. The bot didn't invent the confusion. It amplified it.
+
+That evening I added one guard line to the one file the bot reads: this helper does not fetch until called, do not flag a missing opt-out as an eager request. That turned "missing option" from a finding into an explicit do-not-flag. One line, and the whole class of noise died.
+
+Since then, every narrow rule we've added ships the same way, each carrying its false-positive case. And each review run ends with three questions: too noisy, missed pattern, do not flag this here. Style notes go to preferences, repo facts go to memory. Tuning is part of the run, not a project for later.
+
+Some teams track this formally, logging every AI comment as accepted or dismissed and watching the true-positive rate climb week over week. Ours is lighter: three questions, written down. Same mechanism.
+
+And the bot is advisory only. It comments; it never blocks a merge. A noisy gate teaches the team to route around the bot. A noisy comment teaches us to fix the list.
+
+## What I kept human-only
+
+Bots check shape. I check placement. Two patterns stay off the bot's list on purpose, because no checklist line will ever cover them.
+
+Wrong layer, right code. Polling logic sitting in a page that belongs in the middle layer, flagged as a follow-up. A one-off component pulled out too early that should stay inline so it shares state and styles. What I'm catching: does this logic live where its owner can change it. Why the bot never will: that needs cross-file ownership plus what the team already agreed comes next. No checklist line covers "right layer."
+
+Bypassed shared primitive. A custom slot that renders the same with no slot. An old ref shape where the current composable does it shorter. A one-off helper that already exists in the shared kit. What I'm catching: the default already does this, use it. Why the bot never will: it checks that a shape is present, not that the default made your code unneeded. That needs version sense plus reuse judgment across files.
+
+Keep them off the bot's list. The moment you try to encode judgment as rules, you turn judgment into noise.
+
+There's a louder worry behind this one: that AI review erodes engineering judgment across the industry. I think the opposite happens when the split is deliberate. Keeping placement human means the team keeps practicing placement. The judgment doesn't atrophy. It concentrates.
+
+## The small-team math
+
+On a team of 3 with one reviewer, I am the bottleneck. The bot handles the first pass. I spend my few comments on placement, and that's the whole system.
+
+I reviewed about 439 PRs in the window this system has been live. Most are quick approves. The substantive threads cluster hard: about 15 threads across 8 PRs in a 40-PR September scan. That shape is this post in one line.
+
+I built this across February to September, but the version that matters went live in early September. Most of that time was cutting, not writing: a short checklist for the bot, a longer guide for humans, each kept apart on purpose.
+
+One more thing the setup assumes: the author still owns the merge. The bot is a first pass, not a sign-off.
+
+| Measure                             | Value                        |
+| ----------------------------------- | ---------------------------- |
+| PRs reviewed (my own count)         | ~439                         |
+| Substantive threads, Sep 40-PR scan | ~15 across 8 PRs             |
+| Team size                           | 3                            |
+| Build window                        | Feb–Sep 2026, live early Sep |
+
+## FAQ
+
+**Doesn't giving the bot less context make it dumber?**
+It makes it quieter about things it can't know. The author guide still exists; it's for humans. The bot doesn't need our taste to check our shapes.
+
+**Why not just use an off-the-shelf AI reviewer?**
+Generic reviewers don't know our stack, and I watched one give confident wrong advice because of it. The value was never the model. It was the checklist.
+
+**How do you handle false positives?**
+Same day, same commit: every rule ships with its when-not-to-flag. Each run ends asking what was too noisy, and we write it down. The list only shrinks or gets more precise.
+
+**What stays human-only?**
+Placement: the right layer and the right shared piece. Anything needing cross-file ownership or a sense of what the team already decided.
+
+**How long did this take to build?**
+Across February to September, but the live version went up in early September. Most of the time was cutting rules, not writing them.
+
+**Would this work on a bigger team?**
+The principles scale; the specific list doesn't. A bigger team needs more lists with more owners. The closed-list discipline matters more, not less.
+
+Bots check shape. You check placement. Give the bot a short list, tell it exactly when not to flag, and keep the judgment calls for yourself. If you're the bottleneck reviewer on your team, start by deleting half your bot's rules and see what breaks. Probably nothing.
+
+## References
+
+- Gloaguen et al., "Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?", arXiv:2602.11988 (2026). Found that repository context files don't generally improve agent task success rates while raising inference cost over 20%, but that specific, non-standard instructions are well followed. [https://arxiv.org/abs/2602.11988](https://arxiv.org/abs/2602.11988)
+- "AI Code Review at Scale: How We Use Claude to Review Every PR Before Humans See It": a team that tracked true-positive rate from 58% to 81% over six weeks by logging accept/dismiss on every AI comment. [dev.to](https://dev.to/avaneeshyadav/ai-code-review-at-scale-how-we-use-claude-to-review-every-pr-before-humans-see-it-170o)
