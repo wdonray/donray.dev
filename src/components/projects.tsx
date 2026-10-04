@@ -222,9 +222,9 @@ export default function Projects() {
     {
       slug: "donray-dev",
       title: "donray.dev",
-      subtitle: "My Digital Home",
+      subtitle: "Personal Portfolio and Blog",
       description:
-        "Personal portfolio site showcasing projects and skills. Built with modern web technologies for optimal performance.",
+        "Portfolio site and blog. Static-first Next.js with public, privacy-respecting analytics and accessibility as a CI gate.",
       technologies: ["Next.js", "Tailwind CSS", "TypeScript", "Framer Motion"],
       github: "https://github.com/wdonray/donray.dev",
     },

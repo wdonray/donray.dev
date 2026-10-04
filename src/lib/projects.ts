@@ -115,16 +115,41 @@ export const PROJECTS: ProjectDetail[] = [
   {
     slug: "donray-dev",
     title: "donray.dev",
-    subtitle: "My Digital Home",
+    subtitle: "Personal Portfolio and Blog",
     description:
-      "Personal portfolio site showcasing projects and skills. Built with modern web technologies for optimal performance.",
+      "Personal portfolio site and blog. Static-first Next.js with a public, privacy-respecting analytics dashboard, accessibility enforced as a CI gate, and a full discovery layer for human visitors and AI engines.",
     role: "Builder",
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
     github: "https://github.com/wdonray/donray.dev",
     details: [
-      "This site. Static-first Next.js with a public, privacy-respecting analytics dashboard backed by DynamoDB: one page load per page per session, bots filtered, no cookies, no raw IPs stored.",
-      "Accessibility is a CI gate: every page is axe-core scanned against WCAG 2.2 AA, and merging is blocked until it passes.",
-      "Discovery layer: robots.txt and sitemap.xml, Person and FAQPage JSON-LD, Open Graph cards, and llms.txt.",
+      "This site. Static-first Next.js 16 on the App Router with React 19 and TypeScript, styled with Tailwind CSS v4 and shadcn/ui, animated with Framer Motion, hosted on AWS Amplify. Project, experience, and blog sections render from MDX with syntax highlighting, heading anchor links, an automatic table of contents, and reading-time estimates.",
+      "Analytics is public and privacy-respecting: a rate-limited /api/track endpoint and an /analytics dashboard backed by DynamoDB count one page load per page per browsing session, filter bots, and estimate daily uniques with a salted SHA-256 hash of IP, user agent, and day. Raw IPs are never stored, there are no cookies, and the dashboard discloses its methodology instead of presenting estimates as exact figures.",
+      "Accessibility is a CI gate rather than an aspiration: every page is axe-core scanned against WCAG 2.2 AA on every pull request, and merging is blocked until the scan passes. The release pipeline bumps versions automatically and deploys through Amplify on every release, and a discovery layer of sitemap, robots.txt, Person and FAQPage JSON-LD, Open Graph cards, and llms.txt serves both search engines and AI crawlers.",
+    ],
+    features: [
+      "Project, experience, and blog sections rendered from MDX with code highlighting and reading time",
+      "Public analytics dashboard with disclosed methodology and privacy-preserving unique counting",
+      "axe-core WCAG 2.2 AA accessibility scans as a required CI check on every pull request",
+      "Discovery layer: sitemap, robots.txt, Person and FAQPage JSON-LD, Open Graph cards, llms.txt",
+      "Automated version bumps with Amplify deploys on every release",
+      "Rate-limited tracking endpoint with abuse protection",
+    ],
+    faq: [
+      {
+        question: "What is donray.dev built with?",
+        answer:
+          "Next.js 16 (App Router, static-first), React 19, TypeScript, Tailwind CSS v4, shadcn/ui, and Framer Motion, hosted on AWS Amplify.",
+      },
+      {
+        question: "How does the public analytics work?",
+        answer:
+          "A rate-limited /api/track endpoint records one page load per page per browsing session, filters bots, and stores counts in DynamoDB. Daily unique visitors are estimated with a salted SHA-256 hash of IP, user agent, and day. Raw IPs are never stored and there are no cookies.",
+      },
+      {
+        question: "What does the accessibility CI gate check?",
+        answer:
+          "Every page is scanned with axe-core against WCAG 2.2 AA on every pull request, and merging is blocked until the scan passes.",
+      },
     ],
   },
 ];
