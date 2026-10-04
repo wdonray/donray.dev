@@ -11,6 +11,8 @@ export interface ProjectDetail {
   role: string;
   stack: string[];
   url?: string;
+  /** Wayback Machine snapshot, used when the live site is gone. */
+  archivedUrl?: string;
   github?: string;
   image?: string;
   imageAlt?: string;
@@ -31,6 +33,8 @@ export const PROJECTS: ProjectDetail[] = [
     role: "Frontend Developer",
     stack: ["Nuxt.js", "TypeScript", "Vite", "CSS", "HTML5"],
     status: "discontinued",
+    archivedUrl:
+      "https://web.archive.org/web/20250224032816/https://www.pico.domains/",
     image: "/pico-domains.png",
     imageAlt: "Screenshot of pico.domains website",
     details: [

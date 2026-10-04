@@ -30,6 +30,24 @@ describe("ProjectCard branches", () => {
     expect(links.length).toBeGreaterThanOrEqual(1);
   });
 
+  it("renders the archived site link when only archivedUrl exists", () => {
+    render(
+      <ProjectCard
+        project={{
+          ...base,
+          archivedUrl: "https://web.archive.org/web/2025/https://example.com",
+        }}
+        index={0}
+      />,
+    );
+    const link = screen.getByRole("link", { name: /archived site/i });
+    expect(link).toHaveAttribute(
+      "href",
+      "https://web.archive.org/web/2025/https://example.com",
+    );
+    expect(link).toHaveAttribute("target", "_blank");
+  });
+
   it("still renders the Details link with no external url or github", () => {
     render(<ProjectCard project={base} index={0} />);
     expect(
