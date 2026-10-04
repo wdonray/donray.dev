@@ -191,8 +191,6 @@ export default function Projects() {
       subtitle: "Ultra-Short Domain Search Engine",
       description:
         "Free search engine for ultra-short domain names. Curates available concise domains and hands buyers off to trusted marketplaces.",
-      archivedUrl:
-        "https://web.archive.org/web/20250224032816/https://www.pico.domains/",
       technologies: [
         "Nuxt.js",
         "CSS",
@@ -202,7 +200,7 @@ export default function Projects() {
         "Custom Internal Libraries",
       ],
       image: "/pico-domains.png",
-      imageAlt: "Screenshot of pico.domains website",
+      imageAlt: "pico.domains logo",
     },
     {
       slug: "cyclei",

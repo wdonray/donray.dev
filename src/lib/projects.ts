@@ -33,10 +33,8 @@ export const PROJECTS: ProjectDetail[] = [
     role: "Frontend Developer",
     stack: ["Nuxt.js", "TypeScript", "Vite", "CSS", "HTML5"],
     status: "discontinued",
-    archivedUrl:
-      "https://web.archive.org/web/20250224032816/https://www.pico.domains/",
     image: "/pico-domains.png",
-    imageAlt: "Screenshot of pico.domains website",
+    imageAlt: "pico.domains logo",
     details: [
       "pico.domains is a free search engine for ultra-short domain names, not a registrar. It tracks hundreds of millions of domains considered high-value and easy to remember, curates the available ones, and links buyers to marketplaces. The service is free, monetized through affiliate commissions on registrar traffic. It was built by a two-person team, with Donray on frontend development.",
       "Search starts with a prefix of up to four characters and narrows by second-level-domain length, one of 18 TLD categories (tech, commerce, country and region, and more), TLD length, specific TLDs, English-dictionary words only, and availability. Results sort by domain, SLD length, price, and registration duration, with 25 results per page and deep-linkable URLs carrying canonical tags and per-search SEO metadata.",
