@@ -106,7 +106,7 @@ export function ProjectCard({
             ))}
           </div>
         </CardContent>
-        {primaryUrl && (
+        {primaryUrl ? (
           <CardFooter className="flex items-center justify-between gap-2">
             <a
               href={primaryUrl}
@@ -143,6 +143,16 @@ export function ProjectCard({
                 </a>
               </Button>
             )}
+            <a
+              href={`/projects/${project.slug}`}
+              aria-label={`View details about ${project.title}`}
+              className="inline-flex min-h-6 items-center text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
+            >
+              Details →
+            </a>
+          </CardFooter>
+        ) : (
+          <CardFooter className="flex items-center justify-end gap-2">
             <a
               href={`/projects/${project.slug}`}
               aria-label={`View details about ${project.title}`}
@@ -196,8 +206,9 @@ export default function Projects() {
       title: "Hide Zero Cards",
       subtitle: "Educational Place Value Tool",
       description:
-        "Interactive educational tool for fourth-grade students. Features draggable number cards with color-coded place value components.",
+        "Interactive place-value tool for fourth-grade students. Type any number up to one billion and break it into draggable, color-coded digit cards.",
       url: "https://hidezerocards.org",
+      github: "https://github.com/wdonray/c-hide-zero-cards",
       technologies: [
         "Next.js",
         "React",

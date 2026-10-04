@@ -5,6 +5,7 @@ import { ExternalLink } from "lucide-react";
 import { Github } from "@/components/ui/brand-icons";
 import { Badge } from "@/components/ui/badge";
 import { getProject, PROJECTS } from "@/lib/projects";
+import { getFaqJsonLd, serializeJsonLd } from "@/lib/schema";
 
 export function generateStaticParams() {
   return PROJECTS.map((p) => ({ slug: p.slug }));
@@ -48,6 +49,9 @@ export default async function ProjectPage({
               <p className="text-sm font-medium text-primary uppercase tracking-wide">
                 Project · {project.role}
               </p>
+              {project.status === "discontinued" && (
+                <Badge variant="outline">Discontinued</Badge>
+              )}
               <h1 className="text-4xl font-bold tracking-tight">
                 {project.title}
               </h1>
@@ -110,6 +114,49 @@ export default async function ProjectPage({
             </p>
           ))}
         </div>
+
+        {project.features && project.features.length > 0 && (
+          <section aria-labelledby="features-heading">
+            <h2
+              id="features-heading"
+              className="text-2xl font-bold tracking-tight mb-4"
+            >
+              Features
+            </h2>
+            <ul className="list-disc pl-6 space-y-2 text-muted-foreground leading-relaxed">
+              {project.features.map((feature, i) => (
+                <li key={i}>{feature}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {project.faq && project.faq.length > 0 && (
+          <section aria-labelledby="faq-heading">
+            <h2
+              id="faq-heading"
+              className="text-2xl font-bold tracking-tight mb-4"
+            >
+              Frequently asked questions
+            </h2>
+            <div className="space-y-6">
+              {project.faq.map((item, i) => (
+                <div key={i}>
+                  <h3 className="font-semibold">{item.question}</h3>
+                  <p className="text-muted-foreground leading-relaxed mt-1">
+                    {item.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: serializeJsonLd(getFaqJsonLd(project.faq)),
+              }}
+            />
+          </section>
+        )}
       </article>
     </div>
   );
