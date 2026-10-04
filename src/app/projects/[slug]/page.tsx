@@ -83,6 +83,17 @@ export default async function ProjectPage({
                     Visit live site
                   </a>
                 )}
+                {project.archivedUrl && (
+                  <a
+                    href={project.archivedUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
+                  >
+                    <ExternalLink className="size-4" aria-hidden="true" />
+                    View archived site
+                  </a>
+                )}
                 {project.github && (
                   <a
                     href={project.github}
