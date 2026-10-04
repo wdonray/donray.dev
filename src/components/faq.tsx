@@ -22,7 +22,7 @@ const FAQS: FaqItem[] = [
   {
     question: "What's your technical background?",
     answer:
-      "7+ years building for the web. As a Senior Software Engineer I built org-wide typed fetch and shared frontend config libraries, and helped move customer traffic from roughly half to roughly three-quarters onto the new app. My core stack is Vue, TypeScript, and Ruby on Rails.",
+      "7+ years building for the web, starting at Stuller in Louisiana before moving north: Leaflink, Cyclei (founding frontend engineer), and Justworks, where I grew from Software Engineer to Senior to Engineering Manager. As a senior I built the org-wide typed fetch library and shared frontend config libraries, and helped move customer traffic from roughly half to roughly three-quarters onto the new app. Core stack is Vue, TypeScript, and Ruby on Rails, with Go, Node.js, Vitest, Playwright, and GitHub Actions in regular rotation. Very comfortable with AI tooling: Cursor and Claude Code are daily drivers, and I rolled out Claude PR review across our frontend org.",
   },
   {
     question: "Where are you based?",
