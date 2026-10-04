@@ -30,15 +30,14 @@ export const PROJECTS: ProjectDetail[] = [
       "Free search engine for ultra-short domain names. Curates available concise domains across 18 TLD categories and hands buyers off to trusted marketplaces.",
     role: "Frontend Developer",
     stack: ["Nuxt.js", "TypeScript", "Vite", "CSS", "HTML5"],
-    url: "https://www.pico.domains/",
-    status: "maintenance",
+    status: "discontinued",
     image: "/pico-domains.png",
     imageAlt: "Screenshot of pico.domains website",
     details: [
       "pico.domains is a free search engine for ultra-short domain names, not a registrar. It tracks hundreds of millions of domains considered high-value and easy to remember, curates the available ones, and links buyers to marketplaces. The service is free, monetized through affiliate commissions on registrar traffic. It was built by a two-person team, with Donray on frontend development.",
       "Search starts with a prefix of up to four characters and narrows by second-level-domain length, one of 18 TLD categories (tech, commerce, country and region, and more), TLD length, specific TLDs, English-dictionary words only, and availability. Results sort by domain, SLD length, price, and registration duration, with 25 results per page and deep-linkable URLs carrying canonical tags and per-search SEO metadata.",
       "Each result links out to Dynadot with a referral ID, keeping the commercial side with the registrar. Eighteen TLD category landing pages each carry a unique headline, long description, and icon. The app is installable as a PWA with runtime caching of API responses, and ships a collapsible filter panel with simplified table columns for small screens.",
-      "Built with Nuxt 3, Vue 3, and strict TypeScript against an Elasticsearch-backed API, with client-side caching keyed on the full query signature and shared internal component libraries. The site remains live but is in maintenance mode and not under active development.",
+      "Built with Nuxt 3, Vue 3, and strict TypeScript against an Elasticsearch-backed API, with client-side caching keyed on the full query signature and shared internal component libraries. The service has since been discontinued.",
     ],
     features: [
       "Second-level-domain search capped at 4 characters, defaulting to 2 or fewer",
@@ -67,9 +66,8 @@ export const PROJECTS: ProjectDetail[] = [
           "Through an affiliate model: result links go to Dynadot with referral IDs, and the service earns a commission on registrar traffic.",
       },
       {
-        question: "Is pico.domains still running?",
-        answer:
-          "Yes, the site remains live, but it is in maintenance mode and not under active development.",
+        question: "Is pico.domains still available?",
+        answer: "No, the service has been discontinued.",
       },
     ],
   },

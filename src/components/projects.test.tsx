@@ -27,12 +27,12 @@ describe("Projects", () => {
     const links = screen.getAllByRole("link", {
       name: /visit site/i,
     });
-    const pico = links.find(
-      (l) => l.getAttribute("href") === "https://www.pico.domains/",
+    const site = links.find(
+      (l) => l.getAttribute("href") === "https://hidezerocards.org",
     );
-    expect(pico).toBeDefined();
-    expect(pico).toHaveAttribute("target", "_blank");
-    expect(pico).toHaveAttribute("rel", "noopener noreferrer");
+    expect(site).toBeDefined();
+    expect(site).toHaveAttribute("target", "_blank");
+    expect(site).toHaveAttribute("rel", "noopener noreferrer");
   });
 
   it("links the repo-only project to GitHub", () => {
