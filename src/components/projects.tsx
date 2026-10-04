@@ -177,7 +177,7 @@ export default function Projects() {
       title: "pico.domains",
       subtitle: "Ultra-Short Domain Search Engine",
       description:
-        "Smart search engine for ultra-short domains. Curates available concise domains and connects with trusted marketplaces.",
+        "Free search engine for ultra-short domain names. Curates available concise domains and hands buyers off to trusted marketplaces.",
       url: "https://www.pico.domains/",
       technologies: [
         "Nuxt.js",

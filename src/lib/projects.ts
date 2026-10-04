@@ -14,8 +14,8 @@ export interface ProjectDetail {
   github?: string;
   image?: string;
   imageAlt?: string;
-  /** Omitted for active projects; "discontinued" renders a status badge. */
-  status?: "discontinued";
+  /** Omitted for active projects. */
+  status?: "discontinued" | "maintenance";
   details: string[];
   features?: string[];
   faq?: ProjectFaq[];
@@ -27,16 +27,50 @@ export const PROJECTS: ProjectDetail[] = [
     title: "pico.domains",
     subtitle: "Ultra-Short Domain Search Engine",
     description:
-      "Smart search engine for ultra-short domains. Curates available concise domains and connects with trusted marketplaces.",
-    role: "Builder",
+      "Free search engine for ultra-short domain names. Curates available concise domains across 18 TLD categories and hands buyers off to trusted marketplaces.",
+    role: "Frontend Developer",
     stack: ["Nuxt.js", "TypeScript", "Vite", "CSS", "HTML5"],
     url: "https://www.pico.domains/",
+    status: "maintenance",
     image: "/pico-domains.png",
     imageAlt: "Screenshot of pico.domains website",
     details: [
-      "Short domains are scarce and hard to shop for. Most search tools are built for full-length names. pico.domains is a focused search engine for the ultra-short end of the market.",
-      "It curates available concise domains and hands off to trusted marketplaces for purchase, keeping the search experience fast and the commercial side with the specialists.",
-      "Built with Nuxt.js and TypeScript on Vite, with internal libraries for the domain-data pipeline.",
+      "pico.domains is a free search engine for ultra-short domain names, not a registrar. It tracks hundreds of millions of domains considered high-value and easy to remember, curates the available ones, and links buyers to marketplaces. The service is free, monetized through affiliate commissions on registrar traffic. It was built by a two-person team, with Donray on frontend development.",
+      "Search starts with a prefix of up to four characters and narrows by second-level-domain length, one of 18 TLD categories (tech, commerce, country and region, and more), TLD length, specific TLDs, English-dictionary words only, and availability. Results sort by domain, SLD length, price, and registration duration, with 25 results per page and deep-linkable URLs carrying canonical tags and per-search SEO metadata.",
+      "Each result links out to Dynadot with a referral ID, keeping the commercial side with the registrar. Eighteen TLD category landing pages each carry a unique headline, long description, and icon. The app is installable as a PWA with runtime caching of API responses, and ships a collapsible filter panel with simplified table columns for small screens.",
+      "Built with Nuxt 3, Vue 3, and strict TypeScript against an Elasticsearch-backed API, with client-side caching keyed on the full query signature and shared internal component libraries. The site remains live but is in maintenance mode and not under active development.",
+    ],
+    features: [
+      "Second-level-domain search capped at 4 characters, defaulting to 2 or fewer",
+      "Filters: SLD prefix and length, 18 TLD categories, TLD length, multi-select TLD picker, English-dictionary-only toggle, availability toggle",
+      "Sortable results table (domain, SLD length, price, registration duration) with pagination",
+      "Marketplace handoff linking each result to Dynadot with referral tracking",
+      "18 TLD category landing pages, each with a unique headline, description, and icon",
+      "Deep-linkable searches with canonical URLs and per-search SEO titles and descriptions",
+      "Installable PWA with runtime caching of API responses",
+      "Responsive layout with a collapsible filter panel for small screens",
+    ],
+    faq: [
+      {
+        question: "What is pico.domains?",
+        answer:
+          "A free search engine for ultra-short domain names (four characters or fewer before the dot). It is not a registrar: it curates available short domains and links buyers to marketplaces.",
+      },
+      {
+        question: "How can you search?",
+        answer:
+          "By typing a prefix of up to four characters, then narrowing by second-level-domain length, one of 18 TLD categories, TLD length, specific TLDs, English-dictionary words only, and availability. Results sort by domain, length, price, or registration duration.",
+      },
+      {
+        question: "How is it free?",
+        answer:
+          "Through an affiliate model: result links go to Dynadot with referral IDs, and the service earns a commission on registrar traffic.",
+      },
+      {
+        question: "Is pico.domains still running?",
+        answer:
+          "Yes, the site remains live, but it is in maintenance mode and not under active development.",
+      },
     ],
   },
   {
