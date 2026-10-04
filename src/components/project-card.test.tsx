@@ -29,4 +29,13 @@ describe("ProjectCard branches", () => {
     const links = screen.getAllByRole("link", { name: /github/i });
     expect(links.length).toBeGreaterThanOrEqual(1);
   });
+
+  it("still renders the Details link with no external url or github", () => {
+    render(<ProjectCard project={base} index={0} />);
+    expect(
+      screen.getByRole("link", {
+        name: /view details about test project/i,
+      }),
+    ).toHaveAttribute("href", "/projects/test");
+  });
 });
