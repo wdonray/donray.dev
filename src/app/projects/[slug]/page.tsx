@@ -121,6 +121,19 @@ export default async function ProjectPage({
           </div>
         </header>
 
+        {project.screenshot && (
+          <figure className="overflow-hidden rounded-xl border shadow-sm">
+            <Image
+              src={project.screenshot}
+              alt={project.screenshotAlt || `${project.title} screenshot`}
+              width={1600}
+              height={973}
+              className="w-full"
+              sizes="(max-width: 768px) 100vw, 768px"
+            />
+          </figure>
+        )}
+
         <div className="space-y-4">
           {project.details.map((paragraph, i) => (
             <p key={i} className="text-muted-foreground leading-relaxed">
