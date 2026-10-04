@@ -41,15 +41,19 @@ describe("Experience", () => {
     expect(screen.getByText("Jun 2026 – Present")).toBeInTheDocument();
   });
 
-  it("collapses Justworks to the two resume roles", () => {
+  it("shows all three Justworks roles", () => {
     render(<Experience />);
     expect(
       screen.getByRole("heading", { name: "Engineering Manager" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Jan 2023 – Jun 2026")).toBeInTheDocument();
     expect(
-      screen.queryByRole("heading", { name: "Software Engineer" }),
-    ).not.toBeInTheDocument();
+      screen.getByRole("heading", { name: "Senior Software Engineer" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Software Engineer" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Mar 2023 – Dec 2023")).toBeInTheDocument();
+    expect(screen.getByText("Dec 2023 – Jun 2026")).toBeInTheDocument();
   });
 
   it("describes the Engineering Manager role", () => {

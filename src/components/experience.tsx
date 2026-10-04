@@ -161,7 +161,13 @@ export default function Experience() {
         },
         {
           title: "Senior Software Engineer",
-          period: "Jan 2023 – Jun 2026",
+          period: "Dec 2023 – Jun 2026",
+          description:
+            "Operated as tech lead and de facto manager for two engineers; both formally transferred to my team when I was promoted to Engineering Manager.",
+        },
+        {
+          title: "Software Engineer",
+          period: "Mar 2023 – Dec 2023",
         },
       ],
     },
