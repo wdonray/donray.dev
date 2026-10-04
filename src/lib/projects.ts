@@ -47,14 +47,13 @@ export const PROJECTS: ProjectDetail[] = [
       "Customer web app for a curbside reusable-packaging pickup service. Covers the full lifecycle: onboarding and activation, bag tracking, an impact dashboard, a rewards wallet with payouts, and account management.",
     role: "Founding Frontend Engineer",
     stack: ["Vue 3", "TypeScript", "Vite", "GraphQL", "CSS", "HTML5"],
-    url: "https://app.cyclei.eco/",
-    status: "maintenance",
+    status: "discontinued",
     image: "/cyclei.png",
     imageAlt: "Screenshot of Cyclei application",
     details: [
       "Cyclei pairs curbside collection of reusable containers with regular waste pickup. Customers sign up, pay a one-time activation fee, buy from partner businesses offering reusable packaging, fill a Cyclei bag, and clip it to their recycling bin handle on trash day. A fresh return bag is delivered to their door, and the account shows returned reusables plus deposits or rewards.",
       "As the founding frontend engineer, Donray built the customer-facing web app: multi-step onboarding with address validation and Stripe setup intents, a dashboard with an impact tracker counting single-use containers saved and a wallet balance card, bag tracking across collected, sorted, and lost states, cart checkout with coupons and invoices, wallet payouts with pending, paid, and failed statuses, and account management with pickup pause and resume.",
-      "The app is Vue 3.5 with Vite 7 and TypeScript, using Apollo Client GraphQL against a Django backend, vee-validate forms with a custom input component library, and a published Vue component library for the UI system. Vitest unit tests and ESLint/Stylelint gates run in CI. The app remains live but is in maintenance mode and not under active development.",
+      "The app is Vue 3.5 with Vite 7 and TypeScript, using Apollo Client GraphQL against a Django backend, vee-validate forms with a custom input component library, and a published Vue component library for the UI system. Vitest unit tests and ESLint/Stylelint gates run in CI. The service has since been discontinued.",
     ],
     features: [
       "Multi-step onboarding: email, address validation, confirmation, Stripe payment",
@@ -88,8 +87,7 @@ export const PROJECTS: ProjectDetail[] = [
       },
       {
         question: "Is Cyclei still operating?",
-        answer:
-          "The app remains live but is in maintenance mode and not under active development.",
+        answer: "No, the service has been discontinued.",
       },
     ],
   },
