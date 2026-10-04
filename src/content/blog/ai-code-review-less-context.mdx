@@ -1,10 +1,10 @@
 ---
 title: "I Made Our AI Code Reviewer Dumber. It Got Better."
 date: "2026-10-04"
-excerpt: "I rolled out Claude code review to my team of 3. The highest-leverage change was subtraction: a shorter checklist, less context, and every rule shipped with its own off-switch."
+excerpt: "I rolled out Claude code review across our frontend org. The highest-leverage change was subtraction: a shorter checklist, less context, and every rule shipped with its own off-switch."
 ---
 
-I rolled out Claude code review to my team, and the most useful thing I did was make the bot dumber. Shorter checklist, walled off from our author guide, everything lint could catch removed from its list. Noise dropped. Most teams do the opposite: more context, more rules, then wonder why every PR comes back with confident suggestions about code it doesn't understand.
+I rolled out Claude code review across our frontend org, and the most useful thing I did was make the bot dumber. Shorter checklist, walled off from our author guide, everything lint could catch removed from its list. Noise dropped. Most teams do the opposite: more context, more rules, then wonder why every PR comes back with confident suggestions about code it doesn't understand.
 
 ## Give the bot less, not more
 
@@ -50,9 +50,9 @@ Keep them off the bot's list. The moment you try to encode judgment as rules, yo
 
 There's a louder worry behind this one: that AI review erodes engineering judgment across the industry. I think the opposite happens when the split is deliberate. Keeping placement human means the team keeps practicing placement. The judgment doesn't atrophy. It concentrates.
 
-## The small-team math
+## The reviewer math
 
-On a team of 3 with one reviewer, I am the bottleneck. The bot handles the first pass. I spend my few comments on placement, and that's the whole system.
+I lead a team of 3 and review across the frontend org. The bot handles the first pass on every PR; I spend my few comments on placement, and that's the whole system.
 
 I reviewed about 439 PRs in the window this system has been live. Most are quick approves. The substantive threads cluster hard: about 15 threads across 8 PRs in a 40-PR September scan. That shape is this post in one line.
 
@@ -64,7 +64,7 @@ One more thing the setup assumes: the author still owns the merge. The bot is a 
 | ----------------------------------- | ---------------------------- |
 | PRs reviewed (my own count)         | ~439                         |
 | Substantive threads, Sep 40-PR scan | ~15 across 8 PRs             |
-| Team size                           | 3                            |
+| Rollout scope                       | Frontend org                 |
 | Build window                        | Feb–Sep 2026, live early Sep |
 
 ## FAQ
@@ -84,8 +84,8 @@ Placement: the right layer and the right shared piece. Anything needing cross-fi
 **How long did this take to build?**
 Across February to September, but the live version went up in early September. Most of the time was cutting rules, not writing them.
 
-**Would this work on a bigger team?**
-The principles scale; the specific list doesn't. A bigger team needs more lists with more owners. The closed-list discipline matters more, not less.
+**Does this scale beyond one team?**
+It already runs across our frontend org. The principles travel; the specific list doesn't. Tune from your own noise, not someone else's.
 
 Bots check shape. You check placement. Give the bot a short list, tell it exactly when not to flag, and keep the judgment calls for yourself. If you're the bottleneck reviewer on your team, start by deleting half your bot's rules and see what breaks. Probably nothing.
 
