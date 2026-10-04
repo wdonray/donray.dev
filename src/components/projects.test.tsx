@@ -41,8 +41,7 @@ describe("Projects", () => {
       name: /view on github/i,
     });
     const repo = links.find(
-      (l) =>
-        l.getAttribute("href") === "https://github.com/wdonray/donray.dev",
+      (l) => l.getAttribute("href") === "https://github.com/wdonray/donray.dev",
     );
     expect(repo).toBeDefined();
   });
