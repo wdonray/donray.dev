@@ -92,7 +92,7 @@ export const PROJECTS: ProjectDetail[] = [
     imageAlt: "Cyclei logo",
     screenshot: "/cyclei-screenshot.png",
     screenshotAlt:
-      "Screenshot of the Cyclei tutorial page explaining curbside pickup of reusable packaging",
+      "Screenshot of the Cyclei customer dashboard showing the impact tracker, wallet balance card, and bag tracking tabs",
     details: [
       "Cyclei pairs curbside collection of reusable containers with regular waste pickup. Customers sign up, pay a one-time activation fee, buy from partner businesses offering reusable packaging, fill a Cyclei bag, and clip it to their recycling bin handle on trash day. A fresh return bag is delivered to their door, and the account shows returned reusables plus deposits or rewards.",
       "As the founding frontend engineer, Donray built the customer-facing web app: multi-step onboarding with address validation and Stripe setup intents, a dashboard with an impact tracker counting single-use containers saved and a wallet balance card, bag tracking across collected, sorted, and lost states, cart checkout with coupons and invoices, wallet payouts with pending, paid, and failed statuses, and account management with pickup pause and resume.",
