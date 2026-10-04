@@ -25,8 +25,6 @@ export interface Project {
   subtitle?: string;
   description: string;
   url?: string;
-  /** Wayback Machine snapshot, used when the live site is gone. */
-  archivedUrl?: string;
   github?: string;
   technologies: string[];
   image?: string;
@@ -44,15 +42,9 @@ export function ProjectCard({
   // Each action is an explicit visible link. No stretched invisible overlay:
   // a full-card link plus inner links creates redundant tab stops and
   // confusing screen-reader output.
-  const primaryUrl = project.url ?? project.archivedUrl ?? project.github;
-  const primaryKind = project.url
-    ? "site"
-    : project.archivedUrl
-      ? "archived"
-      : "github";
-  const hasSecondaryGithub = Boolean(
-    (project.url || project.archivedUrl) && project.github,
-  );
+  const primaryUrl = project.url ?? project.github;
+  const primaryIsSite = Boolean(project.url);
+  const hasSecondaryGithub = Boolean(project.url && project.github);
 
   return (
     <motion.div
@@ -122,15 +114,10 @@ export function ProjectCard({
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground group-hover:text-khaki transition-colors underline underline-offset-4 hover:opacity-80"
             >
-              {primaryKind === "site" ? (
+              {primaryIsSite ? (
                 <>
                   <ExternalLink className="size-4" aria-hidden="true" />
                   Visit Site
-                </>
-              ) : primaryKind === "archived" ? (
-                <>
-                  <ExternalLink className="size-4" aria-hidden="true" />
-                  Archived Site
                 </>
               ) : (
                 <>
@@ -190,9 +177,8 @@ export default function Projects() {
       title: "pico.domains",
       subtitle: "Ultra-Short Domain Search Engine",
       description:
-        "Free search engine for ultra-short domain names. Curates available concise domains and hands buyers off to trusted marketplaces.",
-      archivedUrl:
-        "https://web.archive.org/web/20250224032816/https://www.pico.domains/",
+        "Smart search engine for ultra-short domains. Curates available concise domains and connects with trusted marketplaces.",
+      url: "https://www.pico.domains/",
       technologies: [
         "Nuxt.js",
         "CSS",
@@ -210,7 +196,6 @@ export default function Projects() {
       subtitle: "Reusable Packaging Pickup Service",
       description:
         "Customer web app for a curbside reusable-packaging pickup service. Onboarding, bag tracking, impact dashboard, and a rewards wallet with payouts.",
-      url: "https://app.cyclei.eco/",
       technologies: ["Vue3", "CSS", "HTML5", "TypeScript", "Vite", "GraphQL"],
       image: "/cyclei.png",
       imageAlt: "Screenshot of Cyclei application",
