@@ -210,7 +210,7 @@ export default function Projects() {
         "Customer web app for a curbside reusable-packaging pickup service. Onboarding, bag tracking, impact dashboard, and a rewards wallet with payouts.",
       technologies: ["Vue3", "CSS", "HTML5", "TypeScript", "Vite", "GraphQL"],
       image: "/cyclei.png",
-      imageAlt: "Screenshot of Cyclei application",
+      imageAlt: "Cyclei logo",
     },
     {
       slug: "hide-zero-cards",
