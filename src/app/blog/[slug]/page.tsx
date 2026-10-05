@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Link } from "next-view-transitions";
+import Link from "next/link";
 import { Clock } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import {

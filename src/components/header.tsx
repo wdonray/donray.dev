@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Link } from "next-view-transitions";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Menu,
