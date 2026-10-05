@@ -31,7 +31,7 @@ export default function Footer() {
           <div className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Donray Williams
           </div>
-          <div className="flex items-center gap-6 md:gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4 md:gap-4">
             <Link
               href="/principles"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
