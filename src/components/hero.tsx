@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Mail } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { motion } from "framer-motion";
 import { fadeInUpWithDelay, imageScale } from "@/lib/animations";
 

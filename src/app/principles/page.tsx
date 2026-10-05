@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 
 export const metadata: Metadata = {
   title: "How I Lead",
