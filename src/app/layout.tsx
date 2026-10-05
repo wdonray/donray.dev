@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { ViewTransitions } from "next-view-transitions";
 
 import "./globals.css";
 import ClientLayout from "@/components/client-layout";
@@ -56,18 +55,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ViewTransitions>
-      <html lang="en" suppressHydrationWarning>
-        <body>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: serializeJsonLd(getPersonJsonLd()),
-            }}
-          />
-          <ClientLayout>{children}</ClientLayout>
-        </body>
-      </html>
-    </ViewTransitions>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: serializeJsonLd(getPersonJsonLd()),
+          }}
+        />
+        <ClientLayout>{children}</ClientLayout>
+      </body>
+    </html>
   );
 }

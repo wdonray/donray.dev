@@ -7,14 +7,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
-      // Unit tests run in jsdom, which has no View Transitions API.
-      // Stub the library as thin passthroughs so component tests keep
-      // asserting on rendered anchors without pulling in the real module
-      // (its internal next/link import breaks vitest's resolver).
-      "next-view-transitions": path.resolve(
-        __dirname,
-        "src/test-utils/next-view-transitions-stub.tsx",
-      ),
     },
   },
   test: {

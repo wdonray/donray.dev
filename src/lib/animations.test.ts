@@ -1,18 +1,14 @@
-import { describe, expect, it, vi } from "vitest";
-import { renderHook } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import {
-  IntroAnimationContext,
   containerVariants,
   fadeInUp,
   fadeInUpWithDelay,
   imageScale,
-  introAnimation,
   itemVariants,
   scaleIn,
   scaleInWithDelay,
   slideInLeft,
   slideInLeftWithDelay,
-  useIntroAnimation,
 } from "./animations";
 
 describe("animation variants", () => {
@@ -72,43 +68,5 @@ describe("animation variants", () => {
 
   it("imageScale reuses the scale-in variant", () => {
     expect(imageScale).toEqual(scaleIn);
-  });
-});
-
-describe("intro animations", () => {
-  it("consumeIntroAnimation is true only on the first call per page lifetime", async () => {
-    vi.resetModules();
-    const { consumeIntroAnimation } = await import("./animations");
-    expect(consumeIntroAnimation()).toBe(true);
-    expect(consumeIntroAnimation()).toBe(false);
-    expect(consumeIntroAnimation()).toBe(false);
-  });
-
-  it("introAnimation plays the variant untouched on initial load", () => {
-    const variant = fadeInUpWithDelay(0.1);
-    expect(introAnimation(true, variant)).toBe(variant);
-  });
-
-  it("introAnimation renders the final state immediately on navigations", () => {
-    const variant = fadeInUpWithDelay(0.1);
-    const result = introAnimation(false, variant);
-    expect(result.initial).toBe(false);
-    expect(result.animate).toEqual(variant.animate);
-    expect(result.transition).toEqual(variant.transition);
-  });
-
-  it("useIntroAnimation defaults to playing outside a provider", () => {
-    const { result } = renderHook(() => useIntroAnimation());
-    expect(result.current).toBe(true);
-  });
-
-  it("useIntroAnimation reads the provider value", () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <IntroAnimationContext.Provider value={false}>
-        {children}
-      </IntroAnimationContext.Provider>
-    );
-    const { result } = renderHook(() => useIntroAnimation(), { wrapper });
-    expect(result.current).toBe(false);
   });
 });
