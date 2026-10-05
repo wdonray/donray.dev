@@ -369,7 +369,7 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
           pk: "PAGE#/blog/a",
           sk: "UNIQUES",
           path: "/blog/a",
-          visitors: ["u1", "u2"],
+          visitors: new Set(["u1", "u2"]),
         },
         {
           pk: "PAGE#/blog/a",
@@ -411,6 +411,12 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
           sk: "UNIQUES",
           visitors: ["u1", "u2", "u3"],
         },
+        // UNIQUES item without a visitors field: counts as 0.
+        {
+          pk: "PAGE#/blog/b",
+          sk: "UNIQUES",
+          path: "/blog/b",
+        },
         // Legacy day-bound records are ignored by the new read path.
         {
           pk: "SITE",
@@ -427,9 +433,11 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
     expect(summary).not.toBeNull();
     expect(summary!.totalViews).toBe(100);
     expect(summary!.totalUniques).toBe(3);
-    expect(summary!.pages).toHaveLength(1);
+    expect(summary!.pages).toHaveLength(2);
     expect(summary!.pages[0].path).toBe("/blog/a");
     expect(summary!.pages[0].uniques).toBe(2);
+    expect(summary!.pages[1].path).toBe("/blog/b");
+    expect(summary!.pages[1].uniques).toBe(0);
     expect(summary!.dailyTotals).toHaveLength(5);
     // Sorted ascending by day.
     expect(summary!.dailyTotals[0].day).toBe("2026-09-28");
