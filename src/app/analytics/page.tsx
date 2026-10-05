@@ -11,8 +11,11 @@ import { Eye, Users } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Analytics | donray.dev",
+  title: "Analytics",
   description: "Public, privacy-respecting traffic statistics for donray.dev.",
+  alternates: {
+    canonical: "/analytics",
+  },
 };
 
 function formatDate(isoDay: string): string {

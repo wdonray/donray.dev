@@ -27,14 +27,22 @@ export async function generateMetadata({
   const post = getPost(slug);
   if (!post) return {};
   return {
-    title: `${post.title} | donray.dev`,
+    title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      url: `https://www.donray.dev/blog/${post.slug}`,
+      url: `/blog/${post.slug}`,
       type: "article",
       publishedTime: post.date,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
     },
   };
 }

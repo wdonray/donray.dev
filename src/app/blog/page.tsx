@@ -5,9 +5,18 @@ import { POSTS } from "@/lib/blog";
 import ViewCount from "@/components/view-count";
 
 export const metadata: Metadata = {
-  title: "Blog | donray.dev",
+  title: "Blog",
   description:
     "Notes from Donray Williams on engineering management, frontend leadership, and shipping software.",
+  alternates: {
+    canonical: "/blog",
+  },
+  openGraph: {
+    title: "Blog",
+    description:
+      "Notes from Donray Williams on engineering management, frontend leadership, and shipping software.",
+    url: "/blog",
+  },
 };
 
 export default function BlogIndexPage() {

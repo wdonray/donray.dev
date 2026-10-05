@@ -2,9 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "How I Lead | donray.dev",
+  title: "How I Lead",
   description:
     "Donray Williams' management principles: the rules he operates by as an engineering manager, earned from leading a team as a player-coach.",
+  alternates: {
+    canonical: "/principles",
+  },
+  openGraph: {
+    title: "How I Lead",
+    description:
+      "Donray Williams' management principles: the rules he operates by as an engineering manager, earned from leading a team as a player-coach.",
+    url: "/principles",
+  },
 };
 
 const PRINCIPLES: { title: string; body: string[] }[] = [
