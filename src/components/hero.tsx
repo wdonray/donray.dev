@@ -18,9 +18,9 @@ export default function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="pt-24 sm:pt-28"
+      className="min-h-svh pt-16 flex flex-col"
     >
-      <div className="flex flex-col md:flex-row gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center justify-between w-full">
+      <div className="flex-1 flex flex-col justify-evenly md:flex-row gap-8 sm:gap-12 md:gap-16 lg:gap-20 items-center md:justify-between w-full py-8">
         <div
           className="space-y-4 sm:space-y-5 md:space-y-6 text-center md:text-left"
           id="hero-content"
