@@ -30,7 +30,7 @@ export default function Hero() {
             className={`${h1Size} font-bold tracking-tight`}
             {...fadeInUpWithDelay(0)}
           >
-            Hi, I&apos;m Donray Williams
+            Hi, I&apos;m Donray
           </motion.h1>
 
           <motion.h2
