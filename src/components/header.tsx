@@ -3,7 +3,15 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Menu, Code2, Briefcase, Rocket, Mail, PenLine } from "lucide-react";
+import {
+  Menu,
+  Code2,
+  Briefcase,
+  Rocket,
+  Mail,
+  PenLine,
+  Compass,
+} from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
 import { Github, Linkedin } from "./ui/brand-icons";
 import {
@@ -41,6 +49,7 @@ const navLinks = [
   { href: "/#skills", label: "Skills", icon: Code2 },
   { href: "/#projects", label: "Projects", icon: Rocket },
   { href: "/#experience", label: "Experience", icon: Briefcase },
+  { href: "/principles", label: "Principles", icon: Compass },
   { href: "/blog", label: "Blog", icon: PenLine },
 ];
 

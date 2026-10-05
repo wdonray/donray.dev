@@ -45,6 +45,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    {
+      url: `${BASE_URL}/principles`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
     ...["pico-domains", "cyclei", "hide-zero-cards", "donray-dev"].map(
       (slug) => ({
         url: `${BASE_URL}/projects/${slug}`,

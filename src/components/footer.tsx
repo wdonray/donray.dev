@@ -33,6 +33,12 @@ export default function Footer() {
           </div>
           <div className="flex items-center gap-6 md:gap-4">
             <Link
+              href="/principles"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Principles
+            </Link>
+            <Link
               href="/analytics"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
