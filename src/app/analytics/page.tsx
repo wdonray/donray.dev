@@ -131,7 +131,7 @@ export default async function AnalyticsPage() {
                     {summary.totalUniques.toLocaleString()}
                   </div>
                   <CardDescription className="mt-1">
-                    Last 30 days · estimated
+                    All time · bots filtered
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -273,14 +273,17 @@ export default async function AnalyticsPage() {
                 </li>
                 <li>
                   <strong className="text-foreground">Unique visitors</strong>{" "}
-                  are estimated: each visit is hashed (IP + browser, salted and
-                  non-reversible) and counted once per day. A visitor who reads
-                  several pages in one day counts once. Shared networks can
-                  undercount; changing IPs can overcount.
+                  are real people, counted once ever: each visit is hashed (IP +
+                  browser, salted and non-reversible) and the hash is kept in a
+                  permanent set. A visitor who returns a year later still counts
+                  once, and a visitor who reads several pages counts once.
+                  Shared networks can undercount; changing IPs can overcount.
+                  True unique counting started in October 2026; earlier visits
+                  used day-bound hashes that cannot be converted.
                 </li>
                 <li>
-                  No cookies are set and no raw IP addresses are stored. Daily
-                  detail expires automatically after about a year.
+                  No cookies are set and no raw IP addresses are stored. All
+                  records are kept permanently.
                 </li>
                 <li>
                   <strong className="text-foreground">

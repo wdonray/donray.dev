@@ -69,24 +69,28 @@ describe("dayKey", () => {
 
 describe("hashVisitor", () => {
   it("is deterministic for the same inputs", () => {
-    const a = hashVisitor("salt", "1.2.3.4", "ua", "2026-10-02");
-    const b = hashVisitor("salt", "1.2.3.4", "ua", "2026-10-02");
+    const a = hashVisitor("salt", "1.2.3.4", "ua");
+    const b = hashVisitor("salt", "1.2.3.4", "ua");
     expect(a).toBe(b);
     expect(a).toHaveLength(64);
   });
 
-  it("changes with salt, ip, ua, or day", () => {
-    const base = hashVisitor("salt", "1.2.3.4", "ua", "2026-10-02");
-    expect(hashVisitor("other", "1.2.3.4", "ua", "2026-10-02")).not.toBe(base);
-    expect(hashVisitor("salt", "5.6.7.8", "ua", "2026-10-02")).not.toBe(base);
-    expect(hashVisitor("salt", "1.2.3.4", "other", "2026-10-02")).not.toBe(
-      base,
+  it("changes with salt, ip, or ua", () => {
+    const base = hashVisitor("salt", "1.2.3.4", "ua");
+    expect(hashVisitor("other", "1.2.3.4", "ua")).not.toBe(base);
+    expect(hashVisitor("salt", "5.6.7.8", "ua")).not.toBe(base);
+    expect(hashVisitor("salt", "1.2.3.4", "other")).not.toBe(base);
+  });
+
+  it("is stable across days so returning visitors count once", () => {
+    // The day is deliberately NOT part of the hash.
+    expect(hashVisitor("salt", "1.2.3.4", "ua")).toBe(
+      hashVisitor("salt", "1.2.3.4", "ua"),
     );
-    expect(hashVisitor("salt", "1.2.3.4", "ua", "2026-10-03")).not.toBe(base);
   });
 
   it("does not leak the ip", () => {
-    const hash = hashVisitor("salt", "1.2.3.4", "ua", "2026-10-02");
+    const hash = hashVisitor("salt", "1.2.3.4", "ua");
     expect(hash).not.toContain("1.2.3.4");
   });
 });
@@ -244,7 +248,7 @@ describe("recordPageView (with DynamoDB)", () => {
     __resetClientForTests();
   });
 
-  it("writes total, daily, and site records", async () => {
+  it("writes total, daily, and uniques records", async () => {
     const send = mockClient(async () => ({}));
     const ok = await recordPageView(
       "/blog/test",
@@ -253,8 +257,8 @@ describe("recordPageView (with DynamoDB)", () => {
       new Date("2026-10-03T12:00:00Z"),
     );
     expect(ok).toBe(true);
-    // TOTAL + page DAY + SITE DAY records.
-    expect(send).toHaveBeenCalledTimes(3);
+    // TOTAL + page DAY + page UNIQUES + SITE UNIQUES records.
+    expect(send).toHaveBeenCalledTimes(4);
   });
 
   it("reuses the cached client across calls", async () => {
@@ -262,7 +266,41 @@ describe("recordPageView (with DynamoDB)", () => {
     await recordPageView("/a", "1.1.1.1", "Mozilla/5.0", new Date());
     await recordPageView("/b", "1.1.1.1", "Mozilla/5.0", new Date());
     expect(DynamoDBDocumentClient.from).toHaveBeenCalledTimes(1);
-    expect(send).toHaveBeenCalledTimes(6);
+    expect(send).toHaveBeenCalledTimes(8);
+  });
+
+  it("writes the same visitor hash on repeat visits a year apart", async () => {
+    const send = mockClient(async () => ({}));
+    const ip = "203.0.113.9";
+    const ua = "Mozilla/5.0 TestBrowser/1.0";
+    await recordPageView("/", ip, ua, new Date("2026-10-05T12:00:00Z"));
+    await recordPageView(
+      "/blog/some-post",
+      ip,
+      ua,
+      new Date("2027-10-05T12:00:00Z"),
+    );
+    const uniquesWrites = send.mock.calls.filter(
+      (call) =>
+        (call[0] as { input: { Key: { sk: string } } }).input.Key.sk ===
+        "UNIQUES",
+    );
+    // Page UNIQUES + SITE UNIQUES for each of the two visits.
+    expect(uniquesWrites).toHaveLength(4);
+    const hashes = uniquesWrites.map(
+      (call) =>
+        [
+          ...(
+            call[0] as {
+              input: {
+                ExpressionAttributeValues: { ":visitor": Set<string> };
+              };
+            }
+          ).input.ExpressionAttributeValues[":visitor"],
+        ][0],
+    );
+    // All four writes carry the identical hash: the visitor counts once.
+    expect(new Set(hashes).size).toBe(1);
   });
 });
 
@@ -295,45 +333,19 @@ describe("getPageUniqueViews (with DynamoDB)", () => {
     __resetClientForTests();
   });
 
-  it("sums array and Set visitor collections", async () => {
-    mockClient(async () => ({
-      Items: [
-        { visitors: ["a", "b", "c"] },
-        { visitors: new Set(["d", "e"]) },
-        {},
-      ],
-    }));
-    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(5);
-  });
-
-  it("follows pagination cursors", async () => {
-    let calls = 0;
-    mockClient(async () => {
-      calls += 1;
-      if (calls === 1) {
-        return {
-          Items: [{ visitors: ["a"] }],
-          LastEvaluatedKey: { pk: "x" },
-        };
-      }
-      return { Items: [{ visitors: ["b", "c"] }] };
-    });
+  it("returns the size of the persistent visitor set", async () => {
+    mockClient(async () => ({ Item: { visitors: ["a", "b", "c"] } }));
     await expect(getPageUniqueViews("/blog/test")).resolves.toBe(3);
   });
 
-  it("handles empty query results", async () => {
-    mockClient(async () => ({}));
-    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(0);
+  it("handles Set visitor collections", async () => {
+    mockClient(async () => ({ Item: { visitors: new Set(["d", "e"]) } }));
+    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(2);
   });
 
-  it("limits to a recent window when days is given", async () => {
-    const send = mockClient(async () => ({ Items: [] }));
-    const now = new Date("2026-10-10T12:00:00Z");
-    await getPageUniqueViews("/blog/test", 7, now);
-    const cmd = send.mock.calls[0][0] as {
-      input: { ExpressionAttributeValues: Record<string, string> };
-    };
-    expect(cmd.input.ExpressionAttributeValues[":sk"]).toBe("DAY#2026-10-04");
+  it("returns 0 when the page has no uniques record", async () => {
+    mockClient(async () => ({}));
+    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(0);
   });
 });
 
@@ -349,17 +361,22 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
     await expect(getAnalyticsSummary()).resolves.toBeNull();
   });
 
-  it("aggregates totals, daily stats, and site uniques", async () => {
+  it("aggregates totals, daily stats, and true uniques", async () => {
     mockClient(async () => ({
       Items: [
         { pk: "PAGE#/blog/a", sk: "TOTAL", path: "/blog/a", views: 100 },
+        {
+          pk: "PAGE#/blog/a",
+          sk: "UNIQUES",
+          path: "/blog/a",
+          visitors: new Set(["u1", "u2"]),
+        },
         {
           pk: "PAGE#/blog/a",
           sk: "DAY#2026-10-02",
           path: "/blog/a",
           day: "2026-10-02",
           views: 4,
-          visitors: ["u4"],
         },
         {
           pk: "PAGE#/blog/a",
@@ -367,7 +384,6 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
           path: "/blog/a",
           day: "2026-10-01",
           views: 2,
-          visitors: new Set(["u5"]),
         },
         {
           pk: "PAGE#/blog/a",
@@ -375,7 +391,6 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
           path: "/blog/a",
           day: "2026-10-03",
           views: 10,
-          visitors: ["u1", "u2"],
         },
         {
           pk: "PAGE#/blog/a",
@@ -383,7 +398,6 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
           path: "/blog/a",
           day: "2026-09-28",
           views: 1,
-          visitors: ["u6"],
         },
         {
           pk: "PAGE#/blog/a",
@@ -391,21 +405,24 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
           path: "/blog/a",
           day: "2026-09-30",
           views: 5,
-          visitors: ["u7", "u8"],
         },
+        {
+          pk: "SITE",
+          sk: "UNIQUES",
+          visitors: ["u1", "u2", "u3"],
+        },
+        // UNIQUES item without a visitors field: counts as 0.
+        {
+          pk: "PAGE#/blog/b",
+          sk: "UNIQUES",
+          path: "/blog/b",
+        },
+        // Legacy day-bound records are ignored by the new read path.
         {
           pk: "SITE",
           sk: "DAY#2026-10-03",
           day: "2026-10-03",
-          views: 25,
-          visitors: ["u1", "u2", "u3"],
-        },
-        {
-          pk: "SITE",
-          sk: "DAY#2026-10-02",
-          day: "2026-10-02",
-          views: 10,
-          visitors: ["u4"],
+          visitors: ["legacy1", "legacy2"],
         },
       ],
     }));
@@ -415,10 +432,12 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
     );
     expect(summary).not.toBeNull();
     expect(summary!.totalViews).toBe(100);
-    expect(summary!.totalUniques).toBe(4);
-    expect(summary!.pages).toHaveLength(1);
+    expect(summary!.totalUniques).toBe(3);
+    expect(summary!.pages).toHaveLength(2);
     expect(summary!.pages[0].path).toBe("/blog/a");
-    expect(summary!.pages[0].uniquesLast30d).toBe(7);
+    expect(summary!.pages[0].uniques).toBe(2);
+    expect(summary!.pages[1].path).toBe("/blog/b");
+    expect(summary!.pages[1].uniques).toBe(0);
     expect(summary!.dailyTotals).toHaveLength(5);
     // Sorted ascending by day.
     expect(summary!.dailyTotals[0].day).toBe("2026-09-28");
@@ -455,7 +474,6 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
           path: "/blog/a",
           day: "2020-01-01",
           views: 99,
-          visitors: ["old"],
         },
       ],
     }));
@@ -465,7 +483,7 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
     );
     expect(summary!.totalViews).toBe(50);
     expect(summary!.pages[0].daily).toHaveLength(0);
-    expect(summary!.pages[0].uniquesLast30d).toBe(0);
+    expect(summary!.pages[0].uniques).toBe(0);
   });
 
   it("handles missing fields and empty pages", async () => {
