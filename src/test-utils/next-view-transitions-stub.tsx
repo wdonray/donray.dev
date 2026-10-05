@@ -30,11 +30,7 @@ export function Link({
   );
 }
 
-export function ViewTransitions({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function ViewTransitions({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
