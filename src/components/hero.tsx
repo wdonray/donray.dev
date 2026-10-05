@@ -5,10 +5,19 @@ import { ExternalLink, Mail } from "lucide-react";
 import Image from "next/image";
 import { Link } from "next-view-transitions";
 import { motion } from "framer-motion";
-import { fadeInUpWithDelay, imageScale } from "@/lib/animations";
+import {
+  fadeInUpWithDelay,
+  imageScale,
+  introAnimation,
+  useIntroAnimation,
+} from "@/lib/animations";
 
 export default function Hero() {
   const yearsSince2019 = new Date().getFullYear() - 2019;
+  // Entrance animations play on initial page load only. On client-side
+  // navigations the View Transitions crossfade already provides the
+  // motion; replaying mount animations reads as a double blink.
+  const playIntro = useIntroAnimation();
 
   const h1Size = "text-4xl sm:text-6xl lg:text-7xl";
   const h2Size = "text-xl sm:text-2xl lg:text-3xl";
@@ -28,21 +37,21 @@ export default function Hero() {
           <motion.h1
             id="hero-heading"
             className={`${h1Size} font-bold tracking-tight`}
-            {...fadeInUpWithDelay(0)}
+            {...introAnimation(playIntro, fadeInUpWithDelay(0))}
           >
             Hi, I&apos;m Donray Williams
           </motion.h1>
 
           <motion.h2
             className={`${h2Size} font-normal text-muted-foreground`}
-            {...fadeInUpWithDelay(0.05)}
+            {...introAnimation(playIntro, fadeInUpWithDelay(0.05))}
           >
             Engineering Manager
           </motion.h2>
 
           <motion.p
             className={`${pSize} text-muted-foreground max-w-xl`}
-            {...fadeInUpWithDelay(0.1)}
+            {...introAnimation(playIntro, fadeInUpWithDelay(0.1))}
           >
             I lead frontend for onboarding and billing at Justworks, a
             player-coach for a team of 3 guided by{" "}
@@ -59,7 +68,7 @@ export default function Hero() {
 
           <motion.div
             className="flex flex-col sm:flex-row gap-3 sm:gap-4 max-w-sm mx-auto md:mx-0"
-            {...fadeInUpWithDelay(0.15)}
+            {...introAnimation(playIntro, fadeInUpWithDelay(0.15))}
           >
             <Button
               size="lg"
@@ -94,7 +103,7 @@ export default function Hero() {
         </div>
 
         <motion.div
-          {...imageScale}
+          {...introAnimation(playIntro, imageScale)}
           transition={{ ...imageScale.transition, delay: 0.1 }}
           className="order-first md:order-none block relative w-36 sm:w-[250px] md:w-[350px] lg:w-[450px] xl:w-[500px] aspect-square shrink-0"
           id="hero-image"
