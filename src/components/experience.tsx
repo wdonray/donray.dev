@@ -4,7 +4,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Calendar, Briefcase, ChevronDown } from "lucide-react";
+import {
+  MapPin,
+  Calendar,
+  Briefcase,
+  ChevronDown,
+  ArrowRight,
+} from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { fadeInUp } from "@/lib/animations";
 
@@ -18,6 +24,7 @@ interface ExperienceItem {
     title: string;
     period: string;
     description?: string;
+    link?: { href: string; label: string };
   }[];
 }
 
@@ -97,6 +104,15 @@ function JobEntry({
                   {pos.description}
                 </p>
               )}
+              {pos.link && (
+                <a
+                  href={pos.link.href}
+                  className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
+                >
+                  {pos.link.label}
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </a>
+              )}
             </div>
           ))}
         </div>
@@ -158,6 +174,7 @@ export default function Experience() {
           period: "Jun 2026 – Present",
           description:
             "Player-coach leading frontend for onboarding and billing (team of 3). Shipped the member onboarding flow used by 6,800+ people across 1,365 companies in 30 days.",
+          link: { href: "/principles", label: "How I lead" },
         },
         {
           title: "Senior Software Engineer",

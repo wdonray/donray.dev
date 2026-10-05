@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Mail } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { fadeInUpWithDelay, imageScale } from "@/lib/animations";
 
@@ -46,7 +47,14 @@ export default function Hero() {
             I lead frontend for all things onboarding and billing at Justworks,
             a player-coach for a team of 3, with{" "}
             <span className="font-bold">{yearsSince2019}+ years</span> turning
-            ideas into polished products.
+            ideas into polished products. I wrote down the{" "}
+            <Link
+              href="/principles"
+              className="font-medium text-foreground underline decoration-primary/50 underline-offset-4 hover:decoration-primary"
+            >
+              principles
+            </Link>{" "}
+            I lead by.
           </motion.p>
 
           <motion.div
