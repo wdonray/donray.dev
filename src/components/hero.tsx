@@ -44,17 +44,17 @@ export default function Hero() {
             className={`${pSize} text-muted-foreground max-w-xl`}
             {...fadeInUpWithDelay(0.1)}
           >
-            I lead frontend for all things onboarding and billing at Justworks,
-            a player-coach for a team of 3, with{" "}
-            <span className="font-bold">{yearsSince2019}+ years</span> turning
-            ideas into polished products. I wrote down the{" "}
+            I lead frontend for onboarding and billing at Justworks, a
+            player-coach for a team of 3 guided by{" "}
             <Link
               href="/principles"
               className="font-medium text-foreground underline decoration-primary/50 underline-offset-4 hover:decoration-primary"
             >
               principles
             </Link>{" "}
-            I lead by.
+            I&apos;ve refined over{" "}
+            <span className="font-bold">{yearsSince2019}+ years</span> turning
+            ideas into polished products.
           </motion.p>
 
           <motion.div
