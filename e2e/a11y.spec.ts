@@ -11,7 +11,14 @@ import AxeBuilder from "@axe-core/playwright";
  * contrast is theme-dependent.
  */
 test.describe("accessibility", () => {
-  const pages = ["/", "/version", "/blog", "/analytics", "/uses"];
+  const pages = [
+    "/",
+    "/version",
+    "/blog",
+    "/analytics",
+    "/uses",
+    "/principles",
+  ];
 
   for (const path of pages) {
     for (const theme of ["light", "dark"] as const) {
