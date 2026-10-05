@@ -4,9 +4,9 @@ test.describe("home page", () => {
   test("renders the hero", async ({ page }) => {
     await page.goto("/");
 
-    const hero = page.getByRole("region", { name: /hi, i'm donray williams/i });
+    const hero = page.getByRole("region", { name: /hi, i'm donray$/i });
     await expect(
-      hero.getByRole("heading", { name: /hi, i'm donray williams/i }),
+      hero.getByRole("heading", { name: /hi, i'm donray$/i }),
     ).toBeVisible();
     await expect(
       hero.getByRole("heading", { name: "Engineering Manager" }),
