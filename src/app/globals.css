@@ -176,17 +176,17 @@
   }
 }
 
-/* Simple crossfade between pages (View Transitions API). */
+/*
+ * Simple page fade (View Transitions API).
+ * The outgoing page holds steady while the incoming page fades in over it.
+ * Fading both snapshots at once dips through the page background
+ * mid-transition, which reads as a double blink.
+ */
 ::view-transition-old(root) {
-  animation: 160ms ease-out both page-fade-out;
+  animation: none;
 }
 ::view-transition-new(root) {
-  animation: 160ms ease-in both page-fade-in;
-}
-@keyframes page-fade-out {
-  to {
-    opacity: 0;
-  }
+  animation: 200ms ease-out both page-fade-in;
 }
 @keyframes page-fade-in {
   from {
