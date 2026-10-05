@@ -120,3 +120,6 @@ abandoning the blog is the failure mode.
 - `npm run test:e2e` — Playwright against a production build
 - `npm test` — both
 - Add tests for new behavior, especially security and analytics logic.
+- Browser-only dependencies that break vitest's resolver get a stub in
+  `src/test-utils/` aliased in `vitest.config.ts` (see
+  `next-view-transitions-stub.tsx`); stubs are excluded from coverage.

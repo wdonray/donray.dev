@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { Mail } from "lucide-react";
 import { Github, Linkedin } from "./ui/brand-icons";
 import { Button } from "./ui/button";
