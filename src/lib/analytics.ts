@@ -6,7 +6,6 @@ import {
 import {
   DynamoDBDocumentClient,
   GetCommand,
-  QueryCommand,
   ScanCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
@@ -16,17 +15,19 @@ import {
  *
  * Design:
  * - One item per page for all-time totals:   pk = "PAGE#<path>", sk = "TOTAL"
- * - One item per page per day for uniques:   pk = "PAGE#<path>", sk = "DAY#<yyyy-mm-dd>"
+ * - One item per page per day for the chart: pk = "PAGE#<path>", sk = "DAY#<yyyy-mm-dd>"
+ *   with a `views` counter.
+ * - One item per page for true unique visitors: pk = "PAGE#<path>", sk = "UNIQUES"
  *   with a `visitors` string-set of salted visitor hashes (kept permanently).
- * - One item per day for site-wide uniques:  pk = "SITE", sk = "DAY#<yyyy-mm-dd>"
- *   so the headline unique-visitor count dedupes across pages (a visitor who
- *   reads three pages in a day counts once, not three times).
+ * - One item for site-wide true unique visitors: pk = "SITE", sk = "UNIQUES"
+ *   so the headline count dedupes across pages (a visitor who reads three
+ *   pages counts once, not three times).
  * - Raw IPs are never stored. A visitor is identified by
- *   SHA-256(salt | ip | user-agent | date), so hashes rotate daily and
- *   cannot be reversed into an IP.
- * - Daily records are kept permanently (no TTL). The table is tiny and
- *   storage costs are negligible; permanent history is what makes
- *   cumulative unique-reader counts possible.
+ *   SHA-256(salt | ip | user-agent): stable over time, so a visitor who
+ *   returns a year later still counts once, and non-reversible, so the
+ *   hash cannot be turned back into an IP.
+ * - All records are kept permanently (no TTL). The table is tiny and
+ *   storage costs are negligible.
  */
 
 const TABLE_ENV = "ANALYTICS_TABLE";
@@ -58,15 +59,16 @@ export function dayKey(date: Date = new Date()): string {
   return date.toISOString().slice(0, 10); // yyyy-mm-dd (UTC)
 }
 
-/** Salted, non-reversible visitor identifier for one page-day. */
+/** Salted, non-reversible visitor identifier. Stable over time: the same
+ * visitor (same IP + user agent) always produces the same hash, so returning
+ * visitors are counted once, no matter how far apart the visits are. */
 export function hashVisitor(
   salt: string,
   ip: string,
   userAgent: string,
-  day: string,
 ): string {
   return createHash("sha256")
-    .update(`${salt}|${ip}|${userAgent}|${day}`)
+    .update(`${salt}|${ip}|${userAgent}`)
     .digest("hex");
 }
 
@@ -157,7 +159,7 @@ export async function recordPageView(
 
   const client = getClient(config);
   const day = dayKey(now);
-  const visitor = hashVisitor(config.salt, ip, userAgent, day);
+  const visitor = hashVisitor(config.salt, ip, userAgent);
 
   await Promise.all([
     // All-time total for the page.
@@ -171,42 +173,55 @@ export async function recordPageView(
         ExpressionAttributeValues: { ":one": 1, ":path": path },
       }),
     ),
-    // Daily uniques for the page (idempotent set-add).
+    // Daily view count for the page (powers the per-day chart).
     client.send(
       new UpdateCommand({
         TableName: config.table,
         Key: { pk: pkFor(path), sk: `DAY#${day}` },
         UpdateExpression:
-          "ADD #views :one, #visitors :visitor SET #path = if_not_exists(#path, :path), #day = if_not_exists(#day, :day)",
+          "ADD #views :one SET #path = if_not_exists(#path, :path), #day = if_not_exists(#day, :day)",
         ExpressionAttributeNames: {
           "#views": "views",
-          "#visitors": "visitors",
           "#path": "path",
           "#day": "day",
         },
         ExpressionAttributeValues: {
           ":one": 1,
-          ":visitor": new Set([visitor]),
           ":path": path,
           ":day": day,
         },
       }),
     ),
-    // Site-wide daily uniques (same visitor hash, so a visitor who reads
-    // several pages in one day counts once here).
+    // True unique visitors for the page (idempotent set-add: a returning
+    // visitor adds the same hash again, so the set size is the real count).
     client.send(
       new UpdateCommand({
         TableName: config.table,
-        Key: { pk: "SITE", sk: `DAY#${day}` },
+        Key: { pk: pkFor(path), sk: "UNIQUES" },
         UpdateExpression:
-          "ADD #visitors :visitor SET #day = if_not_exists(#day, :day)",
+          "ADD #visitors :visitor SET #path = if_not_exists(#path, :path)",
         ExpressionAttributeNames: {
           "#visitors": "visitors",
-          "#day": "day",
+          "#path": "path",
         },
         ExpressionAttributeValues: {
           ":visitor": new Set([visitor]),
-          ":day": day,
+          ":path": path,
+        },
+      }),
+    ),
+    // Site-wide true unique visitors (same visitor hash, so a visitor who
+    // reads several pages counts once here).
+    client.send(
+      new UpdateCommand({
+        TableName: config.table,
+        Key: { pk: "SITE", sk: "UNIQUES" },
+        UpdateExpression: "ADD #visitors :visitor",
+        ExpressionAttributeNames: {
+          "#visitors": "visitors",
+        },
+        ExpressionAttributeValues: {
+          ":visitor": new Set([visitor]),
         },
       }),
     ),
@@ -217,20 +232,19 @@ export async function recordPageView(
 export interface DailyStat {
   day: string;
   views: number;
-  uniques: number;
 }
 
 export interface PageStat {
   path: string;
   totalViews: number;
   daily: DailyStat[];
-  uniquesLast30d: number;
+  uniques: number;
 }
 
 export interface AnalyticsSummary {
   pages: PageStat[];
   totalViews: number;
-  /** Sum of site-wide daily unique visitors (deduped across pages). */
+  /** True site-wide unique visitors (deduped across pages and across time). */
   totalUniques: number;
   dailyTotals: DailyStat[];
   fetchedAt: string;
@@ -272,7 +286,7 @@ export async function getAnalyticsSummary(
   const ensure = (path: string): PageStat => {
     let stat = byPage.get(path);
     if (!stat) {
-      stat = { path, totalViews: 0, daily: [], uniquesLast30d: 0 };
+      stat = { path, totalViews: 0, daily: [], uniques: 0 };
       byPage.set(path, stat);
     }
     return stat;
@@ -286,14 +300,13 @@ export async function getAnalyticsSummary(
         : 0;
   };
 
-  const siteDailyUniques = new Map<string, number>();
+  let siteUniques = 0;
 
   for (const item of items) {
     const pk = item.pk as string | undefined;
     const sk = item.sk as string | undefined;
-    if (pk === "SITE" && sk?.startsWith("DAY#")) {
-      const day = sk.slice("DAY#".length);
-      if (day >= cutoffDay) siteDailyUniques.set(day, countUniques(item));
+    if (pk === "SITE" && sk === "UNIQUES") {
+      siteUniques = countUniques(item);
       continue;
     }
     if (!pk?.startsWith("PAGE#")) continue;
@@ -301,13 +314,14 @@ export async function getAnalyticsSummary(
     const stat = ensure(path);
     if (sk === "TOTAL") {
       stat.totalViews = (item.views as number) ?? 0;
+    } else if (sk === "UNIQUES") {
+      stat.uniques = countUniques(item);
     } else if (sk?.startsWith("DAY#")) {
       const day = sk.slice("DAY#".length);
       if (day >= cutoffDay) {
         stat.daily.push({
           day,
           views: (item.views as number) ?? 0,
-          uniques: countUniques(item),
         });
       }
     }
@@ -315,7 +329,6 @@ export async function getAnalyticsSummary(
 
   for (const stat of byPage.values()) {
     stat.daily.sort(compareDays);
-    stat.uniquesLast30d = stat.daily.reduce((sum, d) => sum + d.uniques, 0);
   }
 
   const pages = [...byPage.values()].sort(
@@ -329,10 +342,8 @@ export async function getAnalyticsSummary(
       const total = dailyTotals.get(d.day) ?? {
         day: d.day,
         views: 0,
-        uniques: 0,
       };
       total.views += d.views;
-      total.uniques += d.uniques;
       dailyTotals.set(d.day, total);
     }
   }
@@ -340,7 +351,7 @@ export async function getAnalyticsSummary(
   return {
     pages,
     totalViews,
-    totalUniques: [...siteDailyUniques.values()].reduce((sum, n) => sum + n, 0),
+    totalUniques: siteUniques,
     dailyTotals: [...dailyTotals.values()].sort(compareDays),
     fetchedAt: now.toISOString(),
   };
@@ -362,53 +373,23 @@ export async function getPageTotalViews(path: string): Promise<number | null> {
 }
 
 /**
- * Sum of daily unique visitors for a page. Each day's `visitors` is a set
- * of salted hashes (IP + UA + day), so a reader who visits on two different
- * days counts twice. Pass `days` to limit to a recent window; defaults to
- * all history (daily records are kept permanently).
+ * True unique visitors for a page: the size of its persistent visitor set.
+ * A visitor who returns any number of times still counts once.
  */
-export async function getPageUniqueViews(
-  path: string,
-  days?: number,
-  now: Date = new Date(),
-): Promise<number | null> {
+export async function getPageUniqueViews(path: string): Promise<number | null> {
   const config = getConfig();
   if (!config) return null;
   const client = getClient(config);
-
-  const skStart =
-    days === undefined
-      ? "DAY#"
-      : `DAY#${dayKey(new Date(now.getTime() - (days - 1) * 86400000))}`;
-
-  let total = 0;
-  let exclusiveStartKey: Record<string, unknown> | undefined;
-  do {
-    const res = await client.send(
-      new QueryCommand({
-        TableName: config.table,
-        KeyConditionExpression: "pk = :pk AND sk >= :sk",
-        ExpressionAttributeValues: {
-          ":pk": pkFor(path),
-          ":sk": skStart,
-        },
-        ExclusiveStartKey: exclusiveStartKey,
-      }),
-    );
-    for (const item of (res.Items ?? []) as Record<string, unknown>[]) {
-      const visitors = item.visitors as string[] | Set<string> | undefined;
-      total += Array.isArray(visitors)
-        ? visitors.length
-        : visitors instanceof Set
-          ? visitors.size
-          : 0;
-    }
-    exclusiveStartKey = res.LastEvaluatedKey as
-      | Record<string, unknown>
-      | undefined;
-  } while (exclusiveStartKey);
-
-  return total;
+  const res = await client.send(
+    new GetCommand({
+      TableName: config.table,
+      Key: { pk: pkFor(path), sk: "UNIQUES" },
+    }),
+  );
+  const item = res.Item as { visitors?: string[] | Set<string> } | undefined;
+  const visitors = item?.visitors;
+  if (!visitors) return 0;
+  return Array.isArray(visitors) ? visitors.length : visitors.size;
 }
 
 /* ------------------------------------------------------------------ */
