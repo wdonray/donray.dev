@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Uses | donray.dev",
+  title: "Uses",
   description:
     "The tools Donray Williams uses to build: editors, languages, frameworks, and infrastructure.",
+  alternates: {
+    canonical: "/uses",
+  },
+  openGraph: {
+    title: "Uses",
+    description:
+      "The tools Donray Williams uses to build: editors, languages, frameworks, and infrastructure.",
+    url: "/uses",
+  },
 };
 
 const GROUPS: { title: string; items: { name: string; note: string }[] }[] = [

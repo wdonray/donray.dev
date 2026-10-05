@@ -1,11 +1,53 @@
-"use client";
+import type { Metadata, Viewport } from "next";
 
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
-import AnalyticsTracker from "@/components/analytics-tracker";
+import ClientLayout from "@/components/client-layout";
 import { getPersonJsonLd, serializeJsonLd } from "@/lib/schema";
+
+const SITE_URL = "https://www.donray.dev";
+const DEFAULT_DESCRIPTION =
+  "Donray Williams is a player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing. Portfolio, projects, and experience.";
+const OG_DESCRIPTION =
+  "Player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing. Portfolio, projects, and experience.";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default:
+      "Donray Williams | Engineering Manager | Frontend Leadership, NYC Metro",
+    template: "%s | donray.dev",
+  },
+  description: DEFAULT_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Donray Williams | Engineering Manager",
+    description: OG_DESCRIPTION,
+    url: "/",
+    siteName: "donray.dev",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Donray Williams | Engineering Manager",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Donray Williams | Engineering Manager",
+    description:
+      "Player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing.",
+    images: ["/og-image.png"],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f7f3e8",
+};
 
 export default function RootLayout({
   children,
@@ -14,71 +56,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <title>
-          Donray Williams | Engineering Manager | Frontend Leadership, NYC Metro
-        </title>
-        <meta
-          name="description"
-          content="Donray Williams is a player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing. Portfolio, projects, and experience."
-        />
-        <link rel="canonical" href="https://www.donray.dev" />
-        <meta name="theme-color" content="#f7f3e8" />
-        <meta
-          property="og:title"
-          content="Donray Williams | Engineering Manager"
-        />
-        <meta
-          property="og:description"
-          content="Player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing. Portfolio, projects, and experience."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.donray.dev" />
-        <meta property="og:site_name" content="donray.dev" />
-        <meta
-          property="og:image"
-          content="https://www.donray.dev/og-image.png"
-        />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta
-          property="og:image:alt"
-          content="Donray Williams | Engineering Manager"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Donray Williams | Engineering Manager"
-        />
-        <meta
-          name="twitter:description"
-          content="Player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing."
-        />
-        <meta
-          name="twitter:image"
-          content="https://www.donray.dev/og-image.png"
-        />
+      <body>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: serializeJsonLd(getPersonJsonLd()),
           }}
         />
-      </head>
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div>
-            <Header />
-            <main className="w-full">{children}</main>
-            <Footer />
-            <AnalyticsTracker />
-          </div>
-        </ThemeProvider>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

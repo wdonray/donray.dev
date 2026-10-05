@@ -7,8 +7,11 @@ import VersionInfo, {
 } from "@/components/version-info";
 
 export const metadata: Metadata = {
-  title: "Version | donray.dev",
+  title: "Version",
   description: "Every deploy to donray.dev, most recent first.",
+  alternates: {
+    canonical: "/version",
+  },
 };
 
 async function getRecentReleases(): Promise<Release[]> {

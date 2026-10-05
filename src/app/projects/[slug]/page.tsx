@@ -19,14 +19,35 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
+  const url = `/projects/${project.slug}`;
+  const ogImage = project.screenshot ?? project.image;
   return {
-    title: `${project.title} | donray.dev`,
+    title: project.title,
     description: project.description,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: project.title,
-      description: project.description,
-      url: `https://www.donray.dev/projects/${project.slug}`,
+      description: `${project.subtitle} ${project.description}`,
+      url,
       type: "article",
+      ...(ogImage
+        ? {
+            images: [
+              {
+                url: ogImage,
+                alt: project.screenshotAlt ?? project.imageAlt,
+              },
+            ],
+          }
+        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.description,
+      ...(ogImage ? { images: [ogImage] } : {}),
     },
   };
 }
