@@ -1,4 +1,5 @@
 import { getAnalyticsSummary } from "@/lib/analytics";
+import { PageViewsByPage } from "@/components/page-views-by-page";
 import {
   Card,
   CardContent,
@@ -184,6 +185,8 @@ export default async function AnalyticsPage() {
                 </CardContent>
               </Card>
             )}
+            {/* Per-page breakdown: all-time views and uniques per path */}
+            <PageViewsByPage pages={summary.pages} />
           </section>
 
           {/* Historical estimates: a different, older measurement */}
@@ -329,9 +332,8 @@ export default async function AnalyticsPage() {
                   <strong className="text-foreground">
                     Almost all traffic is the homepage.
                   </strong>{" "}
-                  That&apos;s why there&apos;s no per-page breakdown here: it
-                  would be a table of one meaningful row. The site&apos;s job is
-                  to be found, read, and contacted from a single page.
+                  The per-page table above makes that plain. The site&apos;s job
+                  is to be found, read, and contacted from a single page.
                 </li>
                 <li>
                   <strong className="text-foreground">
