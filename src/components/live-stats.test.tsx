@@ -1,8 +1,14 @@
 import { render, screen, act } from "@testing-library/react";
 import { describe, expect, it, vi, afterEach } from "vitest";
-import { HzcStats } from "./hzc-stats";
+import { LiveStats } from "./live-stats";
 
 const STATS = { pageViews: 1234, uniqueVisitors: 56 };
+
+const PROPS = {
+  endpoint: "/api/hzc-stats",
+  sourceName: "hidezerocards.org's",
+  sourceHref: "https://hidezerocards.org/analytics",
+};
 
 function mockFetchOnce(
   impl: () => Promise<{ ok: boolean; json: () => Promise<unknown> }>,
@@ -16,20 +22,44 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("HzcStats", () => {
+describe("LiveStats", () => {
   it("renders the stats once loaded", async () => {
-    mockFetchOnce(async () => ({
+    const fetch = mockFetchOnce(async () => ({
       ok: true,
       json: async () => STATS,
     }));
-    render(<HzcStats />);
+    render(<LiveStats {...PROPS} />);
 
+    expect(fetch).toHaveBeenCalledWith("/api/hzc-stats");
     expect(await screen.findByText("Live stats")).toBeVisible();
     expect(await screen.findByText("1,234")).toBeVisible();
     expect(await screen.findByText("56")).toBeVisible();
     expect(
       screen.getByRole("link", { name: "public analytics" }),
     ).toHaveAttribute("href", "https://hidezerocards.org/analytics");
+    expect(
+      screen.getByText("All time, from hidezerocards.org's", { exact: false }),
+    ).toBeVisible();
+  });
+
+  it("uses the given endpoint and source", async () => {
+    const fetch = mockFetchOnce(async () => ({
+      ok: true,
+      json: async () => STATS,
+    }));
+    render(
+      <LiveStats
+        endpoint="/api/ps-stats"
+        sourceName="patternspell.org's"
+        sourceHref="https://patternspell.org/analytics"
+      />,
+    );
+
+    expect(fetch).toHaveBeenCalledWith("/api/ps-stats");
+    expect(await screen.findByText("Live stats")).toBeVisible();
+    expect(
+      screen.getByRole("link", { name: "public analytics" }),
+    ).toHaveAttribute("href", "https://patternspell.org/analytics");
   });
 
   it("renders nothing when the endpoint is unavailable", async () => {
@@ -37,7 +67,7 @@ describe("HzcStats", () => {
       ok: false,
       json: async () => ({ ok: false }),
     }));
-    const { container } = render(<HzcStats />);
+    const { container } = render(<LiveStats {...PROPS} />);
     await act(async () => {});
     expect(container).toBeEmptyDOMElement();
   });
@@ -47,7 +77,7 @@ describe("HzcStats", () => {
       ok: true,
       json: async () => ({ pageViews: "lots" }),
     }));
-    const { container } = render(<HzcStats />);
+    const { container } = render(<LiveStats {...PROPS} />);
     await act(async () => {});
     expect(container).toBeEmptyDOMElement();
   });
@@ -56,7 +86,7 @@ describe("HzcStats", () => {
     mockFetchOnce(async () => {
       throw new Error("network down");
     });
-    const { container } = render(<HzcStats />);
+    const { container } = render(<LiveStats {...PROPS} />);
     await act(async () => {});
     expect(container).toBeEmptyDOMElement();
   });
@@ -72,7 +102,7 @@ describe("HzcStats", () => {
           resolveFetch = resolve;
         }),
     );
-    const { container, unmount } = render(<HzcStats />);
+    const { container, unmount } = render(<LiveStats {...PROPS} />);
     unmount();
     await act(async () => {
       resolveFetch({ ok: true, json: async () => STATS });
@@ -88,7 +118,7 @@ describe("HzcStats", () => {
           rejectFetch = reject;
         }),
     );
-    const { container, unmount } = render(<HzcStats />);
+    const { container, unmount } = render(<LiveStats {...PROPS} />);
     unmount();
     await act(async () => {
       rejectFetch(new Error("network down"));
