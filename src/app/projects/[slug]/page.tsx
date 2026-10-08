@@ -6,6 +6,7 @@ import { Github } from "@/components/ui/brand-icons";
 import { Badge } from "@/components/ui/badge";
 import { getProject, PROJECTS } from "@/lib/projects";
 import { getFaqJsonLd, serializeJsonLd } from "@/lib/schema";
+import { HzcStats } from "@/components/hzc-stats";
 
 export function generateStaticParams() {
   return PROJECTS.map((p) => ({ slug: p.slug }));
@@ -178,6 +179,8 @@ export default async function ProjectPage({
             </ul>
           </section>
         )}
+
+        {slug === "hide-zero-cards" && <HzcStats />}
 
         {project.faq && project.faq.length > 0 && (
           <section aria-labelledby="faq-heading">
