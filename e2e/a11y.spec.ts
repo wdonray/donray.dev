@@ -18,6 +18,7 @@ test.describe("accessibility", () => {
     "/analytics",
     "/uses",
     "/principles",
+    "/projects/hide-zero-cards",
   ];
 
   for (const path of pages) {
