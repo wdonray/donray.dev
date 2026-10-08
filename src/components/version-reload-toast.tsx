@@ -10,15 +10,8 @@ import { useNewVersionAvailable } from "@/hooks/use-new-version";
  * Mounted once in the root layout (via ClientLayout) so it is active on
  * every page. Dismissing hides it for the current page session only;
  * it reappears on the next page load while the app is still stale.
- *
- * `onReload` defaults to a normal window.location.reload(). It is a prop
- * so tests can observe the click without navigating.
  */
-export default function VersionReloadToast({
-  onReload = () => window.location.reload(),
-}: {
-  onReload?: () => void;
-} = {}) {
+export default function VersionReloadToast() {
   const updateAvailable = useNewVersionAvailable();
   const [dismissed, setDismissed] = useState(false);
 
@@ -42,7 +35,11 @@ export default function VersionReloadToast({
       <p className="leading-snug">
         A new version is available. Reload to get the latest.
       </p>
-      <Button type="button" className="min-h-11 shrink-0" onClick={onReload}>
+      <Button
+        type="button"
+        className="min-h-11 shrink-0"
+        onClick={() => window.location.reload()}
+      >
         Reload
       </Button>
       <button

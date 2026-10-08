@@ -59,6 +59,14 @@ describe("fetchDeployedVersion", () => {
   it("returns null when the payload is not an object", async () => {
     vi.stubGlobal(
       "fetch",
+      vi.fn(async () => ({ ok: true, json: async () => "nope" })),
+    );
+    await expect(fetchDeployedVersion()).resolves.toBeNull();
+  });
+
+  it("returns null when the payload is null", async () => {
+    vi.stubGlobal(
+      "fetch",
       vi.fn(async () => ({ ok: true, json: async () => null })),
     );
     await expect(fetchDeployedVersion()).resolves.toBeNull();
@@ -75,6 +83,25 @@ describe("fetchDeployedVersion", () => {
   it("returns null when the request fails", async () => {
     mockFetchVersions([new Error("offline")]);
     await expect(fetchDeployedVersion()).resolves.toBeNull();
+  });
+
+  it("aborts a hung request and returns null", async () => {
+    vi.useFakeTimers();
+    // A fetch that only settles when its signal aborts, like a real one.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        (_url: string, options?: { signal?: AbortSignal }) =>
+          new Promise((_resolve, reject) => {
+            options?.signal?.addEventListener("abort", () =>
+              reject(new DOMException("aborted", "AbortError")),
+            );
+          }),
+      ),
+    );
+    const promise = fetchDeployedVersion();
+    await vi.advanceTimersByTimeAsync(6000);
+    await expect(promise).resolves.toBeNull();
   });
 });
 
