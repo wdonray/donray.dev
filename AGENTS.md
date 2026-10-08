@@ -31,6 +31,7 @@ he decides, you execute. He verifies your work as a habit — be precise.
 
 ## Conventions
 
+- **Version reload toast** (`src/components/version-reload-toast.tsx`, hook `src/hooks/use-new-version.ts`): mounted once in `ClientLayout`; polls `GET /api/version` every 15 min (plus on visibility/focus regain) and shows a dismissible bottom-right toast when a newer deploy is detected.
 - **Evaluate features for value; scrap low-value or risky ideas.** Donray
   would rather cut than ship something marginal.
 - **No em dashes in user-facing copy.** They read as AI-written. Use

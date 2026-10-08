@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import AnalyticsTracker from "@/components/analytics-tracker";
+import VersionReloadToast from "@/components/version-reload-toast";
 
 /**
  * Client-side shell rendered inside the server root layout.
@@ -27,6 +28,7 @@ export default function ClientLayout({
         <main className="w-full">{children}</main>
         <Footer />
         <AnalyticsTracker />
+        <VersionReloadToast />
       </div>
     </ThemeProvider>
   );
