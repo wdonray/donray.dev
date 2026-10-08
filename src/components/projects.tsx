@@ -32,6 +32,8 @@ export interface Project {
   image?: string;
   imageAlt?: string;
   note?: string;
+  /** Omitted for active projects. */
+  status?: "discontinued" | "maintenance";
 }
 
 export function ProjectCard({
@@ -201,6 +203,7 @@ export default function Projects() {
       ],
       image: "/pico-domains.png",
       imageAlt: "pico.domains logo",
+      status: "discontinued",
     },
     {
       slug: "cyclei",
@@ -211,6 +214,7 @@ export default function Projects() {
       technologies: ["Vue3", "CSS", "HTML5", "TypeScript", "Vite", "GraphQL"],
       image: "/cyclei.png",
       imageAlt: "Cyclei logo",
+      status: "discontinued",
     },
     {
       slug: "hide-zero-cards",
@@ -231,6 +235,25 @@ export default function Projects() {
       imageAlt: "Screenshot of Hide Zero Cards website",
     },
     {
+      slug: "patternspell",
+      title: "PatternSpell",
+      subtitle: "Pattern-Based Spelling Toolkit for K-3 Teachers",
+      description:
+        "A pattern-based spelling toolkit for K-3 teachers, free for classrooms. Spelling lists per student, a big-screen pattern chart, and practice with text-to-speech.",
+      url: "https://patternspell.org/",
+      github: "https://github.com/wdonray/c-shepherd-speller",
+      technologies: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "DynamoDB",
+        "AWS Amplify",
+      ],
+      image: "/patternspell.png",
+      imageAlt: "PatternSpell logo: three pattern columns (PatternMark)",
+    },
+    {
       slug: "donray-dev",
       title: "donray.dev",
       subtitle: "Personal Portfolio and Blog",
@@ -240,6 +263,9 @@ export default function Projects() {
       github: "https://github.com/wdonray/donray.dev",
     },
   ];
+
+  const activeProjects = projects.filter((project) => !project.status);
+  const pastProjects = projects.filter((project) => project.status);
 
   return (
     <section id="projects" aria-labelledby="projects-heading" ref={sectionRef}>
@@ -252,9 +278,9 @@ export default function Projects() {
         <div
           className="grid gap-6 md:grid-cols-2"
           role="list"
-          aria-label="Projects"
+          aria-label="Active projects"
         >
-          {projects.map((project, index) => (
+          {activeProjects.map((project, index) => (
             <ProjectCard
               key={`project-${index}-${project.title
                 .toLowerCase()
@@ -264,6 +290,26 @@ export default function Projects() {
             />
           ))}
         </div>
+        {pastProjects.length > 0 && (
+          <div className="space-y-6 pt-4">
+            <h3 className="text-xl font-bold tracking-tight">Past projects</h3>
+            <div
+              className="grid gap-6 md:grid-cols-2"
+              role="list"
+              aria-label="Past projects"
+            >
+              {pastProjects.map((project, index) => (
+                <ProjectCard
+                  key={`past-project-${index}-${project.title
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                  project={project}
+                  index={index}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

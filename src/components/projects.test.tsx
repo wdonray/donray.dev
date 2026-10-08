@@ -10,15 +10,36 @@ describe("Projects", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders all four projects", () => {
+  it("renders all five projects", () => {
     render(<Projects />);
     for (const title of [
       "pico.domains",
       "Cyclei",
       "Hide Zero Cards",
+      "PatternSpell",
       "donray.dev",
     ]) {
       expect(screen.getByText(title)).toBeInTheDocument();
+    }
+  });
+
+  it("lists active projects before past projects", () => {
+    render(<Projects />);
+    const pastHeading = screen.getByRole("heading", {
+      name: "Past projects",
+    });
+    expect(pastHeading).toBeInTheDocument();
+    // Active projects come before the "Past projects" heading...
+    for (const title of ["Hide Zero Cards", "PatternSpell", "donray.dev"]) {
+      expect(screen.getByText(title).compareDocumentPosition(pastHeading)).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+    }
+    // ...and discontinued projects come after it.
+    for (const title of ["pico.domains", "Cyclei"]) {
+      expect(screen.getByText(title).compareDocumentPosition(pastHeading)).toBe(
+        Node.DOCUMENT_POSITION_PRECEDING,
+      );
     }
   });
 
@@ -50,8 +71,8 @@ describe("Projects", () => {
     render(<Projects />);
     expect(screen.getByText("Nuxt.js")).toBeInTheDocument();
     expect(screen.getByText("GraphQL")).toBeInTheDocument();
-    // "Tailwind CSS" is listed on two projects
-    expect(screen.getAllByText("Tailwind CSS")).toHaveLength(2);
+    // "Tailwind CSS" is listed on three projects
+    expect(screen.getAllByText("Tailwind CSS")).toHaveLength(3);
   });
 
   it("renders project subtitles", () => {

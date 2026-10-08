@@ -77,6 +77,7 @@ export default async function ProjectPage({
               {project.status === "maintenance" && (
                 <Badge variant="outline">Maintenance mode</Badge>
               )}
+              {!project.status && <Badge variant="outline">Live</Badge>}
               <h1 className="text-4xl font-bold tracking-tight">
                 {project.title}
               </h1>
