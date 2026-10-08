@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { GET } from "./route";
 import { version } from "../../../../package.json";
 

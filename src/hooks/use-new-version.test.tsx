@@ -184,15 +184,17 @@ describe("useNewVersionAvailable", () => {
   it("ignores poll responses that resolve after unmount", async () => {
     vi.useFakeTimers();
     let resolveFetch!: (value: unknown) => void;
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(() => new Promise((resolve) => (resolveFetch = resolve))),
+    const fetchMock = vi.fn(
+      () => new Promise((resolve) => (resolveFetch = resolve)),
     );
-    const { getByTestId, unmount } = render(<TestHarness />);
+    vi.stubGlobal("fetch", fetchMock);
+    const { queryByTestId, unmount } = render(<TestHarness />);
     unmount();
     resolveFetch({ ok: true, json: async () => ({ version: "9.9.9" }) });
     await act(async () => {});
-    expect(getByTestId("state")).toBeTruthy();
+    // The late response is discarded; the tree stays unmounted.
+    expect(queryByTestId("state")).toBeNull();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it("stops polling and listening after unmount", async () => {
