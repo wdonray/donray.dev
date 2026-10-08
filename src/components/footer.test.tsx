@@ -36,4 +36,15 @@ describe("Footer", () => {
     const email = screen.getByRole("link", { name: "Visit Email profile" });
     expect(email).toHaveAttribute("href", "mailto:donrayxwilliams@gmail.com");
   });
+
+  it("links to Buy Me A Coffee in a new tab", () => {
+    render(<Footer />);
+    const coffee = screen.getByRole("link", { name: "Buy me a coffee" });
+    expect(coffee).toHaveAttribute(
+      "href",
+      "https://buymeacoffee.com/donrayxwils",
+    );
+    expect(coffee).toHaveAttribute("target", "_blank");
+    expect(coffee).toHaveAttribute("rel", "noopener noreferrer");
+  });
 });

@@ -1,11 +1,19 @@
 "use client";
 
+import type { ComponentType } from "react";
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { Coffee, Mail } from "lucide-react";
 import { Github, Linkedin } from "./ui/brand-icons";
 import { Button } from "./ui/button";
 
-const socialLinks = [
+interface SocialLink {
+  name: string;
+  url: string;
+  icon: ComponentType<{ className?: string }>;
+  ariaLabel?: string;
+}
+
+const socialLinks: SocialLink[] = [
   {
     name: "Email",
     url: "mailto:donrayxwilliams@gmail.com",
@@ -20,6 +28,12 @@ const socialLinks = [
     name: "LinkedIn",
     url: "https://www.linkedin.com/in/donrayxwilliams/",
     icon: Linkedin,
+  },
+  {
+    name: "Buy me a coffee",
+    url: "https://buymeacoffee.com/donrayxwils",
+    icon: Coffee,
+    ariaLabel: "Buy me a coffee",
   },
 ];
 
@@ -64,7 +78,9 @@ export default function Footer() {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`Visit ${social.name} profile`}
+                      aria-label={
+                        social.ariaLabel ?? `Visit ${social.name} profile`
+                      }
                     >
                       <social.icon className="size-5" aria-hidden="true" />
                     </Link>
