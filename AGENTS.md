@@ -121,3 +121,9 @@ abandoning the blog is the failure mode.
 - `npm run test:e2e` — Playwright against a production build
 - `npm test` — both
 - Add tests for new behavior, especially security and analytics logic.
+
+## Auto-merge convention
+
+- This repo has GitHub "Allow auto-merge" and "Automatically delete head branches" turned on. Auto-merge only fires when the `main` ruleset's required checks are green (Build, Lint, Unit tests, E2E tests, semantic-title).
+- When you open a PR that should merge on green CI: add the `auto-merge` label at creation, then run `gh pr merge --auto --merge` immediately and finish. Do not wait on CI in a sleep loop.
+- Never enable auto-merge on a PR without the `auto-merge` label. Hand-opened PRs without the label are never auto-merged.
