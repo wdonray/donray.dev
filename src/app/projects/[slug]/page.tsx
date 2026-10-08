@@ -185,6 +185,7 @@ export default async function ProjectPage({
             endpoint="/api/hzc-stats"
             sourceName="hidezerocards.org's"
             sourceHref="https://hidezerocards.org/analytics"
+            external
           />
         )}
         {slug === "patternspell" && (
@@ -192,6 +193,14 @@ export default async function ProjectPage({
             endpoint="/api/ps-stats"
             sourceName="patternspell.org's"
             sourceHref="https://patternspell.org/analytics"
+            external
+          />
+        )}
+        {slug === "donray-dev" && (
+          <LiveStats
+            endpoint="/api/site-stats"
+            sourceName="donray.dev's"
+            sourceHref="/analytics"
           />
         )}
 

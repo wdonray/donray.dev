@@ -17,21 +17,23 @@ type State =
  * Small live-stats section for project pages: all-time page views and
  * true unique visitors, fetched client-side from a same-origin JSON
  * endpoint (so no CORS or ad-blocker issues, and the page builds without
- * AWS credentials). The numbers shown are already public on the site's
- * own analytics dashboard. Renders nothing while loading or when stats
- * are unavailable, so the page never breaks over analytics.
+ * AWS credentials). Renders nothing while loading or when stats are
+ * unavailable, so the page never breaks over analytics.
  */
 export function LiveStats({
   endpoint,
   sourceName,
   sourceHref,
+  external = false,
 }: {
   /** Same-origin JSON endpoint returning { pageViews, uniqueVisitors }. */
   endpoint: string;
-  /** Possessive site name used in the caption, e.g. "hidezerocards.org's". */
+  /** e.g. "hidezerocards.org's" — possessive name used in the caption. */
   sourceName: string;
-  /** Absolute URL of the site's public analytics dashboard. */
+  /** Link to the site's full analytics dashboard. */
   sourceHref: string;
+  /** Whether the dashboard link points off-site. */
+  external?: boolean;
 }) {
   const [state, setState] = useState<State>({ status: "loading" });
 
@@ -95,8 +97,9 @@ export function LiveStats({
         All time, from {sourceName}{" "}
         <a
           href={sourceHref}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...(external
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
           className="text-primary underline underline-offset-4 hover:opacity-80"
         >
           public analytics

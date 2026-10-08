@@ -8,6 +8,7 @@ const PROPS = {
   endpoint: "/api/hzc-stats",
   sourceName: "hidezerocards.org's",
   sourceHref: "https://hidezerocards.org/analytics",
+  external: true,
 };
 
 function mockFetchOnce(
@@ -34,32 +35,34 @@ describe("LiveStats", () => {
     expect(await screen.findByText("Live stats")).toBeVisible();
     expect(await screen.findByText("1,234")).toBeVisible();
     expect(await screen.findByText("56")).toBeVisible();
-    expect(
-      screen.getByRole("link", { name: "public analytics" }),
-    ).toHaveAttribute("href", "https://hidezerocards.org/analytics");
+    const link = screen.getByRole("link", { name: "public analytics" });
+    expect(link).toHaveAttribute("href", "https://hidezerocards.org/analytics");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
     expect(
       screen.getByText("All time, from hidezerocards.org's", { exact: false }),
     ).toBeVisible();
   });
 
-  it("uses the given endpoint and source", async () => {
-    const fetch = mockFetchOnce(async () => ({
+  it("renders an internal dashboard link when not external", async () => {
+    mockFetchOnce(async () => ({
       ok: true,
       json: async () => STATS,
     }));
     render(
       <LiveStats
-        endpoint="/api/ps-stats"
-        sourceName="patternspell.org's"
-        sourceHref="https://patternspell.org/analytics"
+        endpoint="/api/site-stats"
+        sourceName="donray.dev's"
+        sourceHref="/analytics"
       />,
     );
 
-    expect(fetch).toHaveBeenCalledWith("/api/ps-stats");
-    expect(await screen.findByText("Live stats")).toBeVisible();
-    expect(
-      screen.getByRole("link", { name: "public analytics" }),
-    ).toHaveAttribute("href", "https://patternspell.org/analytics");
+    const link = await screen.findByRole("link", {
+      name: "public analytics",
+    });
+    expect(link).toHaveAttribute("href", "/analytics");
+    expect(link).not.toHaveAttribute("target");
+    expect(link).not.toHaveAttribute("rel");
   });
 
   it("renders nothing when the endpoint is unavailable", async () => {
