@@ -33,7 +33,9 @@ test.describe("home page", () => {
 
     await page.getByRole("link", { name: "View projects section" }).click();
     await expect(page).toHaveURL(/#projects/);
-    await expect(page.getByRole("heading", { name: "Projects" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Projects", exact: true }),
+    ).toBeVisible();
 
     await page.getByRole("link", { name: "View experience section" }).click();
     await expect(page).toHaveURL(/#experience/);
