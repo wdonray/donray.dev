@@ -6,7 +6,7 @@ import { Github } from "@/components/ui/brand-icons";
 import { Badge } from "@/components/ui/badge";
 import { getProject, PROJECTS } from "@/lib/projects";
 import { getFaqJsonLd, serializeJsonLd } from "@/lib/schema";
-import { HzcStats } from "@/components/hzc-stats";
+import { LiveStats } from "@/components/live-stats";
 
 export function generateStaticParams() {
   return PROJECTS.map((p) => ({ slug: p.slug }));
@@ -180,7 +180,21 @@ export default async function ProjectPage({
           </section>
         )}
 
-        {slug === "hide-zero-cards" && <HzcStats />}
+        {slug === "hide-zero-cards" && (
+          <LiveStats
+            endpoint="/api/hzc-stats"
+            sourceName="hidezerocards.org's"
+            sourceHref="https://hidezerocards.org/analytics"
+            external
+          />
+        )}
+        {slug === "donray-dev" && (
+          <LiveStats
+            endpoint="/api/site-stats"
+            sourceName="donray.dev's"
+            sourceHref="/analytics"
+          />
+        )}
 
         {project.faq && project.faq.length > 0 && (
           <section aria-labelledby="faq-heading">

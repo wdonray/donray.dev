@@ -3,31 +3,45 @@
 import { useEffect, useState } from "react";
 import { Eye, Users } from "lucide-react";
 
-interface HzcStats {
+interface LiveStatsData {
   pageViews: number;
   uniqueVisitors: number;
 }
 
 type State =
   | { status: "loading" }
-  | { status: "ready"; stats: HzcStats }
+  | { status: "ready"; stats: LiveStatsData }
   | { status: "unavailable" };
 
 /**
- * Small live-stats section for the Hide Zero Cards project page.
- * Fetches from /api/hzc-stats (same origin, so no CORS or ad-blocker
- * issues); the numbers are already public on hidezerocards.org/analytics.
- * Renders nothing while loading or when stats are unavailable, so the
- * page never breaks over analytics.
+ * Small live-stats section for project pages: all-time page views and
+ * true unique visitors, fetched client-side from a same-origin JSON
+ * endpoint (so no CORS or ad-blocker issues, and the page builds without
+ * AWS credentials). Renders nothing while loading or when stats are
+ * unavailable, so the page never breaks over analytics.
  */
-export function HzcStats() {
+export function LiveStats({
+  endpoint,
+  sourceName,
+  sourceHref,
+  external = false,
+}: {
+  /** Same-origin JSON endpoint returning { pageViews, uniqueVisitors }. */
+  endpoint: string;
+  /** e.g. "hidezerocards.org's" — possessive name used in the caption. */
+  sourceName: string;
+  /** Link to the site's full analytics dashboard. */
+  sourceHref: string;
+  /** Whether the dashboard link points off-site. */
+  external?: boolean;
+}) {
   const [state, setState] = useState<State>({ status: "loading" });
 
   useEffect(() => {
     let cancelled = false;
-    fetch("/api/hzc-stats")
+    fetch(endpoint)
       .then((res) => (res.ok ? res.json() : null))
-      .then((data: HzcStats | null) => {
+      .then((data: LiveStatsData | null) => {
         if (cancelled) return;
         if (
           data &&
@@ -45,16 +59,16 @@ export function HzcStats() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [endpoint]);
 
   if (state.status !== "ready") return null;
 
   const { pageViews, uniqueVisitors } = state.stats;
 
   return (
-    <section aria-labelledby="hzc-stats-heading">
+    <section aria-labelledby="live-stats-heading">
       <h2
-        id="hzc-stats-heading"
+        id="live-stats-heading"
         className="text-2xl font-bold tracking-tight mb-4"
       >
         Live stats
@@ -80,11 +94,12 @@ export function HzcStats() {
         </div>
       </div>
       <p className="mt-3 text-sm text-muted-foreground">
-        All time, from hidezerocards.org&apos;s{" "}
+        All time, from {sourceName}{" "}
         <a
-          href="https://hidezerocards.org/analytics"
-          target="_blank"
-          rel="noopener noreferrer"
+          href={sourceHref}
+          {...(external
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
           className="text-primary underline underline-offset-4 hover:opacity-80"
         >
           public analytics
