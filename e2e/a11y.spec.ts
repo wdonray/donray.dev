@@ -19,6 +19,7 @@ test.describe("accessibility", () => {
     "/uses",
     "/principles",
     "/projects/hide-zero-cards",
+    "/projects/patternspell",
   ];
 
   for (const path of pages) {

@@ -191,6 +191,68 @@ export const PROJECTS: ProjectDetail[] = [
     ],
   },
   {
+    slug: "patternspell",
+    title: "PatternSpell",
+    subtitle: "Pattern-Based Spelling Toolkit for K-3 Teachers",
+    description:
+      "A pattern-based spelling toolkit for K-3 teachers, free for classrooms. Teachers manage spelling lists per student, organized by words, sounds, and spelling patterns, with a big-screen display mode and spelling practice with text-to-speech.",
+    role: "Builder",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS",
+      "DynamoDB",
+      "AWS Amplify",
+    ],
+    url: "https://patternspell.org/",
+    github: "https://github.com/wdonray/c-shepherd-speller",
+    image: "/patternspell.png",
+    imageAlt: "PatternSpell logo: three pattern columns (PatternMark)",
+    details: [
+      "PatternSpell is a pattern-based spelling toolkit for K-3 teachers, free for classrooms. Teachers sign in with Google and manage spelling lists per student, organizing words by sounds and spelling patterns, with lists stored in DynamoDB and importable or exportable as JSON.",
+      "The display mode presents an interactive pattern chart on the big screen: one column per spelling pattern, sized by frequency, built to project on a classroom smartboard while students spell. A practice mode lets students work through a word list with text-to-speech spelling prompts.",
+      "The app keeps a public analytics dashboard showing page views, lists created, practice sessions, and words practiced, measured without cookies or stored IP addresses.",
+      "PatternSpell began in August 2025 as Shepherd Speller and was renamed in October 2026 during an active revival, with a new three-column PatternMark logo. It is built with Next.js 16, React 19, TypeScript, and Tailwind CSS v4, hosted on AWS Amplify, and the source is public on GitHub.",
+    ],
+    features: [
+      "Teacher dashboard for managing spelling lists per student: words, sounds, and spelling patterns",
+      "Interactive pattern chart with one column per spelling pattern, sized by frequency",
+      "Big-screen display mode for projecting the chart on a classroom smartboard",
+      "Spelling practice mode with text-to-speech prompts",
+      "JSON import and export for word lists",
+      "Google OAuth sign-in for teachers",
+      "Public analytics dashboard with usage statistics",
+      "Light and dark themes",
+    ],
+    faq: [
+      {
+        question: "Was PatternSpell always called that?",
+        answer:
+          "No. It launched as Shepherd Speller in August 2025 and was renamed PatternSpell in October 2026, with a new three-column PatternMark logo replacing the original tree mark.",
+      },
+      {
+        question: "What is the pattern chart?",
+        answer:
+          "Instead of a spelling tree, PatternSpell organizes words into one column per spelling pattern, with columns sized by frequency. The display mode projects this chart large enough for the whole classroom to read from a smartboard.",
+      },
+      {
+        question: "How does practice mode work?",
+        answer:
+          "Students pick one of the teacher's word lists and practice spelling each word with text-to-speech prompts, working through the list at their own pace.",
+      },
+      {
+        question: "Is PatternSpell free?",
+        answer: "Yes, it is free for classrooms.",
+      },
+      {
+        question: "Is PatternSpell still available?",
+        answer:
+          "Yes, the site is live at patternspell.org, and the full source code is public on GitHub.",
+      },
+    ],
+  },
+  {
     slug: "donray-dev",
     title: "donray.dev",
     subtitle: "Personal Portfolio and Blog",
