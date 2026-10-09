@@ -79,9 +79,13 @@ describe("getPsStats", () => {
       Items: [
         { pk: "PAGE#/", sk: "TOTAL", views: 7 },
         { pk: "PAGE#/", sk: "DAY#2026-10-06", views: 7 },
-        { pk: "PAGE#/", sk: "UNIQUES", visitors: ["a", "b"] },
+        { pk: "PAGE#/", sk: "UNIQUES_V2", visitors: ["a", "b"] },
         { pk: "PAGE#/analytics", sk: "TOTAL", views: 3 },
-        { pk: "SITE", sk: "UNIQUES", visitors: new Set(["a", "b", "c", "d"]) },
+        {
+          pk: "SITE",
+          sk: "UNIQUES_V2",
+          visitors: new Set(["a", "b", "c", "d"]),
+        },
       ],
     }));
     expect(await getPsStats()).toEqual({
@@ -104,7 +108,7 @@ describe("getPsStats", () => {
       return {
         Items: [
           { pk: "PAGE#/x", sk: "TOTAL", views: 2 },
-          { pk: "SITE", sk: "UNIQUES", visitors: ["a"] },
+          { pk: "SITE", sk: "UNIQUES_V2", visitors: ["a"] },
         ],
       };
     });
@@ -133,7 +137,7 @@ describe("getPsStats", () => {
       if (!exclusiveStartKey) {
         return {
           Items: [
-            { pk: "SITE", sk: "UNIQUES" },
+            { pk: "SITE", sk: "UNIQUES_V2" },
             { pk: "PAGE#/", sk: "TOTAL" },
           ],
           LastEvaluatedKey: { pk: "PAGE#/" },

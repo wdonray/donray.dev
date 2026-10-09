@@ -3,6 +3,7 @@ import {
   type DynamoDBClientConfig,
 } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { SITE_UNIQUES_PK, UNIQUES_SK_V2 } from "@wdonray/analytics-core/server";
 
 /**
  * Read-only access to hidezerocards.org's analytics table.
@@ -14,7 +15,7 @@ import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
  *
  * Data model matches src/lib/analytics.ts:
  * - pk = "PAGE#<path>", sk = "TOTAL"      -> all-time views per page
- * - pk = "SITE", sk = "UNIQUES"           -> site-wide true unique visitors
+ * - pk = "SITE", sk = "UNIQUES_V2"         -> site-wide engaged unique visitors
  */
 
 const TABLE_ENV = "HZC_ANALYTICS_TABLE";
@@ -106,7 +107,7 @@ export async function getHzcStats(
     for (const item of (res.Items ?? []) as Record<string, unknown>[]) {
       const pk = item.pk as string | undefined;
       const sk = item.sk as string | undefined;
-      if (pk === "SITE" && sk === "UNIQUES") {
+      if (pk === SITE_UNIQUES_PK && sk === UNIQUES_SK_V2) {
         const visitors = item.visitors as string[] | Set<string> | undefined;
         uniqueVisitors = Array.isArray(visitors)
           ? visitors.length
