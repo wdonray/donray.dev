@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 # Cancel stale runs when a PR is updated.
 concurrency:
