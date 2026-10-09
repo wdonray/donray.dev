@@ -1,0 +1,81 @@
+name: Sentry issues
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+env:
+  SENTRY_ORG: donray-williams
+  SENTRY_PROJECT: donray-dev
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: File new Sentry issues
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SENTRY_AUTH_TOKEN:-}" ]; then
+            echo "SENTRY_AUTH_TOKEN repo secret is not set. Add a Sentry auth token as the SENTRY_AUTH_TOKEN secret to enable this workflow."
+            exit 0
+          fi
+
+          response=$(curl -sS -H "Authorization: Bearer $SENTRY_AUTH_TOKEN" \
+            "https://sentry.io/api/0/projects/$SENTRY_ORG/$SENTRY_PROJECT/issues/?query=is:unresolved&limit=25")
+
+          if ! echo "$response" | jq -e 'type == "array"' > /dev/null; then
+            echo "Unexpected Sentry API response:"
+            echo "${response:0:1000}"
+            exit 1
+          fi
+
+          count=$(echo "$response" | jq 'length')
+          if [ "$count" -eq 0 ]; then
+            echo "No unresolved Sentry issues."
+            exit 0
+          fi
+
+          existing=$(gh issue list --label sentry --state all --json body --jq '[.[].body] | join("\n")')
+
+          echo "$response" | jq -c '.[]' | while read -r issue; do
+            id=$(echo "$issue" | jq -r '.id')
+            if printf '%s' "$existing" | grep -qF "sentry-id: $id"; then
+              echo "Already filed Sentry issue $id, skipping."
+              continue
+            fi
+            title=$(echo "$issue" | jq -r '.title[:200]')
+            permalink=$(echo "$issue" | jq -r '.permalink // ""')
+            first_seen=$(echo "$issue" | jq -r '.firstSeen // "?"')
+            last_seen=$(echo "$issue" | jq -r '.lastSeen // "?"')
+            event_count=$(echo "$issue" | jq -r '.count // "?"')
+            err_type=$(echo "$issue" | jq -r '.metadata.type // ""')
+            err_value=$(echo "$issue" | jq -r '(.metadata.value // "")[:500]')
+
+          body=$(cat <<EOF
+          ## Sentry issue
+
+          **Project:** $SENTRY_PROJECT
+          **Sentry:** $permalink
+          **First seen:** $first_seen | **Last seen:** $last_seen | **Events:** $event_count
+
+          ### Error
+
+          $err_type: $err_value
+
+          ---
+          Filed automatically from Sentry. This issue will not be filed again.
+
+          <!-- sentry-id: $id -->
+          EOF
+          )
+            gh issue create --title "[sentry] $title" --label sentry --body "$body"
+            echo "Filed GitHub issue for Sentry issue $id."
+          done
