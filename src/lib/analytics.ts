@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import {
   DynamoDBClient,
   type DynamoDBClientConfig,
@@ -9,6 +8,19 @@ import {
   ScanCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
+// Pure functions (hashing, bot detection, IP extraction, path utils,
+// rate limiting) live in the shared @wdonray/analytics-core package so
+// the visitor-identification algorithm is byte-identical across all sites.
+import {
+  SITE_UNIQUES_PK,
+  UNIQUES_SK_V2,
+  clientIpFromHeaders,
+  createRateLimiter,
+  dayKey,
+  hashVisitor,
+  isBotUserAgent,
+  normalizePath,
+} from "@wdonray/analytics-core/server";
 
 /**
  * Privacy-respecting page-view analytics backed by DynamoDB.
@@ -17,9 +29,10 @@ import {
  * - One item per page for all-time totals:   pk = "PAGE#<path>", sk = "TOTAL"
  * - One item per page per day for the chart: pk = "PAGE#<path>", sk = "DAY#<yyyy-mm-dd>"
  *   with a `views` counter.
- * - One item per page for true unique visitors: pk = "PAGE#<path>", sk = "UNIQUES"
+ * - One item per page for engaged unique visitors: pk = "PAGE#<path>", sk = "UNIQUES_V2"
  *   with a `visitors` string-set of salted visitor hashes (kept permanently).
- * - One item for site-wide true unique visitors: pk = "SITE", sk = "UNIQUES"
+ *   Only humans who scrolled (client-side engagement gate) are recorded here.
+ * - One item for site-wide engaged unique visitors: pk = "SITE", sk = "UNIQUES_V2"
  *   so the headline count dedupes across pages (a visitor who reads three
  *   pages counts once, not three times).
  * - Raw IPs are never stored. A visitor is identified by
@@ -28,68 +41,26 @@ import {
  *   hash cannot be turned back into an IP.
  * - All records are kept permanently (no TTL). The table is tiny and
  *   storage costs are negligible.
+ *
+ * V2 keys exist because the original UNIQUES sets were polluted with bot
+ * hashes before engagement gating. Page-view history (TOTAL, DAY#) is
+ * untouched; unique-visitor counts start clean from the V2 cutover.
  */
+
+// Re-export library pure functions so existing imports keep working.
+export {
+  clientIpFromHeaders,
+  dayKey,
+  hashVisitor,
+  isBotUserAgent,
+  normalizePath,
+};
 
 const TABLE_ENV = "ANALYTICS_TABLE";
 const REGION_ENV = "ANALYTICS_AWS_REGION";
 const KEY_ENV = "ANALYTICS_AWS_ACCESS_KEY_ID";
 const SECRET_ENV = "ANALYTICS_AWS_SECRET_ACCESS_KEY";
 const SALT_ENV = "ANALYTICS_SALT";
-
-const BOT_PATTERN =
-  /(bot|crawl|spider|slurp|mediapartners|baidu|yandex|sogou|duckduck|ahrefs|semrush|mj12|dotbot|petal|facebookexternalhit|twitterbot|linkedinbot|embedly|quora|pinterest|slackbot|discordbot|telegrambot|whatsapp|google-inspection|chrome-lighthouse|headless)/i;
-
-export function isBot(userAgent: string | null | undefined): boolean {
-  if (!userAgent) return false;
-  return BOT_PATTERN.test(userAgent);
-}
-
-/** Normalize a tracked path: must be a site-relative path, no query/hash. */
-export function normalizePath(raw: string | null | undefined): string | null {
-  if (!raw || typeof raw !== "string") return null;
-  const trimmed = raw.trim();
-  if (!trimmed.startsWith("/") || trimmed.length > 200) return null;
-  if (trimmed.includes("?") || trimmed.includes("#")) return null;
-  // Reject paths with characters that would be odd in a URL path.
-  if (/[<>"\\]/.test(trimmed)) return null;
-  return trimmed;
-}
-
-export function dayKey(date: Date = new Date()): string {
-  return date.toISOString().slice(0, 10); // yyyy-mm-dd (UTC)
-}
-
-/** Salted, non-reversible visitor identifier. Stable over time: the same
- * visitor (same IP + user agent) always produces the same hash, so returning
- * visitors are counted once, no matter how far apart the visits are. */
-export function hashVisitor(
-  salt: string,
-  ip: string,
-  userAgent: string,
-): string {
-  return createHash("sha256")
-    .update(`${salt}|${ip}|${userAgent}`)
-    .digest("hex");
-}
-
-/** Best-effort client IP behind Amplify/CloudFront. */
-export function clientIpFromHeaders(
-  headers: Headers | Record<string, string | null | undefined>,
-): string {
-  const get = (name: string): string | null => {
-    if (typeof (headers as Headers).get === "function") {
-      return (headers as Headers).get(name);
-    }
-    const value = (headers as Record<string, string | null | undefined>)[name];
-    return value ?? null;
-  };
-  const forwarded = get("x-forwarded-for");
-  if (forwarded) {
-    const first = forwarded.split(",")[0].trim();
-    if (first) return first;
-  }
-  return get("x-real-ip") ?? "unknown";
-}
 
 interface AnalyticsConfig {
   table: string;
@@ -142,8 +113,12 @@ export function compareDays(a: { day: string }, b: { day: string }): number {
 }
 
 /**
- * Record one page view. Returns false when analytics is not configured
- * or the hit was filtered (bot); true when recorded.
+ * Record one page view (TOTAL and DAY# counters only).
+ * Returns false when analytics is not configured or the hit was filtered
+ * (bot or invalid path); true when recorded.
+ *
+ * Unique visitors are recorded separately via recordEngagedVisitor, only
+ * when the client reports a human engagement signal (scroll).
  */
 export async function recordPageView(
   rawPath: string,
@@ -153,13 +128,12 @@ export async function recordPageView(
 ): Promise<boolean> {
   const path = normalizePath(rawPath);
   if (!path) return false;
-  if (isBot(userAgent)) return false;
+  if (isBotUserAgent(userAgent)) return false;
   const config = getConfig();
   if (!config) return false;
 
   const client = getClient(config);
   const day = dayKey(now);
-  const visitor = hashVisitor(config.salt, ip, userAgent);
 
   await Promise.all([
     // All-time total for the page.
@@ -192,12 +166,37 @@ export async function recordPageView(
         },
       }),
     ),
-    // True unique visitors for the page (idempotent set-add: a returning
-    // visitor adds the same hash again, so the set size is the real count).
+  ]);
+  return true;
+}
+
+/**
+ * Record an engaged unique visitor (UNIQUES_V2 sets only).
+ * Call this only when the client reports a human engagement signal
+ * (scroll). Idempotent: a returning visitor adds the same hash again,
+ * so the set size is the true human-unique count.
+ * Returns false when analytics is not configured or the input is invalid.
+ */
+export async function recordEngagedVisitor(
+  rawPath: string,
+  ip: string,
+  userAgent: string,
+): Promise<boolean> {
+  const path = normalizePath(rawPath);
+  if (!path) return false;
+  if (isBotUserAgent(userAgent)) return false;
+  const config = getConfig();
+  if (!config) return false;
+
+  const client = getClient(config);
+  const visitor = hashVisitor(config.salt, ip, userAgent);
+
+  await Promise.all([
+    // Engaged unique visitors for the page.
     client.send(
       new UpdateCommand({
         TableName: config.table,
-        Key: { pk: pkFor(path), sk: "UNIQUES" },
+        Key: { pk: pkFor(path), sk: UNIQUES_SK_V2 },
         UpdateExpression:
           "ADD #visitors :visitor SET #path = if_not_exists(#path, :path)",
         ExpressionAttributeNames: {
@@ -210,12 +209,12 @@ export async function recordPageView(
         },
       }),
     ),
-    // Site-wide true unique visitors (same visitor hash, so a visitor who
-    // reads several pages counts once here).
+    // Site-wide engaged unique visitors (same visitor hash, so a visitor
+    // who reads several pages counts once here).
     client.send(
       new UpdateCommand({
         TableName: config.table,
-        Key: { pk: "SITE", sk: "UNIQUES" },
+        Key: { pk: SITE_UNIQUES_PK, sk: UNIQUES_SK_V2 },
         UpdateExpression: "ADD #visitors :visitor",
         ExpressionAttributeNames: {
           "#visitors": "visitors",
@@ -244,7 +243,7 @@ export interface PageStat {
 export interface AnalyticsSummary {
   pages: PageStat[];
   totalViews: number;
-  /** True site-wide unique visitors (deduped across pages and across time). */
+  /** Engaged site-wide unique visitors (deduped across pages and time). */
   totalUniques: number;
   dailyTotals: DailyStat[];
   fetchedAt: string;
@@ -253,6 +252,7 @@ export interface AnalyticsSummary {
 /**
  * Read the analytics table for the public dashboard. Returns null when
  * analytics is not configured (local dev / CI without credentials).
+ * Unique-visitor counts come from the V2 (engagement-gated) sets.
  */
 export async function getAnalyticsSummary(
   days = 30,
@@ -305,7 +305,7 @@ export async function getAnalyticsSummary(
   for (const item of items) {
     const pk = item.pk as string | undefined;
     const sk = item.sk as string | undefined;
-    if (pk === "SITE" && sk === "UNIQUES") {
+    if (pk === SITE_UNIQUES_PK && sk === UNIQUES_SK_V2) {
       siteUniques = countUniques(item);
       continue;
     }
@@ -314,7 +314,7 @@ export async function getAnalyticsSummary(
     const stat = ensure(path);
     if (sk === "TOTAL") {
       stat.totalViews = (item.views as number) ?? 0;
-    } else if (sk === "UNIQUES") {
+    } else if (sk === UNIQUES_SK_V2) {
       stat.uniques = countUniques(item);
     } else if (sk?.startsWith("DAY#")) {
       const day = sk.slice("DAY#".length);
@@ -373,8 +373,9 @@ export async function getPageTotalViews(path: string): Promise<number | null> {
 }
 
 /**
- * True unique visitors for a page: the size of its persistent visitor set.
- * A visitor who returns any number of times still counts once.
+ * Engaged unique visitors for a page: the size of its V2 visitor set.
+ * Only humans who scrolled are counted; a visitor who returns any number
+ * of times still counts once.
  */
 export async function getPageUniqueViews(path: string): Promise<number | null> {
   const config = getConfig();
@@ -383,7 +384,7 @@ export async function getPageUniqueViews(path: string): Promise<number | null> {
   const res = await client.send(
     new GetCommand({
       TableName: config.table,
-      Key: { pk: pkFor(path), sk: "UNIQUES" },
+      Key: { pk: pkFor(path), sk: UNIQUES_SK_V2 },
     }),
   );
   const item = res.Item as { visitors?: string[] | Set<string> } | undefined;
@@ -393,35 +394,30 @@ export async function getPageUniqueViews(path: string): Promise<number | null> {
 }
 
 /* ------------------------------------------------------------------ */
-/* Simple in-memory rate limiter for the /api/track endpoint.          */
-/* Protects DynamoDB from abuse: an attacker spamming the endpoint     */
-/* could otherwise inflate stats or run up AWS write costs.           */
+/* Rate limiting for the /api/track endpoint, backed by the shared     */
+/* library. Protects DynamoDB from abuse: an attacker spamming the     */
+/* endpoint could otherwise inflate stats or run up AWS write costs.   */
 /* ------------------------------------------------------------------ */
 
 const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
 const RATE_LIMIT_MAX = 60; // requests per window per key
 
-const rateLimitBuckets = new Map<string, number[]>();
+let rateLimiter = createRateLimiter({
+  windowMs: RATE_LIMIT_WINDOW_MS,
+  max: RATE_LIMIT_MAX,
+});
 
 /**
  * Returns true when the key has exceeded the rate limit.
- * Old timestamps are pruned on each call.
  */
 export function isRateLimited(key: string, now: number = Date.now()): boolean {
-  const cutoff = now - RATE_LIMIT_WINDOW_MS;
-  const timestamps = (rateLimitBuckets.get(key) ?? []).filter(
-    (t) => t > cutoff,
-  );
-  if (timestamps.length >= RATE_LIMIT_MAX) {
-    rateLimitBuckets.set(key, timestamps);
-    return true;
-  }
-  timestamps.push(now);
-  rateLimitBuckets.set(key, timestamps);
-  return false;
+  return rateLimiter(key, now);
 }
 
 /** For tests: clear all rate-limit state. */
 export function __resetRateLimitForTests(): void {
-  rateLimitBuckets.clear();
+  rateLimiter = createRateLimiter({
+    windowMs: RATE_LIMIT_WINDOW_MS,
+    max: RATE_LIMIT_MAX,
+  });
 }
