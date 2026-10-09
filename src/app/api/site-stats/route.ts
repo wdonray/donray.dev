@@ -4,6 +4,7 @@ import {
   getAnalyticsSummary,
   isRateLimited,
 } from "@/lib/analytics";
+import { reportError } from "@/lib/report-error";
 
 /**
  * GET /api/site-stats
@@ -36,7 +37,11 @@ export async function GET(request: Request) {
         },
       },
     );
-  } catch {
+  } catch (error) {
+    reportError(error, {
+      location: "ApiSiteStats.GET",
+      extra: { route: "/api/site-stats", status: 503 },
+    });
     return NextResponse.json({ ok: false }, { status: 503 });
   }
 }

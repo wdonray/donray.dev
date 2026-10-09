@@ -5,6 +5,7 @@ import {
   normalizePath,
   recordPageView,
 } from "@/lib/analytics";
+import { reportError } from "@/lib/report-error";
 
 /**
  * POST /api/track { path: "/some/page" }
@@ -36,8 +37,12 @@ export async function POST(request: Request) {
 
     await recordPageView(path, ip, userAgent);
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
     // Analytics must never break the site.
+    reportError(error, {
+      location: "ApiTrack.POST",
+      extra: { route: "/api/track", status: 200 },
+    });
     return NextResponse.json({ ok: true });
   }
 }

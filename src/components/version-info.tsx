@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { fadeInUp, fadeInUpWithDelay } from "@/lib/animations";
+import { reportError } from "@/lib/report-error";
 
 export const RELEASES_API =
   "https://api.github.com/repos/wdonray/donray.dev/releases?per_page=5";
@@ -137,7 +138,8 @@ export default function VersionInfo({
         setReleases(next);
         setLastChecked(Date.now());
         setUnreachable(false);
-      } catch {
+      } catch (error) {
+        reportError(error, { location: "VersionInfo.poll" });
         if (!cancelled) setUnreachable(true);
       }
     };

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
+import { reportError } from "@/lib/report-error";
 
 /**
  * Live view count for a page, fetched client-side from /api/views.
@@ -19,8 +20,9 @@ export default function ViewCount({ path }: { path: string }) {
           setViews(data.views);
         }
       })
-      .catch(() => {
+      .catch((error) => {
         // Views are decorative; never break the page.
+        reportError(error, { location: "ViewCount" });
       });
     return () => {
       cancelled = true;

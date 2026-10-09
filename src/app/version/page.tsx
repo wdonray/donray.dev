@@ -5,6 +5,7 @@ import VersionInfo, {
   toRelease,
   type Release,
 } from "@/components/version-info";
+import { reportError } from "@/lib/report-error";
 
 export const metadata: Metadata = {
   title: "Version",
@@ -36,7 +37,8 @@ async function getRecentReleases(): Promise<Release[]> {
     return data.map((item) =>
       toRelease((item ?? {}) as Parameters<typeof toRelease>[0]),
     );
-  } catch {
+  } catch (error) {
+    reportError(error, { location: "VersionPage.getRecentReleases" });
     return [];
   }
 }

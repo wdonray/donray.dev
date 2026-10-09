@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Eye, Users } from "lucide-react";
+import { reportError } from "@/lib/report-error";
 
 interface LiveStatsData {
   pageViews: number;
@@ -53,7 +54,8 @@ export function LiveStats({
           setState({ status: "unavailable" });
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        reportError(error, { location: "LiveStats", extra: { endpoint } });
         if (!cancelled) setState({ status: "unavailable" });
       });
     return () => {
