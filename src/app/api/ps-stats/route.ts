@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { clientIpFromHeaders, isRateLimited } from "@/lib/analytics";
 import { getPsStats } from "@/lib/ps-analytics";
+import { reportError } from "@/lib/report-error";
 
 /**
  * GET /api/ps-stats
@@ -27,7 +28,11 @@ export async function GET(request: Request) {
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
       },
     });
-  } catch {
+  } catch (error) {
+    reportError(error, {
+      location: "ApiPsStats.GET",
+      extra: { route: "/api/ps-stats", status: 503 },
+    });
     return NextResponse.json({ ok: false }, { status: 503 });
   }
 }

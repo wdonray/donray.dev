@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { clientIpFromHeaders, isRateLimited } from "@/lib/analytics";
 import { getHzcStats } from "@/lib/hzc-analytics";
+import { reportError } from "@/lib/report-error";
 
 /**
  * GET /api/hzc-stats
@@ -27,7 +28,11 @@ export async function GET(request: Request) {
         "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
       },
     });
-  } catch {
+  } catch (error) {
+    reportError(error, {
+      location: "ApiHzcStats.GET",
+      extra: { route: "/api/hzc-stats", status: 503 },
+    });
     return NextResponse.json({ ok: false }, { status: 503 });
   }
 }

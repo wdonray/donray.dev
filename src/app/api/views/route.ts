@@ -5,6 +5,7 @@ import {
   isRateLimited,
   normalizePath,
 } from "@/lib/analytics";
+import { reportError } from "@/lib/report-error";
 
 /**
  * GET /api/views?path=/blog/some-post
@@ -36,7 +37,11 @@ export async function GET(request: Request) {
         },
       },
     );
-  } catch {
+  } catch (error) {
+    reportError(error, {
+      location: "ApiViews.GET",
+      extra: { route: "/api/views", status: 200 },
+    });
     return NextResponse.json({ views: null });
   }
 }
