@@ -28,8 +28,9 @@ test.describe("security headers", () => {
       );
       // The /version page retries the GitHub release lookup from the
       // browser, so api.github.com must be an allowed connect-src.
+      // The Sentry browser SDK posts error events to the ingest host.
       expect(headers["content-security-policy"]).toContain(
-        "connect-src 'self' https://api.github.com",
+        "connect-src 'self' https://api.github.com https://*.ingest.us.sentry.io",
       );
     });
   }
