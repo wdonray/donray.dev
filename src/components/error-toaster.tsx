@@ -11,42 +11,57 @@ import {
 const AUTO_DISMISS_MS = 8000;
 
 function ToastCard({ toast }: { toast: ErrorToast }) {
-  const pauseRef = useRef<() => void>(() => undefined);
-  const resumeRef = useRef<() => void>(() => undefined);
+  // Mutable timer controls, stable across renders. pause/resume read the ref
+  // only when invoked (event handlers), never during render.
+  const controlsRef = useRef({
+    remaining: AUTO_DISMISS_MS,
+    startedAt: 0,
+    timer: null as ReturnType<typeof setTimeout> | null,
+  });
 
   useEffect(() => {
-    let remaining = AUTO_DISMISS_MS;
-    let startedAt = Date.now();
-    let timer: ReturnType<typeof setTimeout> | null = setTimeout(
+    const controls = controlsRef.current;
+    controls.remaining = AUTO_DISMISS_MS;
+    controls.startedAt = Date.now();
+    controls.timer = setTimeout(
       () => dismissToast(toast.id),
-      remaining,
+      controls.remaining,
     );
-    const arm = () => {
-      if (timer) clearTimeout(timer);
-      startedAt = Date.now();
-      timer = setTimeout(() => dismissToast(toast.id), remaining);
-    };
-    pauseRef.current = () => {
-      if (timer) {
-        clearTimeout(timer);
-        timer = null;
-        remaining = Math.max(0, remaining - (Date.now() - startedAt));
-      }
-    };
-    resumeRef.current = arm;
     return () => {
-      if (timer) clearTimeout(timer);
+      if (controls.timer) clearTimeout(controls.timer);
     };
   }, [toast.id]);
+
+  const pause = () => {
+    const controls = controlsRef.current;
+    if (controls.timer) {
+      clearTimeout(controls.timer);
+      controls.timer = null;
+      controls.remaining = Math.max(
+        0,
+        controls.remaining - (Date.now() - controls.startedAt),
+      );
+    }
+  };
+
+  const resume = () => {
+    const controls = controlsRef.current;
+    if (controls.timer) clearTimeout(controls.timer);
+    controls.startedAt = Date.now();
+    controls.timer = setTimeout(
+      () => dismissToast(toast.id),
+      controls.remaining,
+    );
+  };
 
   return (
     <div
       role="alert"
       aria-atomic="true"
-      onMouseEnter={() => pauseRef.current()}
-      onMouseLeave={() => resumeRef.current()}
-      onFocus={() => pauseRef.current()}
-      onBlur={() => resumeRef.current()}
+      onMouseEnter={pause}
+      onMouseLeave={resume}
+      onFocus={pause}
+      onBlur={resume}
       onKeyDown={(event) => {
         if (event.key === "Escape") dismissToast(toast.id);
       }}

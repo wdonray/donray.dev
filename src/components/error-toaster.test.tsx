@@ -170,4 +170,66 @@ describe("ErrorToaster", () => {
     });
     expect(container).toBeEmptyDOMElement();
   });
+
+  it("re-arms the running timer when the pointer leaves without a prior hover", () => {
+    const { container } = render(<ErrorToaster />);
+    act(() => {
+      toastError("boom");
+    });
+    const toast = screen.getByRole("alert");
+
+    // No mouseEnter first: resume() runs while the timer is still active,
+    // so it clears and re-arms it.
+    fireEvent.mouseLeave(toast);
+    act(() => {
+      vi.advanceTimersByTime(7999);
+    });
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("ignores a redundant pause while already paused", () => {
+    render(<ErrorToaster />);
+    act(() => {
+      toastError("boom");
+    });
+    const toast = screen.getByRole("alert");
+
+    fireEvent.mouseEnter(toast);
+    // Timer is already null; the second pause is a no-op.
+    fireEvent.mouseEnter(toast);
+    act(() => {
+      vi.advanceTimersByTime(20000);
+    });
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    drainToasts();
+  });
+
+  it("unmounts cleanly after the timer was paused", () => {
+    const { unmount } = render(<ErrorToaster />);
+    act(() => {
+      toastError("boom");
+    });
+    // Pause first so the cleanup runs with no active timer.
+    fireEvent.mouseEnter(screen.getByRole("alert"));
+    unmount();
+
+    render(<ErrorToaster />);
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    drainToasts();
+  });
+
+  it("ignores non-Escape key presses", () => {
+    render(<ErrorToaster />);
+    act(() => {
+      toastError("boom");
+    });
+    const toast = screen.getByRole("alert");
+    fireEvent.keyDown(toast, { key: "Enter" });
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+    drainToasts();
+  });
 });
