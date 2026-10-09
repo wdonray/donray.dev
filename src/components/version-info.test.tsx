@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, render, screen } from "@testing-library/react";
+import { toastError } from "@/lib/error-toast";
 import VersionInfo, {
   POLL_INTERVAL_MS,
   compareVersions,
@@ -12,6 +13,13 @@ import VersionInfo, {
   toRelease,
   type Release,
 } from "./version-info";
+
+vi.mock("@/lib/error-toast", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/error-toast")>();
+  return { ...actual, toastError: vi.fn() };
+});
+
+const toastErrorMock = vi.mocked(toastError);
 
 const NOW = Date.parse("2026-10-03T12:00:00Z");
 
@@ -411,7 +419,7 @@ describe("VersionInfo", () => {
     expect(screen.getAllByText("v0.5.0")).toHaveLength(2);
   });
 
-  it("shows an empty-state message when GitHub is unreachable and no releases exist", async () => {
+  it("fires an error toast (and no inline notice) when GitHub is unreachable", async () => {
     useFakeTimers();
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
     render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
@@ -419,9 +427,32 @@ describe("VersionInfo", () => {
       await vi.advanceTimersByTimeAsync(0);
     });
 
+    // The error surfaces as a toast, not inline red text.
+    expect(toastErrorMock).toHaveBeenCalledWith(
+      "Something went wrong. Please try again.",
+    );
     expect(
-      screen.getByText("Couldn't reach GitHub to load releases."),
+      screen.queryByText("Couldn't reach GitHub to load releases."),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText("Offline · showing last known releases"),
     ).toBeInTheDocument();
+  });
+
+  it("toasts only once while polling keeps failing", async () => {
+    useFakeTimers();
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
+    render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+    expect(toastErrorMock).toHaveBeenCalledTimes(1);
+
+    // Two more failed poll cycles: no additional toasts.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS * 2);
+    });
+    expect(toastErrorMock).toHaveBeenCalledTimes(1);
   });
 
   it("renders releases without a version tag", async () => {

@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import AnalyticsTracker from "@/components/analytics-tracker";
+import ErrorToaster from "@/components/error-toaster";
 import VersionReloadToast from "@/components/version-reload-toast";
 
 /**
@@ -29,6 +30,7 @@ export default function ClientLayout({
         <Footer />
         <AnalyticsTracker />
         <VersionReloadToast />
+        <ErrorToaster />
       </div>
     </ThemeProvider>
   );

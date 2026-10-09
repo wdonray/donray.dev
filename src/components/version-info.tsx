@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { fadeInUp, fadeInUpWithDelay } from "@/lib/animations";
 import { reportError } from "@/lib/report-error";
+import { getErrorMessage, toastError } from "@/lib/error-toast";
 
 export const RELEASES_API =
   "https://api.github.com/repos/wdonray/donray.dev/releases?per_page=5";
@@ -128,6 +129,9 @@ export default function VersionInfo({
   const [lastChecked, setLastChecked] = useState<number>(() => Date.now());
   const [now, setNow] = useState<number>(() => Date.now());
   const [unreachable, setUnreachable] = useState(initialReleases.length === 0);
+  // Toast once per outage: the poll retries every 2 minutes, so only the
+  // first failure surfaces a toast. Reset on success for the next outage.
+  const toastedRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -138,9 +142,16 @@ export default function VersionInfo({
         setReleases(next);
         setLastChecked(Date.now());
         setUnreachable(false);
+        toastedRef.current = false;
       } catch (error) {
         reportError(error, { location: "VersionInfo.poll" });
-        if (!cancelled) setUnreachable(true);
+        if (!cancelled) {
+          setUnreachable(true);
+          if (!toastedRef.current) {
+            toastedRef.current = true;
+            toastError(getErrorMessage(error));
+          }
+        }
       }
     };
     // Always re-check from the browser on mount: an independent network with
@@ -240,9 +251,7 @@ export default function VersionInfo({
           </ol>
         ) : (
           <p className="rounded-lg border px-4 py-6 text-center text-sm text-muted-foreground">
-            {unreachable
-              ? "Couldn't reach GitHub to load releases."
-              : "No releases found."}
+            No releases found.
           </p>
         )}
       </motion.div>
