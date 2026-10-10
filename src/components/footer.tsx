@@ -64,6 +64,18 @@ export default function Footer() {
             >
               Version
             </Link>
+            <Link
+              href="/privacy"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/terms"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Terms
+            </Link>
             <nav aria-label="Social links">
               <div className="flex items-center gap-4">
                 {socialLinks.map((social) => (

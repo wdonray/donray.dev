@@ -17,6 +17,12 @@ describe("Footer", () => {
 
     const version = screen.getByRole("link", { name: "Version" });
     expect(version).toHaveAttribute("href", "/version");
+
+    const privacy = screen.getByRole("link", { name: "Privacy" });
+    expect(privacy).toHaveAttribute("href", "/privacy");
+
+    const terms = screen.getByRole("link", { name: "Terms" });
+    expect(terms).toHaveAttribute("href", "/terms");
   });
 
   it("links to social profiles", () => {
