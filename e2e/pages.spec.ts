@@ -95,8 +95,10 @@ test.describe("every page renders content", () => {
       await expect(main).not.toBeEmpty();
 
       // Substantive, not just chrome: at least a paragraph of text.
+      // Threshold is 50 (not 100) because CJK text conveys the same
+      // content in fewer characters than Latin scripts.
       const text = (await main.innerText()).trim();
-      expect(text.length).toBeGreaterThan(100);
+      expect(text.length).toBeGreaterThan(50);
     });
   }
 });

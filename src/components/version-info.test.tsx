@@ -477,7 +477,7 @@ describe("VersionInfo", () => {
     render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
     await screen.findByRole("heading", { name: "Version" });
 
-    expect(screen.getByText("v", { exact: true })).toBeInTheDocument();
+    expect(await screen.findByText("v", { exact: true })).toBeInTheDocument();
   });
 
   it("stops polling on unmount", async () => {
