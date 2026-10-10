@@ -18,6 +18,8 @@ test.describe("accessibility", () => {
     "/analytics",
     "/uses",
     "/principles",
+    "/privacy",
+    "/terms",
     "/projects/hide-zero-cards",
     "/projects/patternspell",
   ];
