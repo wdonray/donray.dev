@@ -39,35 +39,44 @@ function save(locale, data) {
  * - key order follows the source
  */
 function syncTree(source, target, path = "") {
-  const out = {};
+  const isArray = Array.isArray(source);
+  const out = isArray ? [] : {};
   let added = 0;
   let removed = 0;
-  for (const [k, v] of Object.entries(source)) {
-    const p = path ? `${path}.${k}` : k;
+  const entries = isArray ? source.entries() : Object.entries(source);
+  for (const [k, v] of entries) {
+    const key = isArray ? String(k) : k;
+    const p = path ? `${path}.${key}` : key;
+    const t = target && typeof target === "object" ? target[key] : undefined;
     if (v && typeof v === "object") {
-      const sub = syncTree(
-        v,
-        target && typeof target[k] === "object" ? target[k] : {},
-        p,
-      );
-      out[k] = sub.tree;
+      const sub = syncTree(v, t && typeof t === "object" ? t : undefined, p);
+      out[key] = sub.tree;
       added += sub.added;
       removed += sub.removed;
-    } else if (target && k in target) {
-      out[k] = target[k];
+    } else if (t !== undefined) {
+      out[key] = t;
     } else {
-      out[k] = v;
+      out[key] = v;
       added++;
       console.log(`  + ${p}`);
     }
   }
-  if (target) {
+  if (target && typeof target === "object") {
+    const sourceKeys = new Set(
+      isArray ? source.map((_, i) => String(i)) : Object.keys(source),
+    );
     for (const k of Object.keys(target)) {
-      if (!(k in source)) {
+      if (!sourceKeys.has(k)) {
         removed++;
         console.log(`  - ${path ? `${path}.` : ""}${k}`);
       }
     }
+  }
+  // Convert back to array if source was an array
+  if (isArray) {
+    const arr = [];
+    for (let i = 0; i < source.length; i++) arr.push(out[String(i)]);
+    return { tree: arr, added, removed };
   }
   return { tree: out, added, removed };
 }
