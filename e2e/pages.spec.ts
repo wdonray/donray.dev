@@ -61,7 +61,9 @@ function discoverRoutes(): string[] {
       expanded.push(route);
       continue;
     }
-    const slugs = route.startsWith("/blog")
+    // Match /blog or /{locale}/blog (locale prefix is optional)
+    const isBlog = /^\/(es|zh|tl)?\/?blog\//.test(route);
+    const slugs = isBlog
       ? POSTS.map((p) => p.slug)
       : PROJECTS.map((p) => p.slug);
     for (const slug of slugs) {
