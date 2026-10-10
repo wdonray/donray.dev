@@ -178,7 +178,11 @@
               "title": "前端工程师"
             }
           ],
-          "skills": ["Vue.js", "JavaScript", "TypeScript"],
+          "skills": [
+            "Vue.js",
+            "JavaScript",
+            "TypeScript"
+          ],
           "type": "全职"
         },
         {
@@ -194,7 +198,14 @@
               "title": "前端工程师"
             }
           ],
-          "skills": ["React.js", "Vue.js", "CMS", "JavaScript", "CSS", "HTML"],
+          "skills": [
+            "React.js",
+            "Vue.js",
+            "CMS",
+            "JavaScript",
+            "CSS",
+            "HTML"
+          ],
           "type": "全职"
         },
         {
@@ -226,7 +237,10 @@
               "title": "游戏开发者"
             }
           ],
-          "skills": ["C#", "Unity Game Engine"],
+          "skills": [
+            "C#",
+            "Unity Game Engine"
+          ],
           "type": "自由职业"
         },
         {
@@ -238,7 +252,11 @@
               "title": "VR 开发实习生"
             }
           ],
-          "skills": ["Unity Game Engine", "C#", "VR 开发"],
+          "skills": [
+            "Unity Game Engine",
+            "C#",
+            "VR 开发"
+          ],
           "type": "合同制"
         },
         {
@@ -250,7 +268,11 @@
               "title": "游戏编程夏令营讲师"
             }
           ],
-          "skills": ["Unity Game Engine", "C#", "教学"],
+          "skills": [
+            "Unity Game Engine",
+            "C#",
+            "教学"
+          ],
           "type": "合同制"
         }
       ],
@@ -389,7 +411,8 @@
     "captionWithLink": "全部时间，数据来自 {source} 的<link>公开分析</link>。",
     "pageViews": "页面浏览量",
     "title": "实时数据",
-    "uniqueVisitors": "独立访客"
+    "uniqueVisitors": "独立访客",
+    "signups": "注册用户"
   },
   "metadata": {
     "description": "Donray Williams 是 Justworks 的 player-coach 型工程经理，带领前端团队负责用户引导和账单。作品集、项目与工作经历。",
@@ -781,7 +804,9 @@
         "title": "第三方链接"
       },
       {
-        "body": ["这些条款受新泽西州法律管辖，不考虑其法律冲突原则。"],
+        "body": [
+          "这些条款受新泽西州法律管辖，不考虑其法律冲突原则。"
+        ],
         "title": "适用法律"
       },
       {

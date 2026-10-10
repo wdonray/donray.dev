@@ -178,7 +178,11 @@
               "title": "Ingeniero frontend"
             }
           ],
-          "skills": ["Vue.js", "JavaScript", "TypeScript"],
+          "skills": [
+            "Vue.js",
+            "JavaScript",
+            "TypeScript"
+          ],
           "type": "Tiempo completo"
         },
         {
@@ -194,7 +198,14 @@
               "title": "Ingeniero frontend"
             }
           ],
-          "skills": ["React.js", "Vue.js", "CMS", "JavaScript", "CSS", "HTML"],
+          "skills": [
+            "React.js",
+            "Vue.js",
+            "CMS",
+            "JavaScript",
+            "CSS",
+            "HTML"
+          ],
           "type": "Tiempo completo"
         },
         {
@@ -226,7 +237,10 @@
               "title": "Desarrollador de videojuegos"
             }
           ],
-          "skills": ["C#", "Unity Game Engine"],
+          "skills": [
+            "C#",
+            "Unity Game Engine"
+          ],
           "type": "Freelance"
         },
         {
@@ -238,7 +252,11 @@
               "title": "Pasante de desarrollo VR"
             }
           ],
-          "skills": ["Unity Game Engine", "C#", "Desarrollo VR"],
+          "skills": [
+            "Unity Game Engine",
+            "C#",
+            "Desarrollo VR"
+          ],
           "type": "Contrato"
         },
         {
@@ -250,7 +268,11 @@
               "title": "Instructor de campamento de verano de programación de videojuegos"
             }
           ],
-          "skills": ["Unity Game Engine", "C#", "Enseñanza"],
+          "skills": [
+            "Unity Game Engine",
+            "C#",
+            "Enseñanza"
+          ],
           "type": "Contrato"
         }
       ],
@@ -389,7 +411,8 @@
     "captionWithLink": "Histórico, de las <link>analíticas públicas</link> de {source}.",
     "pageViews": "Visitas",
     "title": "Estadísticas en vivo",
-    "uniqueVisitors": "Visitantes únicos"
+    "uniqueVisitors": "Visitantes únicos",
+    "signups": "Registros"
   },
   "metadata": {
     "description": "Donray Williams es un Gerente de ingeniería jugador-entrenador en Justworks, liderando el frontend de onboarding y facturación. Portafolio, proyectos y experiencia.",

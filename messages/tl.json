@@ -178,7 +178,11 @@
               "title": "Frontend Engineer"
             }
           ],
-          "skills": ["Vue.js", "JavaScript", "TypeScript"],
+          "skills": [
+            "Vue.js",
+            "JavaScript",
+            "TypeScript"
+          ],
           "type": "Full-time"
         },
         {
@@ -194,7 +198,14 @@
               "title": "Frontend Engineer"
             }
           ],
-          "skills": ["React.js", "Vue.js", "CMS", "JavaScript", "CSS", "HTML"],
+          "skills": [
+            "React.js",
+            "Vue.js",
+            "CMS",
+            "JavaScript",
+            "CSS",
+            "HTML"
+          ],
           "type": "Full-time"
         },
         {
@@ -226,7 +237,10 @@
               "title": "Game Developer"
             }
           ],
-          "skills": ["C#", "Unity Game Engine"],
+          "skills": [
+            "C#",
+            "Unity Game Engine"
+          ],
           "type": "Freelance"
         },
         {
@@ -238,7 +252,11 @@
               "title": "VR Development Intern"
             }
           ],
-          "skills": ["Unity Game Engine", "C#", "VR Development"],
+          "skills": [
+            "Unity Game Engine",
+            "C#",
+            "VR Development"
+          ],
           "type": "Contract"
         },
         {
@@ -250,7 +268,11 @@
               "title": "Game Programmer Summer Camp Instructor"
             }
           ],
-          "skills": ["Unity Game Engine", "C#", "Teaching"],
+          "skills": [
+            "Unity Game Engine",
+            "C#",
+            "Teaching"
+          ],
           "type": "Contract"
         }
       ],
@@ -389,7 +411,8 @@
     "captionWithLink": "Buong panahon, mula sa <link>pampublikong analytics</link> ng {source}.",
     "pageViews": "Mga page view",
     "title": "Live na stats",
-    "uniqueVisitors": "Mga natatanging bisita"
+    "uniqueVisitors": "Mga natatanging bisita",
+    "signups": "Mga nag-sign up"
   },
   "metadata": {
     "description": "Si Donray Williams ay isang player-coach Engineering Manager sa Justworks, na namumuno sa frontend para sa onboarding at billing. Portfolio, projects, at experience.",

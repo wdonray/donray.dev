@@ -83,6 +83,35 @@ describe("LiveStats", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("renders a signups card when the endpoint returns a signup count", async () => {
+    mockFetchOnce(async () => ({
+      ok: true,
+      json: async () => ({ ...STATS, signups: 789 }),
+    }));
+    render(
+      <LiveStats endpoint="/api/ps-stats" sourceName="patternspell.org" />,
+    );
+
+    expect(await screen.findByText("Signups")).toBeVisible();
+    expect(await screen.findByText("789")).toBeVisible();
+    // The other two cards still render.
+    expect(screen.getByText("1,234")).toBeVisible();
+    expect(screen.getByText("56")).toBeVisible();
+  });
+
+  it("hides the signups card when the signup count is null", async () => {
+    mockFetchOnce(async () => ({
+      ok: true,
+      json: async () => ({ ...STATS, signups: null }),
+    }));
+    render(
+      <LiveStats endpoint="/api/ps-stats" sourceName="patternspell.org" />,
+    );
+
+    expect(await screen.findByText("1,234")).toBeVisible();
+    expect(screen.queryByText("Signups")).not.toBeInTheDocument();
+  });
+
   it("renders nothing when the endpoint is unavailable", async () => {
     mockFetchOnce(async () => ({
       ok: false,

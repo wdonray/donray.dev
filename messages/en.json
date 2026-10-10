@@ -178,7 +178,11 @@
               "title": "Frontend Engineer"
             }
           ],
-          "skills": ["Vue.js", "JavaScript", "TypeScript"],
+          "skills": [
+            "Vue.js",
+            "JavaScript",
+            "TypeScript"
+          ],
           "type": "Full-time"
         },
         {
@@ -194,7 +198,14 @@
               "title": "Frontend Engineer"
             }
           ],
-          "skills": ["React.js", "Vue.js", "CMS", "JavaScript", "CSS", "HTML"],
+          "skills": [
+            "React.js",
+            "Vue.js",
+            "CMS",
+            "JavaScript",
+            "CSS",
+            "HTML"
+          ],
           "type": "Full-time"
         },
         {
@@ -226,7 +237,10 @@
               "title": "Game Developer"
             }
           ],
-          "skills": ["C#", "Unity Game Engine"],
+          "skills": [
+            "C#",
+            "Unity Game Engine"
+          ],
           "type": "Freelance"
         },
         {
@@ -238,7 +252,11 @@
               "title": "VR Development Intern"
             }
           ],
-          "skills": ["Unity Game Engine", "C#", "VR Development"],
+          "skills": [
+            "Unity Game Engine",
+            "C#",
+            "VR Development"
+          ],
           "type": "Contract"
         },
         {
@@ -250,7 +268,11 @@
               "title": "Game Programmer Summer Camp Instructor"
             }
           ],
-          "skills": ["Unity Game Engine", "C#", "Teaching"],
+          "skills": [
+            "Unity Game Engine",
+            "C#",
+            "Teaching"
+          ],
           "type": "Contract"
         }
       ],
@@ -389,7 +411,8 @@
     "captionWithLink": "All time, from {source}'s <link>public analytics</link>.",
     "pageViews": "Page views",
     "title": "Live stats",
-    "uniqueVisitors": "Unique visitors"
+    "uniqueVisitors": "Unique visitors",
+    "signups": "Signups"
   },
   "metadata": {
     "description": "Donray Williams is a player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing. Portfolio, projects, and experience.",

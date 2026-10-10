@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Eye, Users } from "lucide-react";
+import { Eye, UserPlus, Users } from "lucide-react";
 import { reportError } from "@/lib/report-error";
 
 interface LiveStatsData {
   pageViews: number;
   uniqueVisitors: number;
+  /** All-time signup count. Absent when the source has no signup data. */
+  signups?: number | null;
 }
 
 type State =
@@ -20,7 +22,8 @@ type State =
  * true unique visitors, fetched client-side from a same-origin JSON
  * endpoint (so no CORS or ad-blocker issues, and the page builds without
  * AWS credentials). Renders nothing while loading or when stats are
- * unavailable, so the page never breaks over analytics.
+ * unavailable, so the page never breaks over analytics. When the endpoint
+ * also returns a signup count, a third card shows it.
  */
 export function LiveStats({
   endpoint,
@@ -28,7 +31,7 @@ export function LiveStats({
   sourceHref,
   external = false,
 }: {
-  /** Same-origin JSON endpoint returning { pageViews, uniqueVisitors }. */
+  /** Same-origin JSON endpoint returning { pageViews, uniqueVisitors, signups? }. */
   endpoint: string;
   /** e.g. "hidezerocards.org's" — possessive name used in the caption. */
   sourceName: string;
@@ -69,7 +72,8 @@ export function LiveStats({
 
   if (state.status !== "ready") return null;
 
-  const { pageViews, uniqueVisitors } = state.stats;
+  const { pageViews, uniqueVisitors, signups } = state.stats;
+  const showSignups = typeof signups === "number";
 
   return (
     <section aria-labelledby="live-stats-heading">
@@ -79,7 +83,9 @@ export function LiveStats({
       >
         {t("title")}
       </h2>
-      <div className="grid grid-cols-2 gap-4">
+      <div
+        className={`grid gap-4 ${showSignups ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2"}`}
+      >
         <div className="rounded-xl border p-4">
           <p className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <Eye className="size-4 text-primary" aria-hidden="true" />
@@ -98,6 +104,17 @@ export function LiveStats({
             {uniqueVisitors.toLocaleString(locale)}
           </p>
         </div>
+        {showSignups && (
+          <div className="rounded-xl border p-4">
+            <p className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <UserPlus className="size-4 text-primary" aria-hidden="true" />
+              {t("signups")}
+            </p>
+            <p className="mt-1 text-2xl font-bold tabular-nums">
+              {signups.toLocaleString(locale)}
+            </p>
+          </div>
+        )}
       </div>
       <p className="mt-3 text-sm text-muted-foreground">
         {sourceHref ? (
