@@ -46,6 +46,10 @@ function placeholders(str) {
     // Skip the '#' placeholder inside plural blocks; it's not a named arg.
     if (m[1] !== "#") found.add(m[1]);
   }
+  // Also capture rich-text tags like <link>, <principles> used with t.rich().
+  // A removed or renamed tag breaks formatting silently.
+  const tagRe = /<([a-zA-Z][a-zA-Z0-9_]*)>/g;
+  while ((m = tagRe.exec(str)) !== null) found.add(`<${m[1]}>`);
   return found;
 }
 
