@@ -65,6 +65,24 @@ describe("LiveStats", () => {
     expect(link).not.toHaveAttribute("rel");
   });
 
+  it("renders the caption without a link when there is no dashboard", async () => {
+    mockFetchOnce(async () => ({
+      ok: true,
+      json: async () => STATS,
+    }));
+    render(
+      <LiveStats endpoint="/api/ps-stats" sourceName="patternspell.org" />,
+    );
+
+    expect(await screen.findByText("1,234")).toBeVisible();
+    expect(
+      screen.getByText("All time, from patternspell.org.", { exact: false }),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole("link", { name: "public analytics" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("renders nothing when the endpoint is unavailable", async () => {
     mockFetchOnce(async () => ({
       ok: false,

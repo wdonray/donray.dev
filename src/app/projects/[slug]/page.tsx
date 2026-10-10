@@ -190,12 +190,7 @@ export default async function ProjectPage({
           />
         )}
         {slug === "patternspell" && (
-          <LiveStats
-            endpoint="/api/ps-stats"
-            sourceName="patternspell.org's"
-            sourceHref="https://patternspell.org/analytics"
-            external
-          />
+          <LiveStats endpoint="/api/ps-stats" sourceName="patternspell.org" />
         )}
         {slug === "donray-dev" && (
           <LiveStats
