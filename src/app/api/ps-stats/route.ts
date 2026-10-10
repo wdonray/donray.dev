@@ -21,12 +21,20 @@ export async function GET(request: Request) {
       return NextResponse.json({ ok: false }, { status: 429 });
     }
 
-    const [stats, signups] = await Promise.all([
-      getPsStats(),
-      getPsSignupCount(),
-    ]);
+    const stats = await getPsStats();
     if (!stats) {
       return NextResponse.json({ ok: false }, { status: 503 });
+    }
+    // Signups are best-effort: if Cognito is down or misconfigured, still
+    // return the analytics stats rather than failing the whole request.
+    let signups: number | null = null;
+    try {
+      signups = await getPsSignupCount();
+    } catch (error) {
+      reportError(error, {
+        location: "ApiPsStats.GET",
+        extra: { route: "/api/ps-stats", partial: "signups" },
+      });
     }
     return NextResponse.json(
       { ...stats, signups },
