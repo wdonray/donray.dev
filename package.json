@@ -11,7 +11,8 @@
     "test:unit": "vitest run --coverage",
     "test:e2e": "playwright test",
     "format": "oxfmt --write .",
-    "format:check": "oxfmt --check ."
+    "format:check": "oxfmt --check .",
+    "check:translations": "node scripts/check-translations.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1146.0",

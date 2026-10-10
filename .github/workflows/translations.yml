@@ -1,0 +1,29 @@
+name: Translations
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "messages/**"
+      - "scripts/check-translations.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Cancel stale runs when a PR is updated.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Translation completeness
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v7
+
+      - name: Check message catalogs
+        run: node scripts/check-translations.mjs
