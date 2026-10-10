@@ -29,6 +29,29 @@ he decides, you execute. He verifies your work as a habit — be precise.
 - Vitest + Testing Library for unit tests, Playwright for e2e
 - Hosting: AWS Amplify (us-east-1). Analytics: DynamoDB (`donray-dev-page-views`).
 
+## Internationalization (mandatory)
+
+The site ships in 4 locales: English (`en`, unprefixed URLs), Spanish (`es`),
+Simplified Chinese (`zh`), Tagalog (`tl`). Blog post bodies stay in English;
+everything else is translated.
+
+**When you add or change any user-facing string, you MUST:**
+
+1. Add the English string to `messages/en.json`.
+2. Run `npm run translations:sync` to propagate the new key to the other
+   locales (English placeholder).
+3. Translate the placeholder values in `messages/es.json`, `messages/zh.json`,
+   and `messages/tl.json` yourself. Do not leave English placeholders.
+4. Run `npm run check:translations` before pushing. CI's "Translation
+   completeness" check blocks the PR on missing keys, broken ICU
+   placeholders, or em dashes.
+
+**Translation rules:** preserve every key and ICU placeholder (`{count}`,
+`<link>`, etc.) exactly; no em dashes in any language; keep proper nouns,
+product names, tech terms, URLs, and emails untranslated; Simplified Chinese
+only (never Traditional). See `scripts/check-translations.mjs` for the
+enforced rules.
+
 ## Conventions
 
 - **Version reload toast** (`src/components/version-reload-toast.tsx`, hook `src/hooks/use-new-version.ts`): mounted once in `ClientLayout`; polls `GET /api/version` every 15 min (plus on visibility/focus regain) and shows a dismissible bottom-right toast when a newer deploy is detected.
