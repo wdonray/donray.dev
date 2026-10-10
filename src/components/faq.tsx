@@ -2,50 +2,27 @@
 
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { fadeInUp } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { getFaqJsonLd, serializeJsonLd, type FaqItem } from "@/lib/schema";
 
-const FAQS: FaqItem[] = [
-  {
-    question: "What do you do at Justworks?",
-    answer:
-      "I'm a player-coach Engineering Manager leading a team of 3. I own frontend for all things onboarding, member and company, plus billing. I set technical direction, review the team's code, and still write production code myself.",
-  },
-  {
-    question: "Are you open to new roles?",
-    answer:
-      "No. I'm happily at Justworks and not looking for a new role. I am open to conversations: EM coffee chats, frontend mentorship, conference speaking, and podcast guesting.",
-  },
-  {
-    question: "What's your technical background?",
-    answer:
-      "7+ years building for the web, starting at Stuller in Louisiana before moving north: Leaflink, Cyclei (founding frontend engineer), and Justworks, where I grew from Software Engineer to Senior to Engineering Manager. As a senior I built the org-wide typed fetch library and shared frontend config libraries, and helped move customer traffic from roughly half to roughly three-quarters onto the new app. Core stack is Vue, TypeScript, and Ruby on Rails, with Go, Node.js, Vitest, Playwright, and GitHub Actions in regular rotation. Very comfortable with AI tooling: Cursor and Claude Code are daily drivers, and I rolled out Claude PR review across our frontend org.",
-  },
-  {
-    question: "Where are you based?",
-    answer:
-      "I live in New Jersey and work out of New York City (Eastern Time), hybrid.",
-  },
-  {
-    question: "What's the fastest way to reach you?",
-    answer: "Email: donrayxwilliams@gmail.com. I read everything.",
-  },
-];
-
 /**
  * FAQ section with FAQPage structured data. Direct-answer-first format
  * targets featured snippets and AI-answer extraction.
  */
 export default function Faq() {
+  const t = useTranslations("home.faq");
   const sectionRef = useRef<HTMLElement>(null);
   const isSectionInView = useInView(sectionRef, {
     once: true,
     margin: "-100px",
   });
   const [openIndexes, setOpenIndexes] = useState<Set<number>>(new Set());
+
+  const FAQS = t.raw("items") as FaqItem[];
 
   const toggle = (index: number) => {
     setOpenIndexes((prev) => {
@@ -75,7 +52,7 @@ export default function Faq() {
       <div className="space-y-8">
         <SectionHeader
           id="faq-heading"
-          title="Frequently asked questions"
+          title={t("title")}
           isInView={isSectionInView}
         />
         <div className="space-y-3">

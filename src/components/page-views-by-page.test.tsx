@@ -8,20 +8,20 @@ function pageStat(path: string, totalViews: number, uniques: number): PageStat {
 }
 
 describe("PageViewsByPage", () => {
-  it("renders nothing when there are no pages", () => {
-    const { container } = render(<PageViewsByPage pages={[]} />);
+  it("renders nothing when there are no pages", async () => {
+    const { container } = render(await PageViewsByPage({ pages: [] }));
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("renders one row per page with views and uniques", () => {
+  it("renders one row per page with views and uniques", async () => {
     render(
-      <PageViewsByPage
-        pages={[
+      await PageViewsByPage({
+        pages: [
           pageStat("/", 1234, 56),
           pageStat("/analytics", 78, 9),
           pageStat("/version", 1, 1),
-        ]}
-      />,
+        ],
+      }),
     );
 
     expect(screen.getByText("Page views by page")).toBeVisible();
@@ -51,9 +51,11 @@ describe("PageViewsByPage", () => {
     ).toEqual(["56", "9", "1"]);
   });
 
-  it("renders pages in the order given (parent sorts most-viewed first)", () => {
+  it("renders pages in the order given (parent sorts most-viewed first)", async () => {
     render(
-      <PageViewsByPage pages={[pageStat("/b", 2, 2), pageStat("/a", 10, 5)]} />,
+      await PageViewsByPage({
+        pages: [pageStat("/b", 2, 2), pageStat("/a", 10, 5)],
+      }),
     );
 
     const rows = screen.getAllByRole("row").slice(1);

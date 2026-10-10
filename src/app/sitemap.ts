@@ -1,75 +1,49 @@
 import type { MetadataRoute } from "next";
+import { absoluteLocaleUrls } from "@/i18n/metadata";
+import { PROJECTS } from "@/lib/projects";
+import { getPosts } from "@/lib/blog";
 
 const BASE_URL = "https://www.donray.dev";
 
+interface PageEntry {
+  path: string;
+  changeFrequency: "daily" | "weekly" | "monthly" | "yearly";
+  priority: number;
+}
+
 /**
- * Generates /sitemap.xml. Update this list when adding public pages
- * (e.g. /blog, /uses, /work/*).
+ * Generates /sitemap.xml with one URL per locale. The default locale (en)
+ * keeps the existing unprefixed URLs; other locales get /es, /zh, /tl.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  return [
-    {
-      url: BASE_URL,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${BASE_URL}/analytics`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/version`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.3,
-    },
-    {
-      url: `${BASE_URL}/blog`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    },
-    {
-      url: `${BASE_URL}/blog/review-to-learn`,
-      lastModified: now,
-      changeFrequency: "monthly",
+  const pages: PageEntry[] = [
+    { path: "/", changeFrequency: "weekly", priority: 1 },
+    { path: "/analytics", changeFrequency: "daily", priority: 0.7 },
+    { path: "/version", changeFrequency: "weekly", priority: 0.3 },
+    { path: "/blog", changeFrequency: "weekly", priority: 0.7 },
+    ...getPosts().map((post) => ({
+      path: `/blog/${post.slug}`,
+      changeFrequency: "monthly" as const,
       priority: 0.6,
-    },
-    {
-      url: `${BASE_URL}/uses`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${BASE_URL}/principles`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: `${BASE_URL}/privacy`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${BASE_URL}/terms`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    ...["pico-domains", "cyclei", "hide-zero-cards", "donray-dev"].map(
-      (slug) => ({
-        url: `${BASE_URL}/projects/${slug}`,
-        lastModified: now,
-        changeFrequency: "monthly" as const,
-        priority: 0.6,
-      }),
-    ),
+    })),
+    { path: "/uses", changeFrequency: "monthly", priority: 0.5 },
+    { path: "/principles", changeFrequency: "monthly", priority: 0.5 },
+    { path: "/privacy", changeFrequency: "yearly", priority: 0.3 },
+    { path: "/terms", changeFrequency: "yearly", priority: 0.3 },
+    ...PROJECTS.map((project) => ({
+      path: `/projects/${project.slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
   ];
+
+  return pages.flatMap((page) =>
+    absoluteLocaleUrls(page.path, BASE_URL).map(({ url }) => ({
+      url,
+      lastModified: now,
+      changeFrequency: page.changeFrequency,
+      priority: page.priority,
+    })),
+  );
 }

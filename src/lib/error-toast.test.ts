@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   dismissToast,
-  getErrorMessage,
+  getErrorMessageKey,
   subscribeToToasts,
   toastError,
   type ErrorToast,
@@ -25,60 +25,57 @@ beforeEach(() => {
   collector.unsubscribe();
 });
 
-describe("getErrorMessage", () => {
-  it("maps fetch TypeErrors to the network message", () => {
-    expect(getErrorMessage(new TypeError("Failed to fetch"))).toBe(
-      "Couldn't reach the server. Check your connection and try again.",
+describe("getErrorMessageKey", () => {
+  it("maps fetch TypeErrors to the network key", () => {
+    expect(getErrorMessageKey(new TypeError("Failed to fetch"))).toBe(
+      "networkError",
     );
   });
 
-  it("maps Response statuses to the approved copy", () => {
-    expect(getErrorMessage(new Response(null, { status: 400 }))).toBe(
-      "That didn't work. Please try again.",
+  it("maps Response statuses to keys", () => {
+    expect(getErrorMessageKey(new Response(null, { status: 400 }))).toBe(
+      "badRequest",
     );
-    expect(getErrorMessage(new Response(null, { status: 401 }))).toBe(
-      "Your session expired. Please sign in again.",
+    expect(getErrorMessageKey(new Response(null, { status: 401 }))).toBe(
+      "unauthorized",
     );
-    expect(getErrorMessage(new Response(null, { status: 403 }))).toBe(
-      "You don't have permission to do that.",
+    expect(getErrorMessageKey(new Response(null, { status: 403 }))).toBe(
+      "forbidden",
     );
-    expect(getErrorMessage(new Response(null, { status: 404 }))).toBe(
-      "That wasn't found. It may have been moved or deleted.",
+    expect(getErrorMessageKey(new Response(null, { status: 404 }))).toBe(
+      "notFound",
     );
-    expect(getErrorMessage(new Response(null, { status: 409 }))).toBe(
-      "That already exists.",
+    expect(getErrorMessageKey(new Response(null, { status: 409 }))).toBe(
+      "conflict",
     );
-    expect(getErrorMessage(new Response(null, { status: 429 }))).toBe(
-      "Too many requests. Please wait a moment and try again.",
+    expect(getErrorMessageKey(new Response(null, { status: 429 }))).toBe(
+      "rateLimited",
     );
   });
 
-  it("maps 5xx statuses to the server message", () => {
+  it("maps 5xx statuses to the server key", () => {
     for (const status of [500, 502, 503, 599]) {
-      expect(getErrorMessage(new Response(null, { status }))).toBe(
-        "Something went wrong on our end. We're looking into it.",
+      expect(getErrorMessageKey(new Response(null, { status }))).toBe(
+        "serverError",
       );
     }
   });
 
   it("reads status from plain error-like objects", () => {
-    expect(getErrorMessage({ status: 404 })).toBe(
-      "That wasn't found. It may have been moved or deleted.",
-    );
-    expect(getErrorMessage({ status: 503 })).toBe(
-      "Something went wrong on our end. We're looking into it.",
-    );
+    expect(getErrorMessageKey({ status: 404 })).toBe("notFound");
+    expect(getErrorMessageKey({ status: 503 })).toBe("serverError");
   });
 
-  it("falls back to the generic message for unknown statuses and values", () => {
-    const generic = "Something went wrong. Please try again.";
-    expect(getErrorMessage(new Response(null, { status: 302 }))).toBe(generic);
-    expect(getErrorMessage({ status: "404" })).toBe(generic);
-    expect(getErrorMessage({ status: 404.5 })).toBe(generic);
-    expect(getErrorMessage(new Error("boom"))).toBe(generic);
-    expect(getErrorMessage("boom")).toBe(generic);
-    expect(getErrorMessage(null)).toBe(generic);
-    expect(getErrorMessage(undefined)).toBe(generic);
+  it("falls back to the generic key for unknown statuses and values", () => {
+    expect(getErrorMessageKey(new Response(null, { status: 302 }))).toBe(
+      "unknownError",
+    );
+    expect(getErrorMessageKey({ status: "404" })).toBe("unknownError");
+    expect(getErrorMessageKey({ status: 404.5 })).toBe("unknownError");
+    expect(getErrorMessageKey(new Error("boom"))).toBe("unknownError");
+    expect(getErrorMessageKey("boom")).toBe("unknownError");
+    expect(getErrorMessageKey(null)).toBe("unknownError");
+    expect(getErrorMessageKey(undefined)).toBe("unknownError");
   });
 });
 

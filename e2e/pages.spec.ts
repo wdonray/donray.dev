@@ -40,14 +40,30 @@ function discoverRoutes(): string[] {
 
   walk(appDir, "");
 
+  // Expand dynamic [locale] routes to the actual supported locales.
+  // English uses unprefixed URLs; es/zh/tl use their prefix.
+  const LOCALES = ["", "/es", "/zh", "/tl"];
+  const localeExpanded: string[] = [];
+  for (const route of routes) {
+    if (!route.includes("[locale]")) {
+      localeExpanded.push(route);
+      continue;
+    }
+    for (const prefix of LOCALES) {
+      localeExpanded.push(route.replace("/[locale]", prefix) || "/");
+    }
+  }
+
   // Expand dynamic [slug] routes from their data sources.
   const expanded: string[] = [];
-  for (const route of routes) {
+  for (const route of localeExpanded) {
     if (!route.includes("__SLUG__")) {
       expanded.push(route);
       continue;
     }
-    const slugs = route.startsWith("/blog")
+    // Match /blog or /{locale}/blog (locale prefix is optional)
+    const isBlog = /^\/(es|zh|tl)?\/?blog\//.test(route);
+    const slugs = isBlog
       ? POSTS.map((p) => p.slug)
       : PROJECTS.map((p) => p.slug);
     for (const slug of slugs) {
@@ -79,8 +95,10 @@ test.describe("every page renders content", () => {
       await expect(main).not.toBeEmpty();
 
       // Substantive, not just chrome: at least a paragraph of text.
+      // Threshold is 50 (not 100) because CJK text conveys the same
+      // content in fewer characters than Latin scripts.
       const text = (await main.innerText()).trim();
-      expect(text.length).toBeGreaterThan(100);
+      expect(text.length).toBeGreaterThan(50);
     });
   }
 });

@@ -1,13 +1,15 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Mail } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { fadeInUpWithDelay, imageScale } from "@/lib/animations";
 
 export default function Hero() {
+  const t = useTranslations("home.hero");
   const yearsSince2019 = new Date().getFullYear() - 2019;
 
   const h1Size = "text-4xl sm:text-6xl lg:text-7xl";
@@ -30,31 +32,32 @@ export default function Hero() {
             className={`${h1Size} font-bold tracking-tight`}
             {...fadeInUpWithDelay(0)}
           >
-            Hi, I&apos;m Donray
+            {t("greeting")}
           </motion.h1>
 
           <motion.h2
             className={`${h2Size} font-normal text-muted-foreground`}
             {...fadeInUpWithDelay(0.05)}
           >
-            Engineering Manager
+            {t("role")}
           </motion.h2>
 
           <motion.p
             className={`${pSize} text-muted-foreground max-w-xl`}
             {...fadeInUpWithDelay(0.1)}
           >
-            I lead frontend for onboarding and billing at Justworks, a
-            player-coach for a team of 3 guided by{" "}
-            <Link
-              href="/principles"
-              className="font-medium text-foreground underline decoration-primary/50 underline-offset-4 hover:decoration-primary"
-            >
-              principles
-            </Link>{" "}
-            I&apos;ve refined over{" "}
-            <span className="font-bold">{yearsSince2019}+ years</span> turning
-            ideas into polished products.
+            {t.rich("intro", {
+              count: yearsSince2019,
+              principles: (chunks) => (
+                <Link
+                  href="/principles"
+                  className="font-medium text-foreground underline decoration-primary/50 underline-offset-4 hover:decoration-primary"
+                >
+                  {chunks}
+                </Link>
+              ),
+              years: (chunks) => <span className="font-bold">{chunks}</span>,
+            })}
           </motion.p>
 
           <motion.div
@@ -64,7 +67,7 @@ export default function Hero() {
             <Button
               size="lg"
               className="cursor-pointer text-sm sm:text-base h-11"
-              aria-label="View Resume"
+              aria-label={t("viewResume")}
               asChild
             >
               <a
@@ -73,7 +76,7 @@ export default function Hero() {
                 rel="noopener noreferrer"
               >
                 <ExternalLink className="size-4" aria-hidden="true" />
-                View Resume
+                {t("viewResume")}
               </a>
             </Button>
             <Button
@@ -84,10 +87,10 @@ export default function Hero() {
             >
               <a
                 href="mailto:donrayxwilliams@gmail.com"
-                aria-label="Contact via email"
+                aria-label={t("contactViaEmail")}
               >
                 <Mail className="size-4" aria-hidden="true" />
-                Contact Me
+                {t("contactMe")}
               </a>
             </Button>
           </motion.div>
@@ -101,7 +104,7 @@ export default function Hero() {
         >
           <Image
             src="/headshot.webp"
-            alt="Donray Williams"
+            alt={t("headshotAlt")}
             fill
             className="object-cover rounded-full shadow-lg"
             priority

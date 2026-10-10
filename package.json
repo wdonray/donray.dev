@@ -11,7 +11,9 @@
     "test:unit": "vitest run --coverage",
     "test:e2e": "playwright test",
     "format": "oxfmt --write .",
-    "format:check": "oxfmt --check ."
+    "format:check": "oxfmt --check .",
+    "check:translations": "node scripts/check-translations.mjs",
+    "translations:sync": "node scripts/sync-translations.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1146.0",
@@ -30,6 +32,7 @@
     "lucide-react": "^1.25.0",
     "motion": "^12.42.2",
     "next": "16.2.11",
+    "next-intl": "^4.14.9",
     "next-mdx-remote": "^6.0.0",
     "next-themes": "^0.4.6",
     "react": "^19.2.8",

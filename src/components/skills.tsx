@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -19,96 +20,37 @@ import { fadeInUp } from "@/lib/animations";
 
 interface SkillGroup {
   category: string;
-  icon: LucideIcon;
   items: string[];
+  icon: LucideIcon;
 }
 
+const groupIcons: LucideIcon[] = [
+  Atom,
+  Server,
+  FlaskConical,
+  Container,
+  Palette,
+  Users,
+];
+
 export default function Skills() {
+  const t = useTranslations("home.skills");
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  const skills: SkillGroup[] = [
-    {
-      category: "Frontend Development",
-      icon: Atom,
-      items: [
-        "Vue 3",
-        "TypeScript",
-        "JavaScript",
-        "Vite",
-        "Vue Router",
-        "Vue I18n",
-        "Storybook",
-      ],
-    },
-    {
-      category: "Backend & APIs",
-      icon: Server,
-      items: [
-        "Go",
-        "REST APIs",
-        "OpenAPI",
-        "Node.js",
-        "Ruby",
-        "Rails",
-        "MySQL",
-      ],
-    },
-    {
-      category: "Testing & Quality",
-      icon: FlaskConical,
-      items: [
-        "Vitest",
-        "Playwright",
-        "Testing Library",
-        "Unit Testing",
-        "E2E Testing",
-        "Test Automation",
-      ],
-    },
-    {
-      category: "Platform & DevOps",
-      icon: Container,
-      items: [
-        "GitHub Actions",
-        "Datadog",
-        "AWS S3",
-        "CI/CD",
-        "Git",
-        "Package Management",
-      ],
-    },
-    {
-      category: "UI & Web Standards",
-      icon: Palette,
-      items: [
-        "Tailwind CSS",
-        "CSS/SASS",
-        "HTML5",
-        "Responsive Design",
-        "Accessibility",
-        "Component Libraries",
-      ],
-    },
-    {
-      category: "Leadership & Craft",
-      icon: Users,
-      items: [
-        "Team Leadership",
-        "Mentorship",
-        "Architecture Design",
-        "Code Review",
-        "Technical Writing",
-      ],
-    },
-  ];
+  const groups = t.raw("groups") as { category: string; items: string[] }[];
+  // Parallel to the message catalog's groups; keep the order in sync.
+  const skills: SkillGroup[] = groups.map((group, i) => ({
+    ...group,
+    icon: groupIcons[i],
+  }));
 
   return (
     <section id="skills" aria-labelledby="skills-heading">
       <div className="space-y-8">
         <SectionHeader
           id="skills-heading"
-          title="Skills & Expertise"
+          title={t("title")}
           isInView={isInView}
         />
         <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -130,7 +72,9 @@ export default function Skills() {
                 <div
                   className="flex flex-wrap content-start items-start gap-2 flex-grow"
                   role="list"
-                  aria-label={`${skillGroup.category} skills`}
+                  aria-label={t("skillsLabel", {
+                    category: skillGroup.category,
+                  })}
                 >
                   {skillGroup.items.map((skill) => (
                     <Badge

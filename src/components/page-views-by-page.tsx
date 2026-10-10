@@ -1,3 +1,4 @@
+import { getTranslations, getLocale } from "next-intl/server";
 import type { PageStat } from "@/lib/analytics";
 import {
   Card,
@@ -12,30 +13,31 @@ import {
  * Renders nothing when there are no pages (the parent section only
  * renders once totalViews > 0, so this is a defensive guard).
  */
-export function PageViewsByPage({ pages }: { pages: PageStat[] }) {
+export async function PageViewsByPage({ pages }: { pages: PageStat[] }) {
   if (pages.length === 0) return null;
+
+  const t = await getTranslations("pageViewsByPage");
+  const locale = await getLocale();
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Page views by page</CardTitle>
-        <CardDescription>All time, most viewed first</CardDescription>
+        <CardTitle className="text-base">{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <table className="w-full text-sm">
-          <caption className="sr-only">
-            Page views and unique visitors by page path, most viewed first
-          </caption>
+          <caption className="sr-only">{t("caption")}</caption>
           <thead>
             <tr className="text-muted-foreground">
               <th scope="col" className="pb-2 pr-4 text-left font-medium">
-                Page
+                {t("path")}
               </th>
               <th scope="col" className="pb-2 pr-4 text-right font-medium">
-                Page views
+                {t("views")}
               </th>
               <th scope="col" className="pb-2 text-right font-medium">
-                Unique visitors
+                {t("visitors")}
               </th>
             </tr>
           </thead>
@@ -46,10 +48,10 @@ export function PageViewsByPage({ pages }: { pages: PageStat[] }) {
                   {page.path}
                 </td>
                 <td className="py-2.5 pr-4 text-right tabular-nums">
-                  {page.totalViews.toLocaleString()}
+                  {page.totalViews.toLocaleString(locale)}
                 </td>
                 <td className="py-2.5 text-right tabular-nums">
-                  {page.uniques.toLocaleString()}
+                  {page.uniques.toLocaleString(locale)}
                 </td>
               </tr>
             ))}

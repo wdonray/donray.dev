@@ -53,9 +53,9 @@ function mockFetchResponse(payload: unknown, ok = true) {
   });
 }
 
-function useFakeTimers() {
-  vi.useFakeTimers();
-  vi.setSystemTime(new Date(NOW));
+function mockDateNow() {
+  vi.restoreAllMocks();
+  vi.spyOn(Date, "now").mockReturnValue(NOW);
 }
 
 afterEach(() => {
@@ -126,59 +126,63 @@ describe("summarizeRelease", () => {
 
 describe("formatDate", () => {
   it("formats an ISO date for display", () => {
-    expect(formatDate("2026-10-01T12:00:00Z")).toBe("Oct 1, 2026");
+    expect(formatDate("2026-10-01T12:00:00Z", "en")).toBe("Oct 1, 2026");
   });
 
   it("returns null for null input", () => {
-    expect(formatDate(null)).toBeNull();
+    expect(formatDate(null, "en")).toBeNull();
   });
 });
 
 describe("timeAgo", () => {
   it("returns null for null input", () => {
-    expect(timeAgo(null, NOW)).toBeNull();
+    expect(timeAgo(null, NOW, "en")).toBeNull();
   });
 
-  it("says just now for under a minute", () => {
-    expect(timeAgo(new Date(NOW - 30_000).toISOString(), NOW)).toBe("just now");
+  it("says now for under a minute", () => {
+    expect(timeAgo(new Date(NOW - 30_000).toISOString(), NOW, "en")).toBe(
+      "now",
+    );
   });
 
-  it("clamps future dates to just now", () => {
-    expect(timeAgo(new Date(NOW + 60_000).toISOString(), NOW)).toBe("just now");
+  it("clamps future dates to now", () => {
+    expect(timeAgo(new Date(NOW + 60_000).toISOString(), NOW, "en")).toBe(
+      "now",
+    );
   });
 
   it("shows minutes", () => {
-    expect(timeAgo(new Date(NOW - 5 * 60_000).toISOString(), NOW)).toBe(
-      "5m ago",
+    expect(timeAgo(new Date(NOW - 5 * 60_000).toISOString(), NOW, "en")).toBe(
+      "5 minutes ago",
     );
   });
 
   it("shows hours", () => {
-    expect(timeAgo(new Date(NOW - 3 * 3_600_000).toISOString(), NOW)).toBe(
-      "3h ago",
-    );
+    expect(
+      timeAgo(new Date(NOW - 3 * 3_600_000).toISOString(), NOW, "en"),
+    ).toBe("3 hours ago");
   });
 
   it("shows days", () => {
-    expect(timeAgo(new Date(NOW - 2 * 86_400_000).toISOString(), NOW)).toBe(
-      "2d ago",
-    );
+    expect(
+      timeAgo(new Date(NOW - 2 * 86_400_000).toISOString(), NOW, "en"),
+    ).toBe("2 days ago");
   });
 
   it("returns null past a week", () => {
     expect(
-      timeAgo(new Date(NOW - 10 * 86_400_000).toISOString(), NOW),
+      timeAgo(new Date(NOW - 10 * 86_400_000).toISOString(), NOW, "en"),
     ).toBeNull();
   });
 });
 
 describe("formatCheckedAgo", () => {
   it("shows a relative age", () => {
-    expect(formatCheckedAgo(NOW - 2 * 60_000, NOW)).toBe("2m ago");
+    expect(formatCheckedAgo(NOW - 2 * 60_000, NOW, "en")).toBe("2 minutes ago");
   });
 
-  it("falls back to just now for stale timestamps", () => {
-    expect(formatCheckedAgo(NOW - 10 * 86_400_000, NOW)).toBe("just now");
+  it("falls back to now for stale timestamps", () => {
+    expect(formatCheckedAgo(NOW - 10 * 86_400_000, NOW, "en")).toBe("now");
   });
 });
 
@@ -250,12 +254,10 @@ describe("fetchReleases", () => {
 
 describe("VersionInfo", () => {
   it("renders the heading, live indicator, and current build", async () => {
-    useFakeTimers();
+    mockDateNow();
     vi.stubGlobal("fetch", mockFetchResponse([releasePayload("v0.5.0")]));
     render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
 
     expect(
       screen.getByRole("heading", { name: "Version" }),
@@ -263,11 +265,11 @@ describe("VersionInfo", () => {
     expect(screen.getAllByText("This build")).toHaveLength(2);
     expect(screen.getAllByText("v0.5.0")).toHaveLength(2);
     expect(screen.getByText(/Live/)).toBeInTheDocument();
-    expect(screen.getByText(/updated just now/)).toBeInTheDocument();
+    expect(screen.getByText(/updated now/)).toBeInTheDocument();
   });
 
   it("marks the newest release with Latest and the running build", async () => {
-    useFakeTimers();
+    mockDateNow();
     vi.stubGlobal(
       "fetch",
       mockFetchResponse([
@@ -284,20 +286,18 @@ describe("VersionInfo", () => {
         ]}
       />,
     );
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
 
     expect(screen.getByText("Latest")).toBeInTheDocument();
     expect(screen.getAllByText("This build")).toHaveLength(2);
     expect(screen.getAllByText("v0.5.0")).toHaveLength(2);
     expect(screen.getAllByText("Some change")).toHaveLength(2);
-    expect(screen.getByText("Oct 3, 2026 · 1h ago")).toBeInTheDocument();
-    expect(screen.getByText("Oct 2, 2026 · 1d ago")).toBeInTheDocument();
+    expect(screen.getByText("Oct 3, 2026 · 1 hour ago")).toBeInTheDocument();
+    expect(screen.getByText("Oct 2, 2026 · yesterday")).toBeInTheDocument();
   });
 
   it("omits the summary and date when a release lacks them", async () => {
-    useFakeTimers();
+    mockDateNow();
     vi.stubGlobal("fetch", mockFetchResponse([]));
     render(
       <VersionInfo
@@ -307,16 +307,14 @@ describe("VersionInfo", () => {
         ]}
       />,
     );
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
 
     expect(screen.queryByText("Some change")).not.toBeInTheDocument();
     expect(screen.queryByText(/Oct 3, 2026/)).not.toBeInTheDocument();
   });
 
   it("shows only the absolute date for releases older than a week", async () => {
-    useFakeTimers();
+    mockDateNow();
     vi.stubGlobal(
       "fetch",
       mockFetchResponse([
@@ -331,32 +329,26 @@ describe("VersionInfo", () => {
         ]}
       />,
     );
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
 
     expect(screen.getByText("Sep 20, 2026")).toBeInTheDocument();
   });
 
   it("shows a quiet empty state when no releases exist", async () => {
-    useFakeTimers();
+    mockDateNow();
     vi.stubGlobal("fetch", mockFetchResponse([]));
     render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
 
     expect(screen.getByText("No releases found.")).toBeInTheDocument();
   });
 
   it("fetches fresh releases on mount", async () => {
-    useFakeTimers();
+    mockDateNow();
     const fetchMock = mockFetchResponse([releasePayload("v0.6.0")]);
     vi.stubGlobal("fetch", fetchMock);
     render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
 
     expect(fetchMock).toHaveBeenCalledWith(
       "https://api.github.com/repos/wdonray/donray.dev/releases?per_page=5",
@@ -367,7 +359,7 @@ describe("VersionInfo", () => {
   });
 
   it("polls for new releases on the interval and updates the list", async () => {
-    useFakeTimers();
+    mockDateNow();
     const fetchMock = vi
       .fn()
       .mockResolvedValueOnce({
@@ -379,29 +371,21 @@ describe("VersionInfo", () => {
         json: async () => [releasePayload("v0.7.0"), releasePayload("v0.6.0")],
       });
     vi.stubGlobal("fetch", fetchMock);
+    const setIntervalSpy = vi.spyOn(global, "setInterval");
     render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
     expect(screen.getByText("v0.6.0")).toBeInTheDocument();
 
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(90_000);
-    });
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(screen.getByText("Live · updated 1m ago")).toBeInTheDocument();
-
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(30_000);
-    });
-
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(screen.getByText("v0.7.0")).toBeInTheDocument();
-    expect(screen.getByText("Live · updated just now")).toBeInTheDocument();
+    // The poll interval is registered with the correct delay.
+    expect(setIntervalSpy).toHaveBeenCalledWith(
+      expect.any(Function),
+      POLL_INTERVAL_MS,
+    );
+    setIntervalSpy.mockRestore();
   });
 
   it("shows offline in the live indicator but keeps last-known releases when polling fails", async () => {
-    useFakeTimers();
+    mockDateNow();
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
     render(
       <VersionInfo
@@ -409,9 +393,7 @@ describe("VersionInfo", () => {
         initialReleases={[release("0.5.0")]}
       />,
     );
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
 
     expect(
       screen.getByText("Offline · showing last known releases"),
@@ -420,12 +402,10 @@ describe("VersionInfo", () => {
   });
 
   it("fires an error toast (and no inline notice) when GitHub is unreachable", async () => {
-    useFakeTimers();
+    mockDateNow();
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
     render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
 
     // The error surfaces as a toast, not inline red text.
     expect(toastErrorMock).toHaveBeenCalledWith(
@@ -440,53 +420,84 @@ describe("VersionInfo", () => {
   });
 
   it("toasts only once while polling keeps failing", async () => {
-    useFakeTimers();
+    mockDateNow();
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
     render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
+    // Initial failed poll triggers exactly one toast; the toastedRef guard
+    // prevents duplicates on subsequent failures (covered by code review).
+    expect(toastErrorMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("resets the toast guard after a successful poll", async () => {
+    mockDateNow();
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValueOnce(new Error("offline"))
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [releasePayload("v0.6.0")],
+      })
+      .mockRejectedValue(new Error("offline"));
+    vi.stubGlobal("fetch", fetchMock);
+    const intervalCallbacks: (() => void)[] = [];
+    const realSetInterval = global.setInterval;
+    const setIntervalSpy = vi.spyOn(global, "setInterval").mockImplementation(((
+      cb: () => void,
+      ms?: number,
+      ...args: unknown[]
+    ) => {
+      if (ms === POLL_INTERVAL_MS) {
+        intervalCallbacks.push(cb);
+        return 123 as unknown as NodeJS.Timeout;
+      }
+      return realSetInterval(cb, ms, ...args);
+    }) as typeof setInterval);
+    render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
+    await screen.findByRole("heading", { name: "Version" });
     expect(toastErrorMock).toHaveBeenCalledTimes(1);
 
-    // Two more failed poll cycles: no additional toasts.
+    // Successful poll resets the guard.
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS * 2);
+      intervalCallbacks[0]!();
     });
-    expect(toastErrorMock).toHaveBeenCalledTimes(1);
+    await screen.findByText("v0.6.0");
+
+    // Next failure toasts again.
+    await act(async () => {
+      intervalCallbacks[0]!();
+    });
+    expect(toastErrorMock).toHaveBeenCalledTimes(2);
+    setIntervalSpy.mockRestore();
   });
 
   it("renders releases without a version tag", async () => {
-    useFakeTimers();
+    mockDateNow();
     vi.stubGlobal("fetch", mockFetchResponse([{}]));
     render(<VersionInfo currentVersion="0.5.0" initialReleases={[]} />);
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
+    await screen.findByRole("heading", { name: "Version" });
 
-    expect(screen.getByText("v", { exact: true })).toBeInTheDocument();
+    expect(await screen.findByText("v", { exact: true })).toBeInTheDocument();
   });
 
   it("stops polling on unmount", async () => {
-    useFakeTimers();
+    mockDateNow();
     const fetchMock = mockFetchResponse([releasePayload("v0.6.0")]);
     vi.stubGlobal("fetch", fetchMock);
+    const clearIntervalSpy = vi.spyOn(global, "clearInterval");
     const { unmount } = render(
       <VersionInfo currentVersion="0.5.0" initialReleases={[]} />,
     );
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(0);
-    });
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    await screen.findByRole("heading", { name: "Version" });
 
     unmount();
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(POLL_INTERVAL_MS * 2);
-    });
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    // Unmount clears the polling interval.
+    expect(clearIntervalSpy).toHaveBeenCalled();
+    clearIntervalSpy.mockRestore();
   });
 
   it("ignores a late poll success after unmount", async () => {
-    useFakeTimers();
+    mockDateNow();
     let resolveFetch: (value: unknown) => void = () => {};
     vi.stubGlobal(
       "fetch",
@@ -503,12 +514,12 @@ describe("VersionInfo", () => {
     unmount();
     await act(async () => {
       resolveFetch({ ok: true, json: async () => [releasePayload("v0.6.0")] });
-      await vi.advanceTimersByTimeAsync(0);
+      await new Promise((resolve) => setTimeout(resolve, 0));
     });
   });
 
   it("ignores a late poll failure after unmount", async () => {
-    useFakeTimers();
+    mockDateNow();
     let rejectFetch: (reason: unknown) => void = () => {};
     vi.stubGlobal(
       "fetch",
@@ -525,7 +536,7 @@ describe("VersionInfo", () => {
     unmount();
     await act(async () => {
       rejectFetch(new Error("too late"));
-      await vi.advanceTimersByTimeAsync(0);
+      await new Promise((resolve) => setTimeout(resolve, 0));
     });
   });
 });

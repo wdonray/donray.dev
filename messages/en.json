@@ -1,0 +1,934 @@
+{
+  "analytics": {
+    "allTimeBotsFiltered": "All time · bots filtered",
+    "chartLabel": "Bar chart of page views per day for the last {days} days",
+    "chartPoint": "{date}: {views} views",
+    "description": "Public, privacy-respecting traffic statistics for donray.dev.",
+    "historical": "Before tracking started",
+    "historicalDescription": "CDN-request estimates from before page-view tracking existed: a different measurement, not page views, and not comparable to the tracked numbers above.",
+    "historicalFootnote": "* Oct 2026 covers Oct 1–2 only. Source: AWS CloudWatch (Amplify Hosting requests), pulled Oct 2, 2026. Page-view tracking started Oct 2026.",
+    "historicalTraffic": "Historical traffic (estimated)",
+    "historicalTrafficDescription": "CDN requests per month: includes page loads, images, scripts, stylesheets, and bots. Not page views; approximate, for rough scale only.",
+    "intro": "Public, privacy-respecting traffic stats for donray.dev. No cookies, no raw IP addresses stored. Ever.",
+    "last30Days": "Last 30 days",
+    "lastUpdated": "Last updated {datetime} · Tracking started October 2026",
+    "learned": "What I've learned",
+    "learnedCdn": "CDN requests are not page views.",
+    "learnedCdnBody": "Before real tracking existed, CloudWatch showed ~560K requests over six months. But that counts every image, script, stylesheet, and bot. Real human page loads are a fraction of that. The dashboard keeps the two measurements visibly separate because conflating them would be dishonest.",
+    "learnedDescription": "Notes from running my own analytics",
+    "learnedHomepage": "Almost all traffic is the homepage.",
+    "learnedHomepageBody": "The per-page table above makes that plain. The site's job is to be found, read, and contacted from a single page.",
+    "learnedPrivacy": "Privacy-respecting analytics is a solved problem.",
+    "learnedPrivacyBody": "One DynamoDB table, salted daily hashes, no cookies, no raw IPs. And the dashboard still answers every question I actually have about my traffic.",
+    "methodology": "How it's measured",
+    "methodologyDescription": "What these numbers are (and aren't)",
+    "methodologyHistorical": "Historical estimates",
+    "methodologyHistoricalBody": "are a separate, older measurement: approximate monthly CDN request counts from AWS CloudWatch, from before page-view tracking existed. They include images, scripts, stylesheets, and bots, so they are not page views and can't be compared with the tracked numbers.",
+    "methodologyNoCookies": "No cookies are set and no raw IP addresses are stored. All records are kept permanently.",
+    "methodologyTracked": "Tracked page views",
+    "methodologyTrackedBody": "are real page loads in a browser, recorded from October 2026. Images, scripts, and stylesheets don't count. Only the page itself. Known bots and crawlers are filtered out before counting.",
+    "methodologyUniques": "Unique visitors",
+    "methodologyUniquesBody": "are real people, counted once ever: each visit is hashed (IP + browser, salted and non-reversible) and the hash is kept in a permanent set. A visitor who returns a year later still counts once, and a visitor who reads several pages counts once. Shared networks can undercount; changing IPs can overcount. True unique counting started in October 2026; earlier visits used day-bound hashes that cannot be converted.",
+    "noViews": "No page views recorded yet. Stats appear here once people start visiting.",
+    "notConfigured": "Analytics isn't configured on this build yet. Check back soon.",
+    "pageViews": "Page views",
+    "perDay": "Page views per day",
+    "title": "Analytics",
+    "tracked": "Tracked page views",
+    "trackedDescription": "Real page loads, measured from October 2026.",
+    "uniqueVisitors": "Unique visitors"
+  },
+  "blog": {
+    "backToBlog": "Back to blog",
+    "description": "Notes on engineering management, frontend architecture, and building for the web.",
+    "englishOnly": "Posts are written in English.",
+    "publishedOn": "Published {date}",
+    "readingTime": "{minutes} min read",
+    "tableOfContents": "On this page",
+    "title": "Blog",
+    "readPost": "Read post",
+    "postNotFound": "Post not found"
+  },
+  "footer": {
+    "buyMeACoffee": "Buy me a coffee",
+    "copyright": "© {year} Donray Williams",
+    "nav": {
+      "analytics": "Analytics",
+      "principles": "Principles",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "version": "Version"
+    },
+    "socialLinks": "Social links",
+    "visitProfile": "Visit {name} profile"
+  },
+  "header": {
+    "contactVia": "Contact via {name}",
+    "homeLabel": "Go to homepage",
+    "mainNav": "Main navigation",
+    "mobileNav": "Mobile navigation",
+    "nav": {
+      "blog": "Blog",
+      "experience": "Experience",
+      "principles": "Principles",
+      "projects": "Projects",
+      "skills": "Skills"
+    },
+    "openMenu": "Open menu",
+    "toggleMenu": "Toggle menu",
+    "viewSection": "View {label} section",
+    "visitProfile": "Visit {name} profile"
+  },
+  "home": {
+    "conversations": {
+      "intro": "I'm happily at Justworks. Not looking for a new role, but I am always up for good conversations with peers, mentees, and conference organizers. Based in the NYC metro area (ET), working hybrid.",
+      "items": [
+        {
+          "description": "Talking shop with other engineering managers: player-coach life, frontend leadership, growing engineers.",
+          "title": "EM coffee chats"
+        },
+        {
+          "description": "Helping developers level up on Vue, TypeScript, and building for scale.",
+          "title": "Frontend mentorship"
+        },
+        {
+          "description": "Talks on onboarding flows, billing UX, and leading frontend teams as a player-coach.",
+          "title": "Conference speaking"
+        },
+        {
+          "description": "Conversations about engineering management, frontend architecture, and shipping real products.",
+          "title": "Podcast guesting"
+        },
+        {
+          "description": "Comparing notes with other EMs on hiring, team health, and staying technical while managing.",
+          "title": "Peer conversations"
+        }
+      ],
+      "sayHello": "Say hello",
+      "sayHelloDescription": "The fastest way to reach me is email. I read everything.",
+      "title": "Open to conversations"
+    },
+    "experience": {
+      "companyDetails": "{company} details",
+      "current": "Current",
+      "earlierLabel": "Earlier professional experience",
+      "hideEarlier": "Hide Earlier Experience",
+      "jobs": [
+        {
+          "company": "Justworks",
+          "location": "Manhattan, New York, United States",
+          "positions": [
+            {
+              "description": "Player-coach leading frontend for onboarding and billing (team of 3). Shipped the member onboarding flow used by 6,800+ people across 1,365 companies in 30 days.",
+              "current": true,
+              "link": {
+                "href": "/principles",
+                "label": "How I lead"
+              },
+              "period": "Jun 2026 – Present",
+              "title": "Engineering Manager"
+            },
+            {
+              "description": "Operated as tech lead and de facto manager for two engineers; both formally transferred to my team when I was promoted to Engineering Manager.",
+              "period": "Dec 2023 – Jun 2026",
+              "title": "Senior Software Engineer"
+            },
+            {
+              "period": "Mar 2023 – Dec 2023",
+              "title": "Software Engineer"
+            }
+          ],
+          "skills": [
+            "Team Leadership",
+            "Vue.js",
+            "JavaScript",
+            "Internal Library Engineering",
+            "Unit Testing",
+            "E2E Testing",
+            "Responsive Design",
+            "Mentorship"
+          ],
+          "type": "Full-time"
+        },
+        {
+          "company": "Cyclei",
+          "location": "San Francisco Bay Area",
+          "positions": [
+            {
+              "period": "Jul 2023 – Aug 2025",
+              "title": "Founding Frontend Engineer"
+            }
+          ],
+          "skills": [
+            "Vue.js",
+            "JavaScript",
+            "TypeScript",
+            "CSS",
+            "HTML",
+            "Responsive Design"
+          ],
+          "type": "Freelance"
+        },
+        {
+          "company": "Leaflink",
+          "location": "New York, United States",
+          "positions": [
+            {
+              "period": "Apr 2022 – Dec 2022",
+              "title": "Frontend Engineer"
+            }
+          ],
+          "skills": ["Vue.js", "JavaScript", "TypeScript"],
+          "type": "Full-time"
+        },
+        {
+          "company": "Stuller, Inc.",
+          "location": "Lafayette, Louisiana, United States",
+          "positions": [
+            {
+              "period": "Jan 2021 – Apr 2022",
+              "title": "Frontend Engineer II"
+            },
+            {
+              "period": "Nov 2020 – Jan 2021",
+              "title": "Frontend Engineer"
+            }
+          ],
+          "skills": ["React.js", "Vue.js", "CMS", "JavaScript", "CSS", "HTML"],
+          "type": "Full-time"
+        },
+        {
+          "company": "Gemvision Corporation",
+          "location": "Lafayette, Louisiana Area",
+          "positions": [
+            {
+              "period": "Jan 2020 – Apr 2020",
+              "title": "DevOps Engineer I"
+            }
+          ],
+          "skills": [
+            "AWS",
+            "AWS Lambda",
+            "React.js",
+            "Redux.js",
+            "JavaScript",
+            "TypeScript",
+            "Serverless"
+          ],
+          "type": "Full-time"
+        },
+        {
+          "company": "Buh! Gaming",
+          "location": "Remote",
+          "positions": [
+            {
+              "period": "Jun 2018 – Jun 2019",
+              "title": "Game Developer"
+            }
+          ],
+          "skills": ["C#", "Unity Game Engine"],
+          "type": "Freelance"
+        },
+        {
+          "company": "TANTRUM Lab",
+          "location": "Lafayette, Louisiana Area",
+          "positions": [
+            {
+              "period": "Oct 2018 – Dec 2018",
+              "title": "VR Development Intern"
+            }
+          ],
+          "skills": ["Unity Game Engine", "C#", "VR Development"],
+          "type": "Contract"
+        },
+        {
+          "company": "Academy of Interactive Entertainment (AIE)",
+          "location": "Lafayette, Louisiana Area",
+          "positions": [
+            {
+              "period": "Jun 2017 – Jul 2017",
+              "title": "Game Programmer Summer Camp Instructor"
+            }
+          ],
+          "skills": ["Unity Game Engine", "C#", "Teaching"],
+          "type": "Contract"
+        }
+      ],
+      "rolesAt": "Roles at {company}",
+      "technologiesAt": "Technologies used at {company}",
+      "timelineLabel": "Professional experience timeline",
+      "title": "Experience",
+      "viewEarlier": "View Earlier Experience"
+    },
+    "faq": {
+      "items": [
+        {
+          "answer": "I'm a player-coach Engineering Manager leading a team of 3. I own frontend for all things onboarding, member and company, plus billing. I set technical direction, review the team's code, and still write production code myself.",
+          "question": "What do you do at Justworks?"
+        },
+        {
+          "answer": "No. I'm happily at Justworks and not looking for a new role. I am open to conversations: EM coffee chats, frontend mentorship, conference speaking, and podcast guesting.",
+          "question": "Are you open to new roles?"
+        },
+        {
+          "answer": "7+ years building for the web, starting at Stuller in Louisiana before moving north: Leaflink, Cyclei (founding frontend engineer), and Justworks, where I grew from Software Engineer to Senior to Engineering Manager. As a senior I built the org-wide typed fetch library and shared frontend config libraries, and helped move customer traffic from roughly half to roughly three-quarters onto the new app. Core stack is Vue, TypeScript, and Ruby on Rails, with Go, Node.js, Vitest, Playwright, and GitHub Actions in regular rotation. Very comfortable with AI tooling: Cursor and Claude Code are daily drivers, and I rolled out Claude PR review across our frontend org.",
+          "question": "What's your technical background?"
+        },
+        {
+          "answer": "I live in New Jersey and work out of New York City (Eastern Time), hybrid.",
+          "question": "Where are you based?"
+        },
+        {
+          "answer": "Email: donrayxwilliams@gmail.com. I read everything.",
+          "question": "What's the fastest way to reach you?"
+        }
+      ],
+      "title": "Frequently asked questions"
+    },
+    "hero": {
+      "contactMe": "Contact Me",
+      "contactViaEmail": "Contact via email",
+      "greeting": "Hi, I'm Donray",
+      "headshotAlt": "Donray Williams",
+      "intro": "I lead frontend for onboarding and billing at Justworks, a player-coach for a team of 3 guided by <principles>principles</principles> I've refined over <years>{count}+ years</years> turning ideas into polished products.",
+      "role": "Engineering Manager",
+      "viewResume": "View Resume"
+    },
+    "projects": {
+      "active": "Active projects",
+      "archivedSite": "Archived Site",
+      "details": "Details →",
+      "detailsLabel": "View details about {title}",
+      "past": "Past projects",
+      "technologies": "Technologies used in {title}",
+      "title": "Projects",
+      "viewOnGitHub": "View on GitHub",
+      "viewOnGitHubLabel": "View {title} on GitHub",
+      "visitSite": "Visit Site"
+    },
+    "skills": {
+      "groups": [
+        {
+          "category": "Frontend Development",
+          "items": [
+            "Vue 3",
+            "TypeScript",
+            "JavaScript",
+            "Vite",
+            "Vue Router",
+            "Vue I18n",
+            "Storybook"
+          ]
+        },
+        {
+          "category": "Backend & APIs",
+          "items": [
+            "Go",
+            "REST APIs",
+            "OpenAPI",
+            "Node.js",
+            "Ruby",
+            "Rails",
+            "MySQL"
+          ]
+        },
+        {
+          "category": "Testing & Quality",
+          "items": [
+            "Vitest",
+            "Playwright",
+            "Testing Library",
+            "Unit Testing",
+            "E2E Testing",
+            "Test Automation"
+          ]
+        },
+        {
+          "category": "Platform & DevOps",
+          "items": [
+            "GitHub Actions",
+            "Datadog",
+            "AWS S3",
+            "CI/CD",
+            "Git",
+            "Package Management"
+          ]
+        },
+        {
+          "category": "UI & Web Standards",
+          "items": [
+            "Tailwind CSS",
+            "CSS/SASS",
+            "HTML5",
+            "Responsive Design",
+            "Accessibility",
+            "Component Libraries"
+          ]
+        },
+        {
+          "category": "Leadership & Craft",
+          "items": [
+            "Team Leadership",
+            "Mentorship",
+            "Architecture Design",
+            "Code Review",
+            "Technical Writing"
+          ]
+        }
+      ],
+      "skillsLabel": "{category} skills",
+      "title": "Skills & Expertise"
+    }
+  },
+  "languageSwitcher": {
+    "chooseLanguage": "Choose a language",
+    "label": "Language"
+  },
+  "liveStats": {
+    "caption": "All time, from {source}.",
+    "captionWithLink": "All time, from {source}'s <link>public analytics</link>.",
+    "pageViews": "Page views",
+    "title": "Live stats",
+    "uniqueVisitors": "Unique visitors"
+  },
+  "metadata": {
+    "description": "Donray Williams is a player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing. Portfolio, projects, and experience.",
+    "ogDescription": "Player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing. Portfolio, projects, and experience.",
+    "siteName": "donray.dev",
+    "title": "Donray Williams | Engineering Manager | Frontend Leadership, NYC Metro"
+  },
+  "modeToggle": {
+    "label": "Toggle theme"
+  },
+  "pageViewsByPage": {
+    "description": "All time, most viewed first",
+    "path": "Page",
+    "title": "Page views by page",
+    "views": "Page views",
+    "visitors": "Unique visitors",
+    "caption": "Page views and unique visitors by page path, most viewed first"
+  },
+  "principles": {
+    "description": "Donray Williams' management principles: the rules he operates by as an engineering manager, earned from leading a team as a player-coach.",
+    "intro": "I'm an engineering manager at Justworks. I lead a team of three as a player-coach: I own frontend for onboarding and billing, I still write code, and I still review the team's code. These are the rules I actually operate by. Each one was earned the hard way.",
+    "items": [
+      {
+        "body": [
+          "I give the team concrete goals, good docs, and well-formed tickets. Then the work is theirs. I order the sprint and name what slips before we start, so slippage is a plan and not a surprise.",
+          "When a launch is ready, the engineer who built it runs it, not me. My job is to make the path clear. Their job is to walk it."
+        ],
+        "title": "Set the path; they own the execution"
+      },
+      {
+        "body": [
+          "I'm a player-coach, and I take that literally. I carry my own small fixes across the stack, write them up the same way every time, and when something breaks in production I jump in: small, surgical, fast. Then I hand close-out back to the team.",
+          "Staying in the code keeps my reviews honest and my estimates real."
+        ],
+        "title": "I still ship"
+      },
+      {
+        "body": [
+          "Feedback arrives within days, grounded in the actual behavior and the actual file, logged as it happens so nothing depends on my memory at review time. Praise travels. Critique gets no audience.",
+          "If I have to leave the same comment twice, the third time is a direct conversation, not another comment."
+        ],
+        "title": "Feedback fast, specific, private when it stings"
+      },
+      {
+        "body": [
+          "Good work nobody saw might as well not have happened when ratings are decided. So I put my reports on stage: they demo their own ships, they get named on launches, and I teach them what counts toward the next level.",
+          "If I don't know it happened, I can't advocate for it."
+        ],
+        "title": "Make their work visible so I can defend it"
+      },
+      {
+        "body": [
+          "A short daily checkpoint inside an already-started day. Async Friday. Blockers raised the moment they hit, not saved for standup.",
+          "When an epic sprawls, I cut scope to protect one finish line instead of tracking everything late."
+        ],
+        "title": "Rhythm protects focus; ceremony doesn't"
+      },
+      {
+        "body": [
+          "The lever for growth is a stretch assignment with a clear definition of done: a cross-stack epic for someone proving broader ownership, end-to-end launch responsibility for someone ready to exceed, a solo domain slice for someone new who needs to prove the level.",
+          "I frame the floor. They estimate it and run it."
+        ],
+        "title": "People grow by getting bigger work, not more advice"
+      }
+    ],
+    "lookingFor": "What I'm looking for",
+    "lookingForBody": "I want teams where ownership is real, the work matters to the business, and engineers are trusted with hard problems. If that sounds like your team, <link>let's talk</link>.",
+    "title": "How I Lead"
+  },
+  "privacy": {
+    "description": "How donray.dev handles your data: what is collected, what is not, and your rights.",
+    "effectiveDate": "October 10, 2026",
+    "intro": "Effective {date}. This page explains what donray.dev collects, what it does not collect, and your rights. For questions, email <link>{email}</link>.",
+    "sections": [
+      {
+        "body": [
+          "donray.dev runs its own first-party analytics. When you load a page, the site records the page path, the time of the visit, and a salted SHA-256 hash of your IP address combined with your browser's user agent string. That hash is how unique visitors are counted: it lets the site recognize a returning visitor without ever storing who they are.",
+          "That is the full extent of it. There are no user accounts, no login, no comments, no newsletter, no contact forms, and no e-commerce. Clicking an email link opens your own mail client; the site itself collects nothing from that interaction."
+        ],
+        "title": "What this site collects"
+      },
+      {
+        "body": [
+          "No cookies are set for analytics or tracking. No raw IP addresses are stored by the application. No names, email addresses, or other personal details are collected through the site itself. The analytics cannot be reversed to identify you: a salted hash is a one-way fingerprint, and the salt is never published."
+        ],
+        "title": "What this site does not collect"
+      },
+      {
+        "body": [
+          "The analytics exist for one reason: to understand readership. The counts power the public dashboard at /analytics, which shows total page views and unique visitors per page. Nothing is collected for advertising, and nothing is sold or shared with data brokers."
+        ],
+        "title": "Why it is collected"
+      },
+      {
+        "body": [
+          "Visitor hashes are kept permanently. That is what makes the unique count honest: a visitor who returns a year later still counts once, because their hash is still in the set. Page view totals are also kept permanently. If you would like your hash removed from the set, contact me at the email below and I will remove what can be identified; note that because hashes cannot be reversed, removal works best when you can describe the approximate time and pages of your visits."
+        ],
+        "title": "How long it is kept"
+      },
+      {
+        "body": [
+          "The site is hosted on AWS Amplify with DNS through Amazon Route 53. As the hosting provider and DNS operator, Amazon may log request data (such as IP addresses) under its own privacy policies, independent of anything described here. No other third-party analytics, advertising, or tracking services run on this site."
+        ],
+        "title": "Third parties"
+      },
+      {
+        "body": [
+          "If you are in the EU or UK, you have rights over your personal data under the GDPR, including the right to access it, to have it deleted, and to object to its processing. Because the analytics store only a salted hash rather than your IP address directly, the practical scope of these rights is narrow, but the rights still apply. To exercise them, or to ask any privacy question, email me and I will respond."
+        ],
+        "title": "Your rights"
+      },
+      {
+        "body": [
+          "This site is a personal technical blog and portfolio. It is not directed at children under 13, and I do not knowingly collect personal data from children."
+        ],
+        "title": "Children"
+      },
+      {
+        "body": [
+          "This policy may change as the site evolves. When it does, the effective date at the top of this page will be updated. Significant changes will also be noted on the site itself."
+        ],
+        "title": "Changes to this policy"
+      }
+    ],
+    "title": "Privacy Policy"
+  },
+  "projectPage": {
+    "discontinued": "Discontinued",
+    "faq": "Frequently asked questions",
+    "features": "Features",
+    "live": "Live",
+    "maintenance": "Maintenance mode",
+    "project": "Project",
+    "screenshotAlt": "{title} screenshot",
+    "technologies": "Technologies used in {title}",
+    "viewArchivedSite": "View archived site",
+    "viewOnGitHub": "View on GitHub",
+    "visitLiveSite": "Visit live site"
+  },
+  "projects": {
+    "cyclei": {
+      "description": "Customer web app for a curbside reusable-packaging pickup service. Covers the full lifecycle: onboarding and activation, bag tracking, an impact dashboard, a rewards wallet with payouts, and account management.",
+      "details": [
+        "Cyclei pairs curbside collection of reusable containers with regular waste pickup. Customers sign up, pay a one-time activation fee, buy from partner businesses offering reusable packaging, fill a Cyclei bag, and clip it to their recycling bin handle on trash day. A fresh return bag is delivered to their door, and the account shows returned reusables plus deposits or rewards.",
+        "As the founding frontend engineer, Donray built the customer-facing web app: multi-step onboarding with address validation and Stripe setup intents, a dashboard with an impact tracker counting single-use containers saved and a wallet balance card, bag tracking across collected, sorted, and lost states, cart checkout with coupons and invoices, wallet payouts with pending, paid, and failed statuses, and account management with pickup pause and resume.",
+        "The app is Vue 3.5 with Vite 7 and TypeScript, using Apollo Client GraphQL against a Django backend, vee-validate forms with a custom input component library, and a published Vue component library for the UI system. Vitest unit tests and ESLint/Stylelint gates run in CI. The service has since been discontinued."
+      ],
+      "faq": [
+        {
+          "answer": "Customers signed up for curbside collection, paid a one-time activation fee, bought from partner businesses offering reusable packaging, filled a Cyclei bag, and clipped it to their recycling bin handle on trash day. A fresh return bag was then delivered to their door.",
+          "question": "How did Cyclei's pickup service work?"
+        },
+        {
+          "answer": "The dashboard showed a running count of single-use containers saved, alongside a wallet balance reflecting deposits and rewards earned from returned containers.",
+          "question": "How did customers track their environmental impact?"
+        },
+        {
+          "answer": "Yes. The payout section let users request payouts of their wallet balance to a chosen destination, with request statuses of pending, paid, or failed.",
+          "question": "Could customers cash out their rewards?"
+        },
+        {
+          "answer": "Vue 3 and Vite with TypeScript, GraphQL via Apollo Client, Stripe for payments, vee-validate forms, and a published Vue component library, with Vitest unit tests and ESLint/Stylelint gates.",
+          "question": "What was the app built with?"
+        },
+        {
+          "answer": "No, the service has been discontinued.",
+          "question": "Is Cyclei still operating?"
+        }
+      ],
+      "features": [
+        "Multi-step onboarding: email, address validation, confirmation, Stripe payment",
+        "Dashboard with impact tracker (single-use containers saved) and wallet balance",
+        "Bag tracking across collected, sorted, lost, assigned, and delivered states",
+        "Cart checkout with activation fees, coupon codes, and invoices",
+        "Wallet payouts with pending, paid, and failed statuses",
+        "Account management: settings, addresses, pickup pause and resume",
+        "Staff admin section with route management and QR-code bag scanning"
+      ],
+      "imageAlt": "Cyclei logo",
+      "role": "Founding Frontend Engineer",
+      "screenshotAlt": "Screenshot of the Cyclei customer dashboard showing the impact tracker, wallet balance card, and bag tracking tabs",
+      "subtitle": "Reusable Packaging Pickup Service",
+      "title": "Cyclei"
+    },
+    "donray-dev": {
+      "description": "Personal portfolio site and blog. Static-first Next.js with a public, privacy-respecting analytics dashboard, accessibility enforced as a CI gate, and a full discovery layer for human visitors and AI engines.",
+      "details": [
+        "This site. Static-first Next.js 16 on the App Router with React 19 and TypeScript, styled with Tailwind CSS v4 and shadcn/ui, animated with Framer Motion, hosted on AWS Amplify. Project, experience, and blog sections render from MDX with syntax highlighting, heading anchor links, an automatic table of contents, and reading-time estimates.",
+        "Analytics is public and privacy-respecting: a rate-limited /api/track endpoint and an /analytics dashboard backed by DynamoDB count one page load per page per browsing session, filter bots, and estimate daily uniques with a salted SHA-256 hash of IP, user agent, and day. Raw IPs are never stored, there are no cookies, and the dashboard discloses its methodology instead of presenting estimates as exact figures.",
+        "Accessibility is a CI gate rather than an aspiration: every page is axe-core scanned against WCAG 2.2 AA on every pull request, and merging is blocked until the scan passes. The release pipeline bumps versions automatically and deploys through Amplify on every release, and a discovery layer of sitemap, robots.txt, Person and FAQPage JSON-LD, Open Graph cards, and llms.txt serves both search engines and AI crawlers."
+      ],
+      "faq": [
+        {
+          "answer": "Next.js 16 (App Router, static-first), React 19, TypeScript, Tailwind CSS v4, shadcn/ui, and Framer Motion, hosted on AWS Amplify.",
+          "question": "What is donray.dev built with?"
+        },
+        {
+          "answer": "A rate-limited /api/track endpoint records one page load per page per browsing session, filters bots, and stores counts in DynamoDB. Daily unique visitors are estimated with a salted SHA-256 hash of IP, user agent, and day. Raw IPs are never stored and there are no cookies.",
+          "question": "How does the public analytics work?"
+        },
+        {
+          "answer": "Every page is scanned with axe-core against WCAG 2.2 AA on every pull request, and merging is blocked until the scan passes.",
+          "question": "What does the accessibility CI gate check?"
+        }
+      ],
+      "features": [
+        "Project, experience, and blog sections rendered from MDX with code highlighting and reading time",
+        "Public analytics dashboard with disclosed methodology and privacy-preserving unique counting",
+        "axe-core WCAG 2.2 AA accessibility scans as a required CI check on every pull request",
+        "Discovery layer: sitemap, robots.txt, Person and FAQPage JSON-LD, Open Graph cards, llms.txt",
+        "Automated version bumps with Amplify deploys on every release",
+        "Rate-limited tracking endpoint with abuse protection"
+      ],
+      "role": "Builder",
+      "subtitle": "Personal Portfolio and Blog",
+      "title": "donray.dev"
+    },
+    "hide-zero-cards": {
+      "description": "Interactive place-value tool for fourth-grade students. Type any number up to one billion and break it into draggable, color-coded digit cards, with a dedicated mode for investigating what zero digits really mean.",
+      "details": [
+        "Hide Zero Cards turns any whole number from 1 to one billion into a set of draggable cards, one per digit, each labeled with the digit's true value. Type 5,432 and you get cards reading 5,000, 400, 30, and 2, color-coded by place group: reds for ones through hundreds, yellow for thousands, green for millions, blue for billions. Dragging the cards apart physically separates a number into its place-value components.",
+        "The namesake interaction is the zero toggle. A zero digit becomes a placeholder card reading 0,000 instead of a value card, and the Zero toolbar button hides or shows those placeholders, framing the difference between having no digit and having a zero digit. A dice button rolls random numbers with an adjustable range and a Zero-focus mode that keeps re-rolling until the number contains a zero, so practice deliberately exercises the concept.",
+        "A Number Forms dialog renders the same number four ways: Standard, Word (through a hand-rolled number-to-words converter), Unit (5 thousands, 4 hundreds, 3 tens, 2 ones), and Expanded (5,000 + 400 + 30 + 2). An in-app guide adds five classroom activities and assessment checks, with a first-visit welcome dialog and a celebratory toast when a student builds their first number.",
+        "Built with Next.js 15, React 19, TypeScript, and shadcn/ui. Dragging is a hand-rolled hook on Pointer Events with pointer capture rather than a drag-and-drop library, so cards respond identically to mouse, touch, and stylus. The full source is public on GitHub."
+      ],
+      "faq": [
+        {
+          "answer": "When a number contains a zero digit, like the 0 in 5,043, the app creates a placeholder card reading 0,000 instead of a value card. The Zero toolbar button toggles these placeholders on and off, letting students investigate the difference between having no digit and having a zero digit in a place.",
+          "question": "What does 'hide zero cards' mean?"
+        },
+        {
+          "answer": "Any whole number from 1 to 1,000,000,000 (one billion), spanning ten place values from ones to billions. The random-number roller defaults to 1 through 1,000,000 with an adjustable maximum.",
+          "question": "What size numbers can students work with?"
+        },
+        {
+          "answer": "The Number Forms dialog shows the same number four ways: Standard form (5,432), Word form (five thousand four hundred thirty-two, produced by a built-in converter), Unit form (5 thousands, 4 hundreds, 3 tens, 2 ones), and Expanded form (5,000 + 400 + 30 + 2).",
+          "question": "What are the four number forms?"
+        },
+        {
+          "answer": "Dragging is built on Pointer Events with pointer capture rather than a drag-and-drop library, so cards respond to mouse, touch, and stylus identically. Cards move with CSS transforms and a computed stacking order.",
+          "question": "How does the drag interaction work?"
+        },
+        {
+          "answer": "Yes, the site is live at hidezerocards.org, and the full source code is public on GitHub.",
+          "question": "Is Hide Zero Cards still available?"
+        }
+      ],
+      "features": [
+        "Number input from 1 to 1,000,000,000 with a mobile numeric keyboard and thousands separators",
+        "One draggable card per digit, labeled with the digit's true value and color-coded by place group",
+        "Zero placeholder cards with a show/hide toggle for investigating zero digits",
+        "Mix button scatters cards to random positions; Reset restores the ordered layout",
+        "Random number roller with adjustable range and a Zero-focus mode",
+        "Number Forms dialog showing Standard, Word, Unit, and Expanded forms side by side",
+        "Instructional guide with five classroom activities and assessment checks",
+        "Light and dark themes, PWA support, and preferences persisted locally"
+      ],
+      "imageAlt": "Screenshot of Hide Zero Cards website",
+      "role": "Builder",
+      "subtitle": "Place Value Learning Tool for 4th Grade Math",
+      "title": "Hide Zero Cards"
+    },
+    "patternspell": {
+      "description": "A pattern-based spelling toolkit for K-3 teachers, free for classrooms. Teachers manage spelling lists per student, organized by words, sounds, and spelling patterns, with a big-screen display mode and spelling practice with text-to-speech.",
+      "details": [
+        "PatternSpell is a pattern-based spelling toolkit for K-3 teachers, free for classrooms. Teachers sign in with Google and manage spelling lists per student, organizing words by sounds and spelling patterns, with lists stored in DynamoDB and importable or exportable as JSON.",
+        "The display mode presents an interactive pattern chart on the big screen: one column per spelling pattern, sized by frequency, built to project on a classroom smartboard while students spell. A practice mode lets students work through a word list with text-to-speech spelling prompts.",
+        "The app keeps an analytics dashboard showing page views, lists created, practice sessions, and words practiced, measured without cookies or stored IP addresses.",
+        "PatternSpell began in August 2025 as Shepherd Speller and was renamed in October 2026 during an active revival, with a new three-column PatternMark logo. It is built with Next.js 16, React 19, TypeScript, and Tailwind CSS v4, hosted on AWS Amplify, and the source is public on GitHub."
+      ],
+      "faq": [
+        {
+          "answer": "No. It launched as Shepherd Speller in August 2025 and was renamed PatternSpell in October 2026, with a new three-column PatternMark logo replacing the original tree mark.",
+          "question": "Was PatternSpell always called that?"
+        },
+        {
+          "answer": "Instead of a spelling tree, PatternSpell organizes words into one column per spelling pattern, with columns sized by frequency. The display mode projects this chart large enough for the whole classroom to read from a smartboard.",
+          "question": "What is the pattern chart?"
+        },
+        {
+          "answer": "Students pick one of the teacher's word lists and practice spelling each word with text-to-speech prompts, working through the list at their own pace.",
+          "question": "How does practice mode work?"
+        },
+        {
+          "answer": "Yes, it is free for classrooms.",
+          "question": "Is PatternSpell free?"
+        },
+        {
+          "answer": "Yes, the site is live at patternspell.org, and the full source code is public on GitHub.",
+          "question": "Is PatternSpell still available?"
+        }
+      ],
+      "features": [
+        "Teacher dashboard for managing spelling lists per student: words, sounds, and spelling patterns",
+        "Interactive pattern chart with one column per spelling pattern, sized by frequency",
+        "Big-screen display mode for projecting the chart on a classroom smartboard",
+        "Spelling practice mode with text-to-speech prompts",
+        "JSON import and export for word lists",
+        "Google OAuth sign-in for teachers",
+        "Analytics dashboard with usage statistics",
+        "Light and dark themes"
+      ],
+      "imageAlt": "PatternSpell logo: three pattern columns (PatternMark)",
+      "role": "Builder",
+      "subtitle": "Pattern-Based Spelling Toolkit for K-3 Teachers",
+      "title": "PatternSpell"
+    },
+    "pico-domains": {
+      "description": "Free search engine for ultra-short domain names. Curates available concise domains across 18 TLD categories and hands buyers off to trusted marketplaces.",
+      "details": [
+        "pico.domains is a free search engine for ultra-short domain names, not a registrar. It tracks hundreds of millions of domains considered high-value and easy to remember, curates the available ones, and links buyers to marketplaces. The service is free, monetized through affiliate commissions on registrar traffic. It was built by a two-person team, with Donray on frontend development.",
+        "Search starts with a prefix of up to four characters and narrows by second-level-domain length, one of 18 TLD categories (tech, commerce, country and region, and more), TLD length, specific TLDs, English-dictionary words only, and availability. Results sort by domain, SLD length, price, and registration duration, with 25 results per page and deep-linkable URLs carrying canonical tags and per-search SEO metadata.",
+        "Each result links out to Dynadot with a referral ID, keeping the commercial side with the registrar. Eighteen TLD category landing pages each carry a unique headline, long description, and icon. The app is installable as a PWA with runtime caching of API responses, and ships a collapsible filter panel with simplified table columns for small screens.",
+        "Built with Nuxt 3, Vue 3, and strict TypeScript against an Elasticsearch-backed API, with client-side caching keyed on the full query signature and shared internal component libraries. The service has since been discontinued."
+      ],
+      "faq": [
+        {
+          "answer": "A free search engine for ultra-short domain names (four characters or fewer before the dot). It is not a registrar: it curates available short domains and links buyers to marketplaces.",
+          "question": "What is pico.domains?"
+        },
+        {
+          "answer": "By typing a prefix of up to four characters, then narrowing by second-level-domain length, one of 18 TLD categories, TLD length, specific TLDs, English-dictionary words only, and availability. Results sort by domain, length, price, or registration duration.",
+          "question": "How can you search?"
+        },
+        {
+          "answer": "Through an affiliate model: result links go to Dynadot with referral IDs, and the service earns a commission on registrar traffic.",
+          "question": "How is it free?"
+        },
+        {
+          "answer": "No, the service has been discontinued.",
+          "question": "Is pico.domains still available?"
+        }
+      ],
+      "features": [
+        "Second-level-domain search capped at 4 characters, defaulting to 2 or fewer",
+        "Filters: SLD prefix and length, 18 TLD categories, TLD length, multi-select TLD picker, English-dictionary-only toggle, availability toggle",
+        "Sortable results table (domain, SLD length, price, registration duration) with pagination",
+        "Marketplace handoff linking each result to Dynadot with referral tracking",
+        "18 TLD category landing pages, each with a unique headline, description, and icon",
+        "Deep-linkable searches with canonical URLs and per-search SEO titles and descriptions",
+        "Installable PWA with runtime caching of API responses",
+        "Responsive layout with a collapsible filter panel for small screens"
+      ],
+      "imageAlt": "pico.domains logo",
+      "role": "Frontend Developer",
+      "screenshotAlt": "Screenshot of the pico.domains search interface with domain filters and a results table of short domain names",
+      "subtitle": "Ultra-Short Domain Search Engine",
+      "title": "pico.domains"
+    }
+  },
+  "tableOfContents": {
+    "title": "On this page"
+  },
+  "terms": {
+    "description": "The terms for using donray.dev: content ownership, acceptable use, and disclaimers.",
+    "effectiveDate": "October 10, 2026",
+    "intro": "Effective {date}. By using donray.dev you agree to these terms. For questions, email <link>{email}</link>.",
+    "sections": [
+      {
+        "body": [
+          "Everything on donray.dev (text, code samples, images) is written or created by Donray Williams unless stated otherwise. You may quote brief excerpts with attribution and a link back; for anything more, ask first."
+        ],
+        "title": "Content ownership"
+      },
+      {
+        "body": [
+          "Use the site normally and we will get along fine. Specifically, do not abuse the public analytics endpoint (/api/track) or any other part of the site: no inflating page view or visitor counts, no scraping at a rate that degrades the service, no attempting to disrupt, reverse engineer, or gain unauthorized access to the site or its infrastructure. Automated access that respects the site's rate limits and does not distort the public statistics is fine; anything designed to game the numbers is not.",
+          "If you find a security issue, I would rather hear about it than discover it from an incident. Contact me at the email below."
+        ],
+        "title": "Acceptable use"
+      },
+      {
+        "body": [
+          "The content here is personal opinion and experience, written to be useful, not to be advice. Blog posts about engineering, management, and careers reflect what worked for me in my context; your context differs. Nothing on this site is professional, legal, financial, or medical advice.",
+          "The site is provided as is, without warranties of any kind. I work to keep the content accurate and the site available, but I make no guarantees about correctness, completeness, or uptime."
+        ],
+        "title": "Disclaimers"
+      },
+      {
+        "body": [
+          "To the maximum extent permitted by law, Donray Williams is not liable for any damages arising from your use of this site or reliance on its content, whether direct, indirect, incidental, or consequential. If you disagree with these terms, your remedy is to stop using the site."
+        ],
+        "title": "Limitation of liability"
+      },
+      {
+        "body": [
+          "The site links to external sites (GitHub, LinkedIn, project demos, and others). I am not responsible for the content, privacy practices, or availability of external sites."
+        ],
+        "title": "Third-party links"
+      },
+      {
+        "body": [
+          "These terms are governed by the laws of the State of New Jersey, without regard to its conflict-of-law principles."
+        ],
+        "title": "Governing law"
+      },
+      {
+        "body": [
+          "These terms may change as the site evolves. When they do, the effective date at the top of this page will be updated. Continued use of the site after changes take effect constitutes acceptance of the updated terms."
+        ],
+        "title": "Changes to these terms"
+      },
+      {
+        "title": "Language",
+        "body": [
+          "These terms are written in English. Translations into other languages are provided for convenience only. In case of any discrepancy or conflict between the English version and a translated version, the English version prevails."
+        ]
+      }
+    ],
+    "title": "Terms of Use"
+  },
+  "uses": {
+    "description": "The tools Donray Williams uses to build: editors, languages, frameworks, and infrastructure.",
+    "groups": [
+      {
+        "items": [
+          {
+            "name": "Cursor",
+            "note": "Daily driver for writing code with AI assistance."
+          },
+          {
+            "name": "Claude Code",
+            "note": "Agentic coding for larger refactors and multi-file work."
+          }
+        ],
+        "title": "Editors & AI"
+      },
+      {
+        "items": [
+          {
+            "name": "TypeScript",
+            "note": "Default for all frontend work."
+          },
+          {
+            "name": "JavaScript",
+            "note": "Where it all started."
+          },
+          {
+            "name": "Ruby",
+            "note": "Rails backend work at Justworks."
+          },
+          {
+            "name": "Go",
+            "note": "Tooling and services."
+          }
+        ],
+        "title": "Languages"
+      },
+      {
+        "items": [
+          {
+            "name": "Vue",
+            "note": "Primary framework: Justworks and this site."
+          },
+          {
+            "name": "Vite",
+            "note": "Build tooling."
+          },
+          {
+            "name": "Vitest",
+            "note": "Unit testing."
+          },
+          {
+            "name": "Playwright",
+            "note": "E2E testing, including accessibility scans."
+          },
+          {
+            "name": "Tailwind CSS",
+            "note": "Styling for this site."
+          }
+        ],
+        "title": "Frontend"
+      },
+      {
+        "items": [
+          {
+            "name": "Ruby on Rails",
+            "note": "API work."
+          },
+          {
+            "name": "Node.js",
+            "note": "Scripts, tooling, and this site's runtime."
+          },
+          {
+            "name": "MySQL",
+            "note": "Relational data."
+          },
+          {
+            "name": "DynamoDB",
+            "note": "Powers this site's public analytics."
+          }
+        ],
+        "title": "Backend & data"
+      },
+      {
+        "items": [
+          {
+            "name": "AWS",
+            "note": "Amplify for hosting, S3 for assets."
+          },
+          {
+            "name": "GitHub Actions",
+            "note": "CI for this site and side projects."
+          }
+        ],
+        "title": "Infrastructure"
+      }
+    ],
+    "title": "Uses",
+    "intro": "The tools I reach for to build and ship software."
+  },
+  "version": {
+    "title": "Version",
+    "description": "Every deploy to donray.dev, most recent first.",
+    "live": "Live",
+    "updated": "updated {ago}",
+    "offline": "Offline · showing last known releases",
+    "thisBuild": "This build",
+    "latest": "Latest",
+    "noReleases": "No releases found."
+  },
+  "versionReload": {
+    "dismiss": "Dismiss",
+    "message": "A new version is available. Reload to get the latest.",
+    "reload": "Reload"
+  },
+  "viewCount": {
+    "label": "{count, plural, one {# view} other {# views}}"
+  },
+  "errorToast": {
+    "dismissNotification": "Dismiss notification",
+    "networkError": "Couldn't reach the server. Check your connection and try again.",
+    "badRequest": "That didn't work. Please try again.",
+    "unauthorized": "Your session expired. Please sign in again.",
+    "forbidden": "You don't have permission to do that.",
+    "notFound": "That wasn't found. It may have been moved or deleted.",
+    "conflict": "That already exists.",
+    "rateLimited": "Too many requests. Please wait a moment and try again.",
+    "serverError": "Something went wrong on our end. We're looking into it.",
+    "unknownError": "Something went wrong. Please try again."
+  }
+}

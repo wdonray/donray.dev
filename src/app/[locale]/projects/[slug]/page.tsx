@@ -1,44 +1,61 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ExternalLink } from "lucide-react";
 import { Github } from "@/components/ui/brand-icons";
 import { Badge } from "@/components/ui/badge";
 import { getProject, PROJECTS } from "@/lib/projects";
 import { getFaqJsonLd, serializeJsonLd } from "@/lib/schema";
 import { LiveStats } from "@/components/live-stats";
+import { routing, isAppLocale } from "@/i18n/routing";
+import { localeAlternates } from "@/i18n/metadata";
+
+interface PageParams {
+  locale: string;
+  slug: string;
+}
 
 export function generateStaticParams() {
-  return PROJECTS.map((p) => ({ slug: p.slug }));
+  return routing.locales.flatMap((locale) =>
+    PROJECTS.map((p) => ({ locale, slug: p.slug })),
+  );
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<PageParams>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  if (!isAppLocale(locale)) return {};
   const project = getProject(slug);
   if (!project) return {};
+  const t = await getTranslations({ locale, namespace: "projects" });
+  const title = t(`${slug}.title`);
+  const description = t(`${slug}.description`);
   const url = `/projects/${project.slug}`;
+  const alternates = localeAlternates(url, locale);
   const ogImage = project.screenshot ?? project.image;
+  const imageAlt =
+    (project.screenshot ? t(`${slug}.screenshotAlt`) : t(`${slug}.imageAlt`)) ||
+    title;
   return {
-    title: project.title,
-    description: project.description,
-    alternates: {
-      canonical: url,
-    },
+    title,
+    description,
+    alternates,
     openGraph: {
-      title: project.title,
-      description: `${project.subtitle} ${project.description}`,
-      url,
+      title,
+      description: `${t(`${slug}.subtitle`)} ${description}`,
+      url: alternates.canonical,
       type: "article",
       ...(ogImage
         ? {
             images: [
               {
                 url: ogImage,
-                alt: project.screenshotAlt ?? project.imageAlt,
+                alt: imageAlt,
               },
             ],
           }
@@ -46,8 +63,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: project.title,
-      description: project.description,
+      title,
+      description,
       ...(ogImage ? { images: [ogImage] } : {}),
     },
   };
@@ -56,11 +73,24 @@ export async function generateMetadata({
 export default async function ProjectPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<PageParams>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  setRequestLocale(locale);
+
   const project = getProject(slug);
   if (!project) notFound();
+
+  const t = await getTranslations("projects");
+  const tc = await getTranslations("projectPage");
+
+  const title = t(`${slug}.title`);
+  const details = t.raw(`${slug}.details`) as string[];
+  const features = t.raw(`${slug}.features`) as string[] | undefined;
+  const faq = t.raw(`${slug}.faq`) as
+    | { question: string; answer: string }[]
+    | undefined;
 
   return (
     <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-16">
@@ -69,24 +99,22 @@ export default async function ProjectPage({
           <div className="flex items-start gap-6">
             <div className="flex-1 space-y-4">
               <p className="text-sm font-medium text-primary uppercase tracking-wide">
-                Project · {project.role}
+                {tc("project")} · {t(`${slug}.role`)}
               </p>
               {project.status === "discontinued" && (
-                <Badge variant="outline">Discontinued</Badge>
+                <Badge variant="outline">{tc("discontinued")}</Badge>
               )}
               {project.status === "maintenance" && (
-                <Badge variant="outline">Maintenance mode</Badge>
+                <Badge variant="outline">{tc("maintenance")}</Badge>
               )}
-              {!project.status && <Badge variant="outline">Live</Badge>}
-              <h1 className="text-4xl font-bold tracking-tight">
-                {project.title}
-              </h1>
+              {!project.status && <Badge variant="outline">{tc("live")}</Badge>}
+              <h1 className="text-4xl font-bold tracking-tight">{title}</h1>
               <p className="text-lg text-muted-foreground">
-                {project.subtitle}
+                {t(`${slug}.subtitle`)}
               </p>
               <div
                 className="flex flex-wrap gap-2"
-                aria-label={`Technologies used in ${project.title}`}
+                aria-label={tc("technologies", { title })}
               >
                 {project.stack.map((tech) => (
                   <Badge key={tech} variant="secondary">
@@ -103,7 +131,7 @@ export default async function ProjectPage({
                     className="inline-flex items-center gap-2 text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
                   >
                     <ExternalLink className="size-4" aria-hidden="true" />
-                    Visit live site
+                    {tc("visitLiveSite")}
                   </a>
                 )}
                 {project.archivedUrl && (
@@ -114,7 +142,7 @@ export default async function ProjectPage({
                     className="inline-flex items-center gap-2 text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
                   >
                     <ExternalLink className="size-4" aria-hidden="true" />
-                    View archived site
+                    {tc("viewArchivedSite")}
                   </a>
                 )}
                 {project.github && (
@@ -125,7 +153,7 @@ export default async function ProjectPage({
                     className="inline-flex items-center gap-2 text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
                   >
                     <Github className="size-4" aria-hidden="true" />
-                    View on GitHub
+                    {tc("viewOnGitHub")}
                   </a>
                 )}
               </div>
@@ -134,7 +162,7 @@ export default async function ProjectPage({
               <div className="relative w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 overflow-hidden rounded-xl border shadow-sm">
                 <Image
                   src={project.image}
-                  alt={project.imageAlt || project.title}
+                  alt={t(`${slug}.imageAlt`) || title}
                   fill
                   className="object-cover"
                   sizes="(max-width: 640px) 96px, 128px"
@@ -148,7 +176,7 @@ export default async function ProjectPage({
           <figure className="overflow-hidden rounded-xl border shadow-sm">
             <Image
               src={project.screenshot}
-              alt={project.screenshotAlt || `${project.title} screenshot`}
+              alt={t(`${slug}.screenshotAlt`) || tc("screenshotAlt", { title })}
               width={1600}
               height={973}
               className="w-full"
@@ -158,23 +186,23 @@ export default async function ProjectPage({
         )}
 
         <div className="space-y-4">
-          {project.details.map((paragraph, i) => (
+          {details.map((paragraph, i) => (
             <p key={i} className="text-muted-foreground leading-relaxed">
               {paragraph}
             </p>
           ))}
         </div>
 
-        {project.features && project.features.length > 0 && (
+        {features && features.length > 0 && (
           <section aria-labelledby="features-heading">
             <h2
               id="features-heading"
               className="text-2xl font-bold tracking-tight mb-4"
             >
-              Features
+              {tc("features")}
             </h2>
             <ul className="list-disc pl-6 space-y-2 text-muted-foreground leading-relaxed">
-              {project.features.map((feature, i) => (
+              {features.map((feature, i) => (
                 <li key={i}>{feature}</li>
               ))}
             </ul>
@@ -184,7 +212,7 @@ export default async function ProjectPage({
         {slug === "hide-zero-cards" && (
           <LiveStats
             endpoint="/api/hzc-stats"
-            sourceName="hidezerocards.org's"
+            sourceName="hidezerocards.org"
             sourceHref="https://hidezerocards.org/analytics"
             external
           />
@@ -195,21 +223,21 @@ export default async function ProjectPage({
         {slug === "donray-dev" && (
           <LiveStats
             endpoint="/api/site-stats"
-            sourceName="donray.dev's"
+            sourceName="donray.dev"
             sourceHref="/analytics"
           />
         )}
 
-        {project.faq && project.faq.length > 0 && (
+        {faq && faq.length > 0 && (
           <section aria-labelledby="faq-heading">
             <h2
               id="faq-heading"
               className="text-2xl font-bold tracking-tight mb-4"
             >
-              Frequently asked questions
+              {tc("faq")}
             </h2>
             <div className="space-y-6">
-              {project.faq.map((item, i) => (
+              {faq.map((item, i) => (
                 <div key={i}>
                   <h3 className="font-semibold">{item.question}</h3>
                   <p className="text-muted-foreground leading-relaxed mt-1">
@@ -221,7 +249,7 @@ export default async function ProjectPage({
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{
-                __html: serializeJsonLd(getFaqJsonLd(project.faq)),
+                __html: serializeJsonLd(getFaqJsonLd(faq)),
               }}
             />
           </section>

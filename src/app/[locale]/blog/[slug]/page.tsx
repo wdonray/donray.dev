@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { hasLocale } from "next-intl";
+import { getTranslations, getLocale, setRequestLocale } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 import { Clock } from "lucide-react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import {
@@ -13,29 +16,33 @@ import { serializeJsonLd } from "@/lib/schema";
 import TableOfContents from "@/components/table-of-contents";
 import { mdxComponents } from "@/components/mdx-components";
 import ViewCount from "@/components/view-count";
+import { routing, isAppLocale } from "@/i18n/routing";
+import { localeAlternates } from "@/i18n/metadata";
 
 export function generateStaticParams() {
-  return POSTS.map((p) => ({ slug: p.slug }));
+  return routing.locales.flatMap((locale) =>
+    POSTS.map((p) => ({ locale, slug: p.slug })),
+  );
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  if (!isAppLocale(locale)) return {};
   const post = getPost(slug);
   if (!post) return {};
+  const alternates = localeAlternates(`/blog/${post.slug}`, locale);
   return {
     title: post.title,
     description: post.excerpt,
-    alternates: {
-      canonical: `/blog/${post.slug}`,
-    },
+    alternates,
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      url: `/blog/${post.slug}`,
+      url: alternates.canonical,
       type: "article",
       publishedTime: post.date,
     },
@@ -79,16 +86,21 @@ function faqPageJsonLd(post: NonNullable<ReturnType<typeof getPost>>) {
 export default async function BlogPostPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  setRequestLocale(locale);
+
+  const t = await getTranslations("blog");
+  const activeLocale = await getLocale();
   const post = getPost(slug);
   if (!post) {
     return (
       <div className="max-w-3xl mx-auto px-6 lg:px-8 pt-24 pb-16">
-        <h1 className="text-2xl font-bold">Post not found</h1>
+        <h1 className="text-2xl font-bold">{t("postNotFound")}</h1>
         <Link href="/blog" className="text-primary underline">
-          Back to blog
+          {t("backToBlog")}
         </Link>
       </div>
     );
@@ -115,20 +127,24 @@ export default async function BlogPostPage({
           }}
         />
       )}
+      <p className="text-sm text-muted-foreground italic">{t("englishOnly")}</p>
       <article className="mt-8">
         <header className="space-y-4">
           <p className="flex items-center gap-3 text-sm text-muted-foreground">
             <span>
-              {new Date(post.date + "T12:00:00").toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+              {new Date(post.date + "T12:00:00").toLocaleDateString(
+                activeLocale,
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              )}
             </span>
             <span aria-hidden="true">·</span>
             <span className="inline-flex items-center gap-1">
               <Clock className="size-3.5" aria-hidden="true" />
-              {post.readingMinutes} min read
+              {t("readingTime", { minutes: post.readingMinutes })}
             </span>
             <ViewCount path={`/blog/${slug}`} />
           </p>

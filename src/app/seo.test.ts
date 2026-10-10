@@ -24,15 +24,32 @@ describe("robots.txt", () => {
 });
 
 describe("sitemap.xml", () => {
-  it("lists the public pages", () => {
+  it("lists the public pages in every locale", () => {
     const urls = sitemap().map((entry) => entry.url);
-    expect(urls).toContain("https://www.donray.dev");
-    expect(urls).toContain("https://www.donray.dev/analytics");
-    expect(urls).toContain("https://www.donray.dev/version");
-    expect(urls).toContain("https://www.donray.dev/uses");
-    expect(urls).toContain("https://www.donray.dev/principles");
-    expect(urls).toContain("https://www.donray.dev/projects/cyclei");
-    expect(urls).toContain("https://www.donray.dev/projects/donray-dev");
+    for (const page of [
+      "",
+      "/analytics",
+      "/version",
+      "/blog",
+      "/uses",
+      "/principles",
+      "/privacy",
+      "/terms",
+      "/projects/cyclei",
+      "/projects/patternspell",
+      "/projects/donray-dev",
+    ]) {
+      expect(urls).toContain(`https://www.donray.dev${page}`);
+      expect(urls).toContain(`https://www.donray.dev/es${page}`);
+      expect(urls).toContain(`https://www.donray.dev/zh${page}`);
+      expect(urls).toContain(`https://www.donray.dev/tl${page}`);
+    }
+  });
+
+  it("includes every blog post", () => {
+    const urls = sitemap().map((entry) => entry.url);
+    expect(urls).toContain("https://www.donray.dev/blog/review-to-learn");
+    expect(urls).toContain("https://www.donray.dev/es/blog/review-to-learn");
   });
 
   it("prioritizes the homepage", () => {

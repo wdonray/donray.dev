@@ -1,19 +1,32 @@
 import type { Metadata } from "next";
-import { version } from "../../../package.json";
+import { hasLocale } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { version } from "../../../../package.json";
 import VersionInfo, {
   RELEASES_API,
   toRelease,
   type Release,
 } from "@/components/version-info";
 import { reportError } from "@/lib/report-error";
+import { routing, isAppLocale } from "@/i18n/routing";
+import { localeAlternates } from "@/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Version",
-  description: "Every deploy to donray.dev, most recent first.",
-  alternates: {
-    canonical: "/version",
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isAppLocale(locale)) return {};
+  const t = await getTranslations({ locale, namespace: "version" });
+  const alternates = localeAlternates("/version", locale);
+  return {
+    title: t("title"),
+    description: t("description"),
+    alternates,
+  };
+}
 
 async function getRecentReleases(): Promise<Release[]> {
   try {
@@ -43,7 +56,15 @@ async function getRecentReleases(): Promise<Release[]> {
   }
 }
 
-export default async function VersionPage() {
+export default async function VersionPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  setRequestLocale(locale);
+
   const initialReleases = await getRecentReleases();
 
   return (

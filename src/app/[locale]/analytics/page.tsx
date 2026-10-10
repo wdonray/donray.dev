@@ -1,3 +1,7 @@
+import { hasLocale } from "next-intl";
+import { getTranslations, getLocale, setRequestLocale } from "next-intl/server";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getAnalyticsSummary } from "@/lib/analytics";
 import { PageViewsByPage } from "@/components/page-views-by-page";
 import {
@@ -8,28 +12,43 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Eye, Users } from "lucide-react";
+import { routing, isAppLocale } from "@/i18n/routing";
+import { localeAlternates } from "@/i18n/metadata";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Analytics",
-  description: "Public, privacy-respecting traffic statistics for donray.dev.",
-  alternates: {
-    canonical: "/analytics",
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isAppLocale(locale)) return {};
+  const t = await getTranslations({ locale, namespace: "analytics" });
+  const alternates = localeAlternates("/analytics", locale);
+  return {
+    title: t("title"),
+    description: t("description"),
+    alternates,
+    openGraph: {
+      title: t("title"),
+      description: t("description"),
+      url: alternates.canonical,
+    },
+  };
+}
 
-function formatDate(isoDay: string): string {
+function formatDate(isoDay: string, locale: string): string {
   const [y, m, d] = isoDay.split("-").map(Number);
-  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString("en-US", {
+  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString(locale, {
     month: "short",
     day: "numeric",
     timeZone: "UTC",
   });
 }
 
-function formatDateTime(iso: string): string {
-  return new Date(iso).toLocaleString("en-US", {
+function formatDateTime(iso: string, locale: string): string {
+  return new Date(iso).toLocaleString(locale, {
     month: "short",
     day: "numeric",
     hour: "numeric",
@@ -42,8 +61,7 @@ function formatDateTime(iso: string): string {
  * Requests metric), pulled Oct 2, 2026. These count every CDN hit:
  * page loads plus images, scripts, stylesheets, and bots. So they are
  * NOT page views. Shown for rough historical scale only, from before
- * page-view
- * tracking started.
+ * page-view tracking started.
  */
 const HISTORICAL_CDN_REQUESTS: {
   month: string;
@@ -59,7 +77,17 @@ const HISTORICAL_CDN_REQUESTS: {
   { month: "Oct 2026", requests: 15000, partial: true },
 ];
 
-export default async function AnalyticsPage() {
+export default async function AnalyticsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
+  setRequestLocale(locale);
+
+  const t = await getTranslations("analytics");
+  const activeLocale = await getLocale();
   const summary = await getAnalyticsSummary(30);
 
   return (
@@ -67,24 +95,20 @@ export default async function AnalyticsPage() {
       {/* Heading: mirrors the SectionHeader accent bar + title */}
       <div className="space-y-2">
         <div className="h-1 w-10 rounded-full bg-primary" aria-hidden="true" />
-        <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-        <p className="text-muted-foreground">
-          Public, privacy-respecting traffic stats for donray.dev. No cookies,
-          no raw IP addresses stored. Ever.
-        </p>
+        <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("intro")}</p>
       </div>
 
       {!summary ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
-            Analytics isn&apos;t configured on this build yet. Check back soon.
+            {t("notConfigured")}
           </CardContent>
         </Card>
       ) : summary.totalViews === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
-            No page views recorded yet. Stats appear here once people start
-            visiting.
+            {t("noViews")}
           </CardContent>
         </Card>
       ) : (
@@ -96,10 +120,10 @@ export default async function AnalyticsPage() {
                 id="tracked-heading"
                 className="text-xl font-semibold tracking-tight"
               >
-                Tracked page views
+                {t("tracked")}
               </h2>
               <p className="text-sm text-muted-foreground">
-                Real page loads, measured from October 2026.
+                {t("trackedDescription")}
               </p>
             </div>
             {/* Headline stats */}
@@ -108,15 +132,15 @@ export default async function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                     <Eye className="size-4 text-primary" aria-hidden="true" />
-                    Page views
+                    {t("pageViews")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">
-                    {summary.totalViews.toLocaleString()}
+                    {summary.totalViews.toLocaleString(activeLocale)}
                   </div>
                   <CardDescription className="mt-1">
-                    All time · bots filtered
+                    {t("allTimeBotsFiltered")}
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -124,15 +148,15 @@ export default async function AnalyticsPage() {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
                     <Users className="size-4 text-primary" aria-hidden="true" />
-                    Unique visitors
+                    {t("uniqueVisitors")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">
-                    {summary.totalUniques.toLocaleString()}
+                    {summary.totalUniques.toLocaleString(activeLocale)}
                   </div>
                   <CardDescription className="mt-1">
-                    All time · bots filtered
+                    {t("allTimeBotsFiltered")}
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -142,16 +166,16 @@ export default async function AnalyticsPage() {
             {summary.dailyTotals.length > 0 && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base">
-                    Page views per day
-                  </CardTitle>
-                  <CardDescription>Last 30 days</CardDescription>
+                  <CardTitle className="text-base">{t("perDay")}</CardTitle>
+                  <CardDescription>{t("last30Days")}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div
                     className="flex items-end gap-1 h-32"
                     role="img"
-                    aria-label={`Bar chart of page views per day for the last ${summary.dailyTotals.length} days`}
+                    aria-label={t("chartLabel", {
+                      days: summary.dailyTotals.length,
+                    })}
                   >
                     {(() => {
                       const max = Math.max(
@@ -162,7 +186,10 @@ export default async function AnalyticsPage() {
                         <div
                           key={d.day}
                           className="flex-1 flex flex-col justify-end h-full group relative"
-                          title={`${formatDate(d.day)}: ${d.views.toLocaleString()} views`}
+                          title={t("chartPoint", {
+                            date: formatDate(d.day, activeLocale),
+                            views: d.views.toLocaleString(activeLocale),
+                          })}
                         >
                           <div
                             className="w-full rounded-sm bg-primary/70 group-hover:bg-primary transition-colors"
@@ -175,10 +202,13 @@ export default async function AnalyticsPage() {
                     })()}
                   </div>
                   <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                    <span>{formatDate(summary.dailyTotals[0].day)}</span>
+                    <span>
+                      {formatDate(summary.dailyTotals[0].day, activeLocale)}
+                    </span>
                     <span>
                       {formatDate(
                         summary.dailyTotals[summary.dailyTotals.length - 1].day,
+                        activeLocale,
                       )}
                     </span>
                   </div>
@@ -196,12 +226,10 @@ export default async function AnalyticsPage() {
                 id="historical-heading"
                 className="text-xl font-semibold tracking-tight"
               >
-                Before tracking started
+                {t("historical")}
               </h2>
               <p className="text-sm text-muted-foreground">
-                CDN-request estimates from before page-view tracking existed: a
-                different measurement, not page views, and not comparable to the
-                tracked numbers above.
+                {t("historicalDescription")}
               </p>
             </div>
 
@@ -209,12 +237,10 @@ export default async function AnalyticsPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">
-                  Historical traffic (estimated)
+                  {t("historicalTraffic")}
                 </CardTitle>
                 <CardDescription>
-                  CDN requests per month: includes page loads, images, scripts,
-                  stylesheets, and bots. Not page views; approximate, for rough
-                  scale only.
+                  {t("historicalTrafficDescription")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -238,16 +264,14 @@ export default async function AnalyticsPage() {
                           />
                         </div>
                         <span className="w-20 shrink-0 text-right text-xs tabular-nums text-muted-foreground">
-                          ≈{m.requests.toLocaleString()}
+                          ≈{m.requests.toLocaleString(activeLocale)}
                         </span>
                       </div>
                     ));
                   })()}
                 </div>
                 <p className="mt-4 text-xs text-muted-foreground">
-                  * Oct 2026 covers Oct 1–2 only. Source: AWS CloudWatch
-                  (Amplify Hosting requests), pulled Oct 2, 2026. Page-view
-                  tracking started Oct 2026.
+                  {t("historicalFootnote")}
                 </p>
               </CardContent>
             </Card>
@@ -256,52 +280,35 @@ export default async function AnalyticsPage() {
           {/* Methodology: the honesty section */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">
-                How it&apos;s measured
-              </CardTitle>
-              <CardDescription>
-                What these numbers are (and aren&apos;t)
-              </CardDescription>
+              <CardTitle className="text-base">{t("methodology")}</CardTitle>
+              <CardDescription>{t("methodologyDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
                 <li>
                   <strong className="text-foreground">
-                    Tracked page views
+                    {t("methodologyTracked")}
                   </strong>{" "}
-                  are real page loads in a browser, recorded from October 2026.
-                  Images, scripts, and stylesheets don&apos;t count. Only the
-                  page itself. Known bots and crawlers are filtered out before
-                  counting.
-                </li>
-                <li>
-                  <strong className="text-foreground">Unique visitors</strong>{" "}
-                  are real people, counted once ever: each visit is hashed (IP +
-                  browser, salted and non-reversible) and the hash is kept in a
-                  permanent set. A visitor who returns a year later still counts
-                  once, and a visitor who reads several pages counts once.
-                  Shared networks can undercount; changing IPs can overcount.
-                  True unique counting started in October 2026; earlier visits
-                  used day-bound hashes that cannot be converted.
-                </li>
-                <li>
-                  No cookies are set and no raw IP addresses are stored. All
-                  records are kept permanently.
+                  {t("methodologyTrackedBody")}
                 </li>
                 <li>
                   <strong className="text-foreground">
-                    Historical estimates
+                    {t("methodologyUniques")}
                   </strong>{" "}
-                  are a separate, older measurement: approximate monthly CDN
-                  request counts from AWS CloudWatch, from before page-view
-                  tracking existed. They include images, scripts, stylesheets,
-                  and bots, so they are not page views and can&apos;t be
-                  compared with the tracked numbers.
+                  {t("methodologyUniquesBody")}
+                </li>
+                <li>{t("methodologyNoCookies")}</li>
+                <li>
+                  <strong className="text-foreground">
+                    {t("methodologyHistorical")}
+                  </strong>{" "}
+                  {t("methodologyHistoricalBody")}
                 </li>
               </ul>
               <p className="mt-4 text-xs text-muted-foreground">
-                Last updated {formatDateTime(summary.fetchedAt)} · Tracking
-                started October 2026
+                {t("lastUpdated", {
+                  datetime: formatDateTime(summary.fetchedAt, activeLocale),
+                })}
               </p>
             </CardContent>
           </Card>
@@ -309,39 +316,26 @@ export default async function AnalyticsPage() {
           {/* What the numbers taught me */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">
-                What I&apos;ve learned
-              </CardTitle>
-              <CardDescription>
-                Notes from running my own analytics
-              </CardDescription>
+              <CardTitle className="text-base">{t("learned")}</CardTitle>
+              <CardDescription>{t("learnedDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <strong className="text-foreground">
-                    CDN requests are not page views.
-                  </strong>{" "}
-                  Before real tracking existed, CloudWatch showed ~560K requests
-                  over six months. But that counts every image, script,
-                  stylesheet, and bot. Real human page loads are a fraction of
-                  that. The dashboard keeps the two measurements visibly
-                  separate because conflating them would be dishonest.
+                  <strong className="text-foreground">{t("learnedCdn")}</strong>{" "}
+                  {t("learnedCdnBody")}
                 </li>
                 <li>
                   <strong className="text-foreground">
-                    Almost all traffic is the homepage.
+                    {t("learnedHomepage")}
                   </strong>{" "}
-                  The per-page table above makes that plain. The site&apos;s job
-                  is to be found, read, and contacted from a single page.
+                  {t("learnedHomepageBody")}
                 </li>
                 <li>
                   <strong className="text-foreground">
-                    Privacy-respecting analytics is a solved problem.
+                    {t("learnedPrivacy")}
                   </strong>{" "}
-                  One DynamoDB table, salted daily hashes, no cookies, no raw
-                  IPs. And the dashboard still answers every question I actually
-                  have about my traffic.
+                  {t("learnedPrivacyBody")}
                 </li>
               </ul>
             </CardContent>

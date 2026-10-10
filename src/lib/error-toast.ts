@@ -46,35 +46,47 @@ export function dismissToast(id: number): void {
 }
 
 /**
- * Map an error to the user-facing message for the toast. Status-code
+ * Message keys for the `errorToast` message namespace. Status-code
  * specific but generic: the user cannot take corrective action, so the
- * copy names the failure without jargon or raw status codes.
+ * copy names the failure without jargon or raw status codes. Callers
+ * translate the key with the active locale's messages.
  */
-export function getErrorMessage(error: unknown): string {
+export type ErrorMessageKey =
+  | "networkError"
+  | "badRequest"
+  | "unauthorized"
+  | "forbidden"
+  | "notFound"
+  | "conflict"
+  | "rateLimited"
+  | "serverError"
+  | "unknownError";
+
+export function getErrorMessageKey(error: unknown): ErrorMessageKey {
   if (error instanceof TypeError) {
-    return "Couldn't reach the server. Check your connection and try again.";
+    return "networkError";
   }
   const status = getHttpStatus(error);
   switch (status) {
     case 400:
-      return "That didn't work. Please try again.";
+      return "badRequest";
     case 401:
-      return "Your session expired. Please sign in again.";
+      return "unauthorized";
     case 403:
-      return "You don't have permission to do that.";
+      return "forbidden";
     case 404:
-      return "That wasn't found. It may have been moved or deleted.";
+      return "notFound";
     case 409:
-      return "That already exists.";
+      return "conflict";
     case 429:
-      return "Too many requests. Please wait a moment and try again.";
+      return "rateLimited";
     default:
       break;
   }
   if (status !== undefined && status >= 500 && status <= 599) {
-    return "Something went wrong on our end. We're looking into it.";
+    return "serverError";
   }
-  return "Something went wrong. Please try again.";
+  return "unknownError";
 }
 
 function getHttpStatus(error: unknown): number | undefined {

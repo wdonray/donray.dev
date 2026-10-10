@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Eye } from "lucide-react";
 import { reportError } from "@/lib/report-error";
 
@@ -9,6 +10,7 @@ import { reportError } from "@/lib/report-error";
  * Renders nothing until the count loads (or if tracking is unconfigured).
  */
 export default function ViewCount({ path }: { path: string }) {
+  const t = useTranslations("viewCount");
   const [views, setViews] = useState<number | null>(null);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function ViewCount({ path }: { path: string }) {
       <span aria-hidden="true">·</span>
       <span className="inline-flex items-center gap-1">
         <Eye className="size-3.5" aria-hidden="true" />
-        {views} {views === 1 ? "view" : "views"}
+        {t("label", { count: views })}
       </span>
     </span>
   );
