@@ -74,7 +74,7 @@ describe("getHzcStats", () => {
     expect(send).not.toHaveBeenCalled();
   });
 
-  it("sums page totals and counts site-wide uniques", async () => {
+  it("sums page totals and V1+V2 site-wide uniques", async () => {
     mockClient(async () => ({
       Items: [
         { pk: "PAGE#/", sk: "TOTAL", views: 7 },
@@ -86,11 +86,18 @@ describe("getHzcStats", () => {
           sk: "UNIQUES_V2",
           visitors: new Set(["a", "b", "c", "d"]),
         },
+        // V1 holds pre-cutover history: summed with V2.
+        {
+          pk: "SITE",
+          sk: "UNIQUES",
+          visitors: ["legacy1", "legacy2"],
+        },
       ],
     }));
     expect(await getHzcStats()).toEqual({
       pageViews: 10,
-      uniqueVisitors: 4,
+      // V1 (2) + V2 (4) = 6.
+      uniqueVisitors: 6,
     });
   });
 

@@ -286,27 +286,47 @@ describe("getPageUniqueViews (with DynamoDB)", () => {
     __resetClientForTests();
   });
 
-  it("reads from the V2 uniques key", async () => {
-    const send = mockClient(async () => ({ Item: { visitors: ["a", "b"] } }));
-    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(2);
-    const key = (send.mock.calls[0][0] as { input: { Key: { sk: string } } })
-      .input.Key;
-    expect(key.sk).toBe("UNIQUES_V2");
+  /** Mock that returns different items based on the GetCommand key's sk. */
+  function mockClientBySk(
+    bySk: Record<string, unknown>,
+  ): ReturnType<typeof mockClient> {
+    return mockClient(async (cmd: unknown) => {
+      const sk = (cmd as { input: { Key: { sk: string } } }).input.Key.sk;
+      return bySk[sk] ?? {};
+    });
+  }
+
+  it("reads from both V1 and V2 uniques keys and sums them", async () => {
+    const send = mockClientBySk({
+      UNIQUES: { Item: { visitors: ["a", "b"] } },
+      UNIQUES_V2: { Item: { visitors: ["c", "d", "e"] } },
+    });
+    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(5);
+    const sks = send.mock.calls.map(
+      (call) => (call[0] as { input: { Key: { sk: string } } }).input.Key.sk,
+    );
+    expect(sks).toContain("UNIQUES");
+    expect(sks).toContain("UNIQUES_V2");
   });
 
-  it("returns the size of the persistent visitor set", async () => {
-    mockClient(async () => ({ Item: { visitors: ["a", "b", "c"] } }));
+  it("handles Set visitor collections in both keys", async () => {
+    mockClientBySk({
+      UNIQUES: { Item: { visitors: new Set(["a", "b"]) } },
+      UNIQUES_V2: { Item: { visitors: new Set(["c"]) } },
+    });
     await expect(getPageUniqueViews("/blog/test")).resolves.toBe(3);
   });
 
-  it("handles Set visitor collections", async () => {
-    mockClient(async () => ({ Item: { visitors: new Set(["d", "e"]) } }));
-    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(2);
+  it("returns 0 when the page has no uniques records", async () => {
+    mockClientBySk({});
+    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(0);
   });
 
-  it("returns 0 when the page has no uniques record", async () => {
-    mockClient(async () => ({}));
-    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(0);
+  it("sums when only one key exists", async () => {
+    mockClientBySk({
+      UNIQUES: { Item: { visitors: ["a", "b", "c"] } },
+    });
+    await expect(getPageUniqueViews("/blog/test")).resolves.toBe(3);
   });
 });
 
@@ -322,7 +342,7 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
     await expect(getAnalyticsSummary()).resolves.toBeNull();
   });
 
-  it("aggregates totals, daily stats, and V2 uniques", async () => {
+  it("aggregates totals, daily stats, and V1+V2 uniques", async () => {
     mockClient(async () => ({
       Items: [
         { pk: "PAGE#/blog/a", sk: "TOTAL", path: "/blog/a", views: 100 },
@@ -332,7 +352,7 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
           path: "/blog/a",
           visitors: new Set(["u1", "u2"]),
         },
-        // Legacy UNIQUES keys are ignored by the V2 read path.
+        // V1 holds pre-cutover history: summed with V2.
         {
           pk: "PAGE#/blog/a",
           sk: "UNIQUES",
@@ -379,7 +399,7 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
           sk: "UNIQUES_V2",
           visitors: ["u1", "u2", "u3"],
         },
-        // SITE with legacy UNIQUES key: ignored.
+        // SITE V1 key: summed with V2.
         {
           pk: "SITE",
           sk: "UNIQUES",
@@ -406,10 +426,12 @@ describe("getAnalyticsSummary (with DynamoDB)", () => {
     );
     expect(summary).not.toBeNull();
     expect(summary!.totalViews).toBe(100);
-    expect(summary!.totalUniques).toBe(3);
+    // SITE: V1 (1) + V2 (3) = 4.
+    expect(summary!.totalUniques).toBe(4);
     expect(summary!.pages).toHaveLength(2);
     expect(summary!.pages[0].path).toBe("/blog/a");
-    expect(summary!.pages[0].uniques).toBe(2);
+    // Page: V1 (3) + V2 (2) = 5.
+    expect(summary!.pages[0].uniques).toBe(5);
     expect(summary!.pages[1].path).toBe("/blog/b");
     expect(summary!.pages[1].uniques).toBe(0);
     expect(summary!.dailyTotals).toHaveLength(5);
