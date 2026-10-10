@@ -126,59 +126,63 @@ describe("summarizeRelease", () => {
 
 describe("formatDate", () => {
   it("formats an ISO date for display", () => {
-    expect(formatDate("2026-10-01T12:00:00Z")).toBe("Oct 1, 2026");
+    expect(formatDate("2026-10-01T12:00:00Z", "en")).toBe("Oct 1, 2026");
   });
 
   it("returns null for null input", () => {
-    expect(formatDate(null)).toBeNull();
+    expect(formatDate(null, "en")).toBeNull();
   });
 });
 
 describe("timeAgo", () => {
   it("returns null for null input", () => {
-    expect(timeAgo(null, NOW)).toBeNull();
+    expect(timeAgo(null, NOW, "en")).toBeNull();
   });
 
-  it("says just now for under a minute", () => {
-    expect(timeAgo(new Date(NOW - 30_000).toISOString(), NOW)).toBe("just now");
+  it("says now for under a minute", () => {
+    expect(timeAgo(new Date(NOW - 30_000).toISOString(), NOW, "en")).toBe(
+      "now",
+    );
   });
 
-  it("clamps future dates to just now", () => {
-    expect(timeAgo(new Date(NOW + 60_000).toISOString(), NOW)).toBe("just now");
+  it("clamps future dates to now", () => {
+    expect(timeAgo(new Date(NOW + 60_000).toISOString(), NOW, "en")).toBe(
+      "now",
+    );
   });
 
   it("shows minutes", () => {
-    expect(timeAgo(new Date(NOW - 5 * 60_000).toISOString(), NOW)).toBe(
-      "5m ago",
+    expect(timeAgo(new Date(NOW - 5 * 60_000).toISOString(), NOW, "en")).toBe(
+      "5 minutes ago",
     );
   });
 
   it("shows hours", () => {
-    expect(timeAgo(new Date(NOW - 3 * 3_600_000).toISOString(), NOW)).toBe(
-      "3h ago",
-    );
+    expect(
+      timeAgo(new Date(NOW - 3 * 3_600_000).toISOString(), NOW, "en"),
+    ).toBe("3 hours ago");
   });
 
   it("shows days", () => {
-    expect(timeAgo(new Date(NOW - 2 * 86_400_000).toISOString(), NOW)).toBe(
-      "2d ago",
-    );
+    expect(
+      timeAgo(new Date(NOW - 2 * 86_400_000).toISOString(), NOW, "en"),
+    ).toBe("2 days ago");
   });
 
   it("returns null past a week", () => {
     expect(
-      timeAgo(new Date(NOW - 10 * 86_400_000).toISOString(), NOW),
+      timeAgo(new Date(NOW - 10 * 86_400_000).toISOString(), NOW, "en"),
     ).toBeNull();
   });
 });
 
 describe("formatCheckedAgo", () => {
   it("shows a relative age", () => {
-    expect(formatCheckedAgo(NOW - 2 * 60_000, NOW)).toBe("2m ago");
+    expect(formatCheckedAgo(NOW - 2 * 60_000, NOW, "en")).toBe("2 minutes ago");
   });
 
-  it("falls back to just now for stale timestamps", () => {
-    expect(formatCheckedAgo(NOW - 10 * 86_400_000, NOW)).toBe("just now");
+  it("falls back to now for stale timestamps", () => {
+    expect(formatCheckedAgo(NOW - 10 * 86_400_000, NOW, "en")).toBe("now");
   });
 });
 
@@ -263,7 +267,7 @@ describe("VersionInfo", () => {
     expect(screen.getAllByText("This build")).toHaveLength(2);
     expect(screen.getAllByText("v0.5.0")).toHaveLength(2);
     expect(screen.getByText(/Live/)).toBeInTheDocument();
-    expect(screen.getByText(/updated just now/)).toBeInTheDocument();
+    expect(screen.getByText(/updated now/)).toBeInTheDocument();
   });
 
   it("marks the newest release with Latest and the running build", async () => {
@@ -292,8 +296,8 @@ describe("VersionInfo", () => {
     expect(screen.getAllByText("This build")).toHaveLength(2);
     expect(screen.getAllByText("v0.5.0")).toHaveLength(2);
     expect(screen.getAllByText("Some change")).toHaveLength(2);
-    expect(screen.getByText("Oct 3, 2026 · 1h ago")).toBeInTheDocument();
-    expect(screen.getByText("Oct 2, 2026 · 1d ago")).toBeInTheDocument();
+    expect(screen.getByText("Oct 3, 2026 · 1 hour ago")).toBeInTheDocument();
+    expect(screen.getByText("Oct 2, 2026 · yesterday")).toBeInTheDocument();
   });
 
   it("omits the summary and date when a release lacks them", async () => {
@@ -389,7 +393,7 @@ describe("VersionInfo", () => {
       await vi.advanceTimersByTimeAsync(90_000);
     });
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(screen.getByText("Live · updated 1m ago")).toBeInTheDocument();
+    expect(screen.getByText("Live · updated 1 minute ago")).toBeInTheDocument();
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(30_000);
@@ -397,7 +401,7 @@ describe("VersionInfo", () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
     expect(screen.getByText("v0.7.0")).toBeInTheDocument();
-    expect(screen.getByText("Live · updated just now")).toBeInTheDocument();
+    expect(screen.getByText("Live · updated now")).toBeInTheDocument();
   });
 
   it("shows offline in the live indicator but keeps last-known releases when polling fails", async () => {

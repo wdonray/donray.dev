@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNewVersionAvailable } from "@/hooks/use-new-version";
@@ -12,6 +13,7 @@ import { useNewVersionAvailable } from "@/hooks/use-new-version";
  * it reappears on the next page load while the app is still stale.
  */
 export default function VersionReloadToast() {
+  const t = useTranslations("versionReload");
   const updateAvailable = useNewVersionAvailable();
   const [dismissed, setDismissed] = useState(false);
 
@@ -32,19 +34,17 @@ export default function VersionReloadToast() {
       aria-live="polite"
       className="fixed right-4 bottom-4 z-50 flex max-w-[calc(100vw-2rem)] items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 text-sm text-card-foreground shadow-lg"
     >
-      <p className="leading-snug">
-        A new version is available. Reload to get the latest.
-      </p>
+      <p className="leading-snug">{t("message")}</p>
       <Button
         type="button"
         className="min-h-11 shrink-0"
         onClick={() => window.location.reload()}
       >
-        Reload
+        {t("reload")}
       </Button>
       <button
         type="button"
-        aria-label="Dismiss"
+        aria-label={t("dismiss")}
         onClick={() => setDismissed(true)}
         className="flex size-11 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
       >

@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { fadeInUp, fadeInUpWithDelay } from "@/lib/animations";
 import { reportError } from "@/lib/report-error";
-import { getErrorMessage, toastError } from "@/lib/error-toast";
+import { getErrorMessageKey, toastError } from "@/lib/error-toast";
 
 export const RELEASES_API =
   "https://api.github.com/repos/wdonray/donray.dev/releases?per_page=5";
@@ -61,9 +62,12 @@ export function summarizeRelease(body: string | null): string | null {
   return summary ? summary : null;
 }
 
-export function formatDate(value: string | null): string | null {
+export function formatDate(
+  value: string | null,
+  locale: string,
+): string | null {
   if (!value) return null;
-  return new Date(value).toLocaleDateString("en-US", {
+  return new Date(value).toLocaleDateString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -71,25 +75,38 @@ export function formatDate(value: string | null): string | null {
 }
 
 /**
- * Relative age ("just now", "3h ago", "2d ago"). Returns null for null input
- * or ages past a week, where the absolute date is enough.
+ * Relative age ("now", "3 hours ago", "2 days ago" in the active locale).
+ * Returns null for null input or ages past a week, where the absolute
+ * date is enough.
  */
-export function timeAgo(iso: string | null, now: number): string | null {
+export function timeAgo(
+  iso: string | null,
+  now: number,
+  locale: string,
+): string | null {
   if (!iso) return null;
   const seconds = Math.max(0, Math.floor((now - Date.parse(iso)) / 1000));
-  if (seconds < 60) return "just now";
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+  if (seconds < 60) return rtf.format(0, "second");
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 60) return rtf.format(-minutes, "minute");
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return rtf.format(-hours, "hour");
   const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
+  if (days < 7) return rtf.format(-days, "day");
   return null;
 }
 
 /** Relative age for the "updated …" line; never blank. */
-export function formatCheckedAgo(lastChecked: number, now: number): string {
-  return timeAgo(new Date(lastChecked).toISOString(), now) ?? "just now";
+export function formatCheckedAgo(
+  lastChecked: number,
+  now: number,
+  locale: string,
+): string {
+  return (
+    timeAgo(new Date(lastChecked).toISOString(), now, locale) ??
+    new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(0, "second")
+  );
 }
 
 /** Normalize one GitHub release payload into a Release. */
@@ -125,6 +142,9 @@ export default function VersionInfo({
   currentVersion: string;
   initialReleases: Release[];
 }) {
+  const t = useTranslations("version");
+  const te = useTranslations("errorToast");
+  const locale = useLocale();
   const [releases, setReleases] = useState<Release[]>(initialReleases);
   const [lastChecked, setLastChecked] = useState<number>(() => Date.now());
   const [now, setNow] = useState<number>(() => Date.now());
@@ -149,7 +169,7 @@ export default function VersionInfo({
           setUnreachable(true);
           if (!toastedRef.current) {
             toastedRef.current = true;
-            toastError(getErrorMessage(error));
+            toastError(te(getErrorMessageKey(error)));
           }
         }
       }
@@ -162,24 +182,22 @@ export default function VersionInfo({
       cancelled = true;
       clearInterval(id);
     };
-  }, []);
+  }, [te]);
 
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), TICK_INTERVAL_MS);
     return () => clearInterval(id);
   }, []);
 
-  const checkedAgo = formatCheckedAgo(lastChecked, now);
+  const checkedAgo = formatCheckedAgo(lastChecked, now, locale);
 
   return (
     <div className="w-full max-w-xl space-y-8">
       {/* Heading: mirrors the SectionHeader accent bar + title */}
       <motion.div className="space-y-2" {...fadeInUp}>
         <div className="h-1 w-10 rounded-full bg-primary" aria-hidden="true" />
-        <h1 className="text-3xl font-bold tracking-tight">Version</h1>
-        <p className="text-muted-foreground">
-          Every deploy to donray.dev, most recent first.
-        </p>
+        <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("description")}</p>
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           <span className="relative flex size-2" aria-hidden="true">
             {unreachable ? (
@@ -193,15 +211,17 @@ export default function VersionInfo({
           </span>
           <span>
             {unreachable
-              ? "Offline · showing last known releases"
-              : `Live · updated ${checkedAgo}`}
+              ? t("offline")
+              : `${t("live")} · ${t("updated", { ago: checkedAgo })}`}
           </span>
         </p>
       </motion.div>
 
       <motion.div className="space-y-3" {...fadeInUpWithDelay(0.1)}>
         <div className="flex items-center justify-between gap-4 rounded-lg border px-4 py-3">
-          <span className="text-sm text-muted-foreground">This build</span>
+          <span className="text-sm text-muted-foreground">
+            {t("thisBuild")}
+          </span>
           <span className="font-mono text-lg font-semibold">
             v{currentVersion}
           </span>
@@ -212,7 +232,7 @@ export default function VersionInfo({
         {releases.length > 0 ? (
           <ol className="space-y-3">
             {releases.map((release, index) => {
-              const relative = timeAgo(release.publishedAt, now);
+              const relative = timeAgo(release.publishedAt, now, locale);
               const isCurrentBuild =
                 compareVersions(currentVersion, release.version) === 0;
               return (
@@ -229,9 +249,9 @@ export default function VersionInfo({
                     >
                       v{release.version}
                     </a>
-                    {index === 0 && <Badge>Latest</Badge>}
+                    {index === 0 && <Badge>{t("latest")}</Badge>}
                     {isCurrentBuild && (
-                      <Badge variant="outline">This build</Badge>
+                      <Badge variant="outline">{t("thisBuild")}</Badge>
                     )}
                   </div>
                   {release.summary && (
@@ -241,7 +261,7 @@ export default function VersionInfo({
                   )}
                   {release.publishedAt && (
                     <p className="mt-1.5 text-xs text-muted-foreground">
-                      {formatDate(release.publishedAt)}
+                      {formatDate(release.publishedAt, locale)}
                       {relative ? ` · ${relative}` : ""}
                     </p>
                   )}
@@ -251,7 +271,7 @@ export default function VersionInfo({
           </ol>
         ) : (
           <p className="rounded-lg border px-4 py-6 text-center text-sm text-muted-foreground">
-            No releases found.
+            {t("noReleases")}
           </p>
         )}
       </motion.div>

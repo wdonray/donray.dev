@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   Card,
   CardHeader,
@@ -18,6 +20,7 @@ import { Github } from "@/components/ui/brand-icons";
 import { SectionHeader } from "@/components/ui/section-header";
 import Image from "next/image";
 import { itemVariants } from "@/lib/animations";
+import { PROJECTS } from "@/lib/projects";
 
 export interface Project {
   slug: string;
@@ -43,6 +46,7 @@ export function ProjectCard({
   project: Project;
   index: number;
 }) {
+  const t = useTranslations("home.projects");
   // Each action is an explicit visible link. No stretched invisible overlay:
   // a full-card link plus inner links creates redundant tab stops and
   // confusing screen-reader output.
@@ -102,7 +106,7 @@ export function ProjectCard({
           <div
             className="flex flex-wrap gap-2"
             role="list"
-            aria-label={`Technologies used in ${project.title}`}
+            aria-label={t("technologies", { title: project.title })}
           >
             {project.technologies.map((tech, i) => (
               <Badge
@@ -127,17 +131,17 @@ export function ProjectCard({
               {primaryKind === "site" ? (
                 <>
                   <ExternalLink className="size-4" aria-hidden="true" />
-                  Visit Site
+                  {t("visitSite")}
                 </>
               ) : primaryKind === "archived" ? (
                 <>
                   <ExternalLink className="size-4" aria-hidden="true" />
-                  Archived Site
+                  {t("archivedSite")}
                 </>
               ) : (
                 <>
                   <Github className="size-4" aria-hidden="true" />
-                  View on GitHub
+                  {t("viewOnGitHub")}
                 </>
               )}
             </a>
@@ -152,29 +156,29 @@ export function ProjectCard({
                   href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`View ${project.title} on GitHub`}
+                  aria-label={t("viewOnGitHubLabel", { title: project.title })}
                 >
                   <Github className="size-4" aria-hidden="true" />
                 </a>
               </Button>
             )}
-            <a
+            <Link
               href={`/projects/${project.slug}`}
-              aria-label={`View details about ${project.title}`}
+              aria-label={t("detailsLabel", { title: project.title })}
               className="inline-flex min-h-6 items-center text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
             >
-              Details →
-            </a>
+              {t("details")}
+            </Link>
           </CardFooter>
         ) : (
           <CardFooter className="flex items-center justify-end gap-2">
-            <a
+            <Link
               href={`/projects/${project.slug}`}
-              aria-label={`View details about ${project.title}`}
+              aria-label={t("detailsLabel", { title: project.title })}
               className="inline-flex min-h-6 items-center text-sm font-medium text-primary underline underline-offset-4 hover:opacity-80"
             >
-              Details →
-            </a>
+              {t("details")}
+            </Link>
           </CardFooter>
         )}
       </Card>
@@ -183,86 +187,25 @@ export function ProjectCard({
 }
 
 export default function Projects() {
+  const t = useTranslations("home.projects");
+  const tp = useTranslations("projects");
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-  const projects: Project[] = [
-    {
-      slug: "pico-domains",
-      title: "pico.domains",
-      subtitle: "Ultra-Short Domain Search Engine",
-      description:
-        "Free search engine for ultra-short domain names. Curates available concise domains and hands buyers off to trusted marketplaces.",
-      technologies: [
-        "Nuxt.js",
-        "CSS",
-        "HTML5",
-        "TypeScript",
-        "Vite",
-        "Custom Internal Libraries",
-      ],
-      image: "/pico-domains.png",
-      imageAlt: "pico.domains logo",
-      status: "discontinued",
-    },
-    {
-      slug: "cyclei",
-      title: "Cyclei",
-      subtitle: "Reusable Packaging Pickup Service",
-      description:
-        "Customer web app for a curbside reusable-packaging pickup service. Onboarding, bag tracking, impact dashboard, and a rewards wallet with payouts.",
-      technologies: ["Vue3", "CSS", "HTML5", "TypeScript", "Vite", "GraphQL"],
-      image: "/cyclei.png",
-      imageAlt: "Cyclei logo",
-      status: "discontinued",
-    },
-    {
-      slug: "hide-zero-cards",
-      title: "Hide Zero Cards",
-      subtitle: "Educational Place Value Tool",
-      description:
-        "Interactive place-value tool for fourth-grade students. Type any number up to one billion and break it into draggable, color-coded digit cards.",
-      url: "https://hidezerocards.org",
-      github: "https://github.com/wdonray/c-hide-zero-cards",
-      technologies: [
-        "Next.js",
-        "React",
-        "TypeScript",
-        "Tailwind CSS",
-        "Shadcn/ui",
-      ],
-      image: "/hide-zero-cards.png",
-      imageAlt: "Screenshot of Hide Zero Cards website",
-    },
-    {
-      slug: "patternspell",
-      title: "PatternSpell",
-      subtitle: "Pattern-Based Spelling Toolkit for K-3 Teachers",
-      description:
-        "A pattern-based spelling toolkit for K-3 teachers, free for classrooms. Spelling lists per student, a big-screen pattern chart, and practice with text-to-speech.",
-      url: "https://patternspell.org/",
-      github: "https://github.com/wdonray/c-shepherd-speller",
-      technologies: [
-        "Next.js",
-        "React",
-        "TypeScript",
-        "Tailwind CSS",
-        "DynamoDB",
-        "AWS Amplify",
-      ],
-      image: "/patternspell.png",
-      imageAlt: "PatternSpell logo: three pattern columns (PatternMark)",
-    },
-    {
-      slug: "donray-dev",
-      title: "donray.dev",
-      subtitle: "Personal Portfolio and Blog",
-      description:
-        "Portfolio site and blog. Static-first Next.js with public, privacy-respecting analytics and accessibility as a CI gate.",
-      technologies: ["Next.js", "Tailwind CSS", "TypeScript", "Framer Motion"],
-      github: "https://github.com/wdonray/donray.dev",
-    },
-  ];
+  // Display strings come from the locale catalog; structure from projects.ts.
+  const projects: Project[] = PROJECTS.map((p) => ({
+    slug: p.slug,
+    title: tp(`${p.slug}.title`),
+    subtitle: tp(`${p.slug}.subtitle`),
+    description: tp(`${p.slug}.description`),
+    url: p.url,
+    archivedUrl: p.archivedUrl,
+    github: p.github,
+    technologies: p.stack,
+    image: p.image,
+    imageAlt: p.image ? tp(`${p.slug}.imageAlt`) : undefined,
+    status: p.status,
+  }));
 
   const activeProjects = projects.filter((project) => !project.status);
   const pastProjects = projects.filter((project) => project.status);
@@ -272,13 +215,13 @@ export default function Projects() {
       <div className="space-y-8">
         <SectionHeader
           id="projects-heading"
-          title="Projects"
+          title={t("title")}
           isInView={isInView}
         />
         <div
           className="grid gap-6 md:grid-cols-2"
           role="list"
-          aria-label="Active projects"
+          aria-label={t("active")}
         >
           {activeProjects.map((project, index) => (
             <ProjectCard
@@ -292,11 +235,11 @@ export default function Projects() {
         </div>
         {pastProjects.length > 0 && (
           <div className="space-y-6 pt-4">
-            <h3 className="text-xl font-bold tracking-tight">Past projects</h3>
+            <h3 className="text-xl font-bold tracking-tight">{t("past")}</h3>
             <div
               className="grid gap-6 md:grid-cols-2"
               role="list"
-              aria-label="Past projects"
+              aria-label={t("past")}
             >
               {pastProjects.map((project, index) => (
                 <ProjectCard

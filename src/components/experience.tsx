@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import {
   MapPin,
@@ -14,21 +15,24 @@ import {
 import { SectionHeader } from "@/components/ui/section-header";
 import { fadeInUp } from "@/lib/animations";
 
+interface ExperiencePosition {
+  title: string;
+  period: string;
+  description?: string;
+  link?: { href: string; label: string };
+  /** Marks the current role. Structural, not translated. */
+  current?: boolean;
+}
+
 interface ExperienceItem {
   company: string;
   location: string;
-  website?: string;
   type: string;
   skills?: string[];
-  positions: {
-    title: string;
-    period: string;
-    description?: string;
-    link?: { href: string; label: string };
-  }[];
+  positions: ExperiencePosition[];
 }
 
-const isCurrentPosition = (period: string) => period.includes("Present");
+const isCurrentPosition = (pos: ExperiencePosition) => pos.current === true;
 
 // One job rendered as an Apple "Tech Specs" row: a left label column
 // (company + location + type) and a right detail column (roles timeline +
@@ -38,10 +42,12 @@ function JobEntry({
   exp,
   index,
   isInView,
+  t,
 }: {
   exp: ExperienceItem;
   index: number;
   isInView: boolean;
+  t: ReturnType<typeof useTranslations<"home.experience">>;
 }) {
   return (
     <motion.div
@@ -57,7 +63,7 @@ function JobEntry({
         <div
           className="flex flex-col gap-1 text-sm text-muted-foreground"
           role="group"
-          aria-label={`${exp.company} details`}
+          aria-label={t("companyDetails", { company: exp.company })}
         >
           <div className="flex items-center gap-1.5">
             <MapPin className="size-4 shrink-0" aria-hidden="true" />
@@ -74,24 +80,24 @@ function JobEntry({
         <div
           className="space-y-4"
           role="list"
-          aria-label={`Roles at ${exp.company}`}
+          aria-label={t("rolesAt", { company: exp.company })}
         >
           {exp.positions.map((pos, posIndex) => (
             <div
               key={`position-${posIndex}-${pos.title.toLowerCase().replace(/\s+/g, "-")}`}
               className={`border-l-2 pl-4 ${
-                isCurrentPosition(pos.period) ? "border-khaki" : "border-muted"
+                isCurrentPosition(pos) ? "border-khaki" : "border-muted"
               }`}
               role="listitem"
             >
               <div className="flex flex-wrap items-center gap-2">
                 <h4 className="text-lg font-medium">{pos.title}</h4>
-                {isCurrentPosition(pos.period) && (
+                {isCurrentPosition(pos) && (
                   <Badge
                     variant="outline"
                     className="text-xs bg-khaki/10 text-khaki border-khaki/30"
                   >
-                    Current
+                    {t("current")}
                   </Badge>
                 )}
               </div>
@@ -121,7 +127,7 @@ function JobEntry({
           <div
             className="flex flex-wrap gap-2"
             role="list"
-            aria-label={`Technologies used at ${exp.company}`}
+            aria-label={t("technologiesAt", { company: exp.company })}
           >
             {exp.skills.map((skill, i) => (
               <Badge
@@ -141,6 +147,7 @@ function JobEntry({
 }
 
 export default function Experience() {
+  const t = useTranslations("home.experience");
   const [showOlderExperiences, setShowOlderExperiences] = useState(false);
   const sectionRef = useRef(null);
   const companiesRef = useRef(null);
@@ -153,148 +160,9 @@ export default function Experience() {
     margin: "-100px",
   });
 
-  const experiences: ExperienceItem[] = [
-    {
-      company: "Justworks",
-      location: "Manhattan, New York, United States",
-      type: "Full-time",
-      skills: [
-        "Team Leadership",
-        "Vue.js",
-        "JavaScript",
-        "Internal Library Engineering",
-        "Unit Testing",
-        "E2E Testing",
-        "Responsive Design",
-        "Mentorship",
-      ],
-      positions: [
-        {
-          title: "Engineering Manager",
-          period: "Jun 2026 – Present",
-          description:
-            "Player-coach leading frontend for onboarding and billing (team of 3). Shipped the member onboarding flow used by 6,800+ people across 1,365 companies in 30 days.",
-          link: { href: "/principles", label: "How I lead" },
-        },
-        {
-          title: "Senior Software Engineer",
-          period: "Dec 2023 – Jun 2026",
-          description:
-            "Operated as tech lead and de facto manager for two engineers; both formally transferred to my team when I was promoted to Engineering Manager.",
-        },
-        {
-          title: "Software Engineer",
-          period: "Mar 2023 – Dec 2023",
-        },
-      ],
-    },
-    {
-      company: "Cyclei",
-      location: "San Francisco Bay Area",
-      type: "Freelance",
-      skills: [
-        "Vue.js",
-        "JavaScript",
-        "TypeScript",
-        "CSS",
-        "HTML",
-        "Responsive Design",
-      ],
-      positions: [
-        {
-          title: "Founding Frontend Engineer",
-          period: "Jul 2023 – Aug 2025",
-        },
-      ],
-    },
-    {
-      company: "Leaflink",
-      location: "New York, United States",
-      type: "Full-time",
-      skills: ["Vue.js", "JavaScript", "TypeScript"],
-      positions: [
-        {
-          title: "Frontend Engineer",
-          period: "Apr 2022 – Dec 2022",
-        },
-      ],
-    },
-    {
-      company: "Stuller, Inc.",
-      location: "Lafayette, Louisiana, United States",
-      type: "Full-time",
-      skills: ["React.js", "Vue.js", "CMS", "JavaScript", "CSS", "HTML"],
-      positions: [
-        {
-          title: "Frontend Engineer II",
-          period: "Jan 2021 – Apr 2022",
-        },
-        {
-          title: "Frontend Engineer",
-          period: "Nov 2020 – Jan 2021",
-        },
-      ],
-    },
-    {
-      company: "Gemvision Corporation",
-      location: "Lafayette, Louisiana Area",
-      type: "Full-time",
-      skills: [
-        "AWS",
-        "AWS Lambda",
-        "React.js",
-        "Redux.js",
-        "JavaScript",
-        "TypeScript",
-        "Serverless",
-      ],
-      positions: [
-        {
-          title: "DevOps Engineer I",
-          period: "Jan 2020 – Apr 2020",
-        },
-      ],
-    },
-    {
-      company: "Buh! Gaming",
-      location: "Remote",
-      type: "Freelance",
-      skills: ["C#", "Unity Game Engine"],
-      positions: [
-        {
-          title: "Game Developer",
-          period: "Jun 2018 – Jun 2019",
-        },
-      ],
-    },
-    {
-      company: "TANTRUM Lab",
-      location: "Lafayette, Louisiana Area",
-      type: "Contract",
-      skills: ["Unity Game Engine", "C#", "VR Development"],
-      positions: [
-        {
-          title: "VR Development Intern",
-          period: "Oct 2018 – Dec 2018",
-        },
-      ],
-    },
-    {
-      company: "Academy of Interactive Entertainment (AIE)",
-      location: "Lafayette, Louisiana Area",
-      type: "Contract",
-      skills: ["Unity Game Engine", "C#", "Teaching"],
-      positions: [
-        {
-          title: "Game Programmer Summer Camp Instructor",
-          period: "Jun 2017 – Jul 2017",
-        },
-      ],
-    },
-  ];
-
-  const recentExperiences = experiences.slice(0, 4); // Justworks through Stuller
-  const olderExperiences = experiences.slice(4); // Gemvision through AIE
+  const experiences = t.raw("jobs") as ExperienceItem[];
+  const recentExperiences = experiences.slice(0, 4);
+  const olderExperiences = experiences.slice(4);
 
   const toggleOlderExperiences = () => {
     setShowOlderExperiences(!showOlderExperiences);
@@ -321,14 +189,14 @@ export default function Experience() {
       <div className="space-y-8">
         <SectionHeader
           id="experience-heading"
-          title="Experience"
+          title={t("title")}
           isInView={isSectionInView}
         />
         <div
           ref={companiesRef}
           className="space-y-8"
           role="list"
-          aria-label="Professional experience timeline"
+          aria-label={t("timelineLabel")}
         >
           {recentExperiences.map((exp, index) => (
             <JobEntry
@@ -336,6 +204,7 @@ export default function Experience() {
               exp={exp}
               index={index}
               isInView={isCompaniesInView}
+              t={t}
             />
           ))}
         </div>
@@ -353,9 +222,7 @@ export default function Experience() {
                 }`}
               />
               <span className="font-medium">
-                {showOlderExperiences
-                  ? "Hide Earlier Experience"
-                  : "View Earlier Experience"}
+                {showOlderExperiences ? t("hideEarlier") : t("viewEarlier")}
               </span>
             </button>
 
@@ -369,7 +236,7 @@ export default function Experience() {
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                   className="space-y-8 overflow-hidden"
                   role="list"
-                  aria-label="Earlier professional experience"
+                  aria-label={t("earlierLabel")}
                 >
                   {olderExperiences.map((exp, index) => (
                     <JobEntry
@@ -377,6 +244,7 @@ export default function Experience() {
                       exp={exp}
                       index={index}
                       isInView={isCompaniesInView}
+                      t={t}
                     />
                   ))}
                 </motion.div>

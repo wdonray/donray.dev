@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { CircleAlert, X } from "lucide-react";
 import {
   dismissToast,
@@ -11,6 +12,7 @@ import {
 const AUTO_DISMISS_MS = 8000;
 
 function ToastCard({ toast }: { toast: ErrorToast }) {
+  const t = useTranslations("errorToast");
   // Mutable timer controls, stable across renders. pause/resume read the ref
   // only when invoked (event handlers), never during render.
   const controlsRef = useRef({
@@ -74,7 +76,7 @@ function ToastCard({ toast }: { toast: ErrorToast }) {
       <p className="min-w-0 flex-1 leading-snug">{toast.message}</p>
       <button
         type="button"
-        aria-label="Dismiss notification"
+        aria-label={t("dismissNotification")}
         onClick={() => dismissToast(toast.id)}
         className="flex size-11 shrink-0 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-50"
       >

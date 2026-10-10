@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import {
   Menu,
@@ -13,6 +14,7 @@ import {
   Compass,
 } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
+import LanguageSwitcher from "./language-switcher";
 import { Github, Linkedin } from "./ui/brand-icons";
 import {
   Sheet,
@@ -45,19 +47,25 @@ const contactLinks = [
   },
 ];
 
-const navLinks = [
-  { href: "/#skills", label: "Skills", icon: Code2 },
-  { href: "/#projects", label: "Projects", icon: Rocket },
-  { href: "/#experience", label: "Experience", icon: Briefcase },
-  { href: "/principles", label: "Principles", icon: Compass },
-  { href: "/blog", label: "Blog", icon: PenLine },
-];
+const navLinkDefs = [
+  { href: "/#skills", labelKey: "skills", icon: Code2 },
+  { href: "/#projects", labelKey: "projects", icon: Rocket },
+  { href: "/#experience", labelKey: "experience", icon: Briefcase },
+  { href: "/principles", labelKey: "principles", icon: Compass },
+  { href: "/blog", labelKey: "blog", icon: PenLine },
+] as const;
 
 export default function Header() {
+  const t = useTranslations("header");
   const [scrolled, setScrolled] = React.useState(false);
   const [hidden, setHidden] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const lastY = React.useRef(0);
+
+  const navLinks = navLinkDefs.map((link) => ({
+    ...link,
+    label: t(`nav.${link.labelKey}`),
+  }));
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -98,7 +106,7 @@ export default function Header() {
         <Link
           href="/#hero"
           className="text-xl font-bold cursor-pointer hover:text-khaki transition-colors flex items-center gap-2"
-          aria-label="Go to homepage"
+          aria-label={t("homeLabel")}
         >
           donray.dev
           <span
@@ -112,7 +120,7 @@ export default function Header() {
 
         <nav
           className="hidden md:flex items-center gap-1"
-          aria-label="Main navigation"
+          aria-label={t("mainNav")}
           id="main-nav"
         >
           {navLinks.map((link) => (
@@ -120,7 +128,7 @@ export default function Header() {
               key={link.href}
               href={link.href}
               className="text-sm px-3 py-3 rounded-md hover:text-khaki hover:bg-accent transition-colors"
-              aria-label={`View ${link.label.toLowerCase()} section`}
+              aria-label={t("viewSection", { label: link.label.toLowerCase() })}
             >
               {link.label}
             </Link>
@@ -143,8 +151,8 @@ export default function Header() {
                   rel={social.external ? "noopener noreferrer" : undefined}
                   aria-label={
                     social.external
-                      ? `Visit ${social.name} profile`
-                      : `Contact via ${social.name.toLowerCase()}`
+                      ? t("visitProfile", { name: social.name })
+                      : t("contactVia", { name: social.name.toLowerCase() })
                   }
                 >
                   <social.icon className="size-5" aria-hidden="true" />
@@ -153,10 +161,12 @@ export default function Header() {
             ))}
           </div>
 
+          <LanguageSwitcher />
           <ModeToggle className="size-11" />
         </nav>
 
         <div className="flex items-center gap-2 md:hidden" id="mobile-menu">
+          <LanguageSwitcher />
           <ModeToggle className="size-11" />
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
@@ -164,10 +174,10 @@ export default function Header() {
                 variant="outline"
                 size="icon"
                 className="size-11"
-                aria-label="Open menu"
+                aria-label={t("openMenu")}
               >
                 <Menu className="size-5 cursor-pointer" aria-hidden="true" />
-                <span className="sr-only">Toggle menu</span>
+                <span className="sr-only">{t("toggleMenu")}</span>
               </Button>
             </SheetTrigger>
             <SheetContent
@@ -179,7 +189,7 @@ export default function Header() {
               </SheetHeader>
               <nav
                 className="flex flex-col gap-2 mt-6 px-4"
-                aria-label="Mobile navigation"
+                aria-label={t("mobileNav")}
               >
                 {navLinks.map((link) => {
                   const Icon = link.icon;
@@ -218,8 +228,10 @@ export default function Header() {
                         }
                         aria-label={
                           social.external
-                            ? `Visit ${social.name} profile`
-                            : `Contact via ${social.name.toLowerCase()}`
+                            ? t("visitProfile", { name: social.name })
+                            : t("contactVia", {
+                                name: social.name.toLowerCase(),
+                              })
                         }
                       >
                         <social.icon className="size-5" aria-hidden="true" />

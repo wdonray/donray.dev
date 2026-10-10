@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { Eye, Users } from "lucide-react";
 import { reportError } from "@/lib/report-error";
 
@@ -63,6 +64,9 @@ export function LiveStats({
     };
   }, [endpoint]);
 
+  const t = useTranslations("liveStats");
+  const locale = useLocale();
+
   if (state.status !== "ready") return null;
 
   const { pageViews, uniqueVisitors } = state.stats;
@@ -73,45 +77,46 @@ export function LiveStats({
         id="live-stats-heading"
         className="text-2xl font-bold tracking-tight mb-4"
       >
-        Live stats
+        {t("title")}
       </h2>
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-xl border p-4">
           <p className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <Eye className="size-4 text-primary" aria-hidden="true" />
-            Page views
+            {t("pageViews")}
           </p>
           <p className="mt-1 text-2xl font-bold tabular-nums">
-            {pageViews.toLocaleString()}
+            {pageViews.toLocaleString(locale)}
           </p>
         </div>
         <div className="rounded-xl border p-4">
           <p className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <Users className="size-4 text-primary" aria-hidden="true" />
-            Unique visitors
+            {t("uniqueVisitors")}
           </p>
           <p className="mt-1 text-2xl font-bold tabular-nums">
-            {uniqueVisitors.toLocaleString()}
+            {uniqueVisitors.toLocaleString(locale)}
           </p>
         </div>
       </div>
       <p className="mt-3 text-sm text-muted-foreground">
         {sourceHref ? (
-          <>
-            All time, from {sourceName}{" "}
-            <a
-              href={sourceHref}
-              {...(external
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-              className="text-primary underline underline-offset-4 hover:opacity-80"
-            >
-              public analytics
-            </a>
-            .
-          </>
+          t.rich("captionWithLink", {
+            source: sourceName,
+            link: (chunks) => (
+              <a
+                href={sourceHref}
+                {...(external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                className="text-primary underline underline-offset-4 hover:opacity-80"
+              >
+                {chunks}
+              </a>
+            ),
+          })
         ) : (
-          <>All time, from {sourceName}.</>
+          <>{t("caption", { source: sourceName })}</>
         )}
       </p>
     </section>
