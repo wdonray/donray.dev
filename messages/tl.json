@@ -389,7 +389,8 @@
     "captionWithLink": "Buong panahon, mula sa <link>pampublikong analytics</link> ng {source}.",
     "pageViews": "Mga page view",
     "title": "Live na stats",
-    "uniqueVisitors": "Mga natatanging bisita"
+    "uniqueVisitors": "Mga natatanging bisita",
+    "signups": "Mga nag-sign up"
   },
   "metadata": {
     "description": "Si Donray Williams ay isang player-coach Engineering Manager sa Justworks, na namumuno sa frontend para sa onboarding at billing. Portfolio, projects, at experience.",

@@ -16,6 +16,7 @@
     "translations:sync": "node scripts/sync-translations.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.1149.0",
     "@aws-sdk/client-dynamodb": "^3.1146.0",
     "@aws-sdk/lib-dynamodb": "^3.1146.0",
     "@next/mdx": "^16.2.11",

@@ -389,7 +389,8 @@
     "captionWithLink": "All time, from {source}'s <link>public analytics</link>.",
     "pageViews": "Page views",
     "title": "Live stats",
-    "uniqueVisitors": "Unique visitors"
+    "uniqueVisitors": "Unique visitors",
+    "signups": "Signups"
   },
   "metadata": {
     "description": "Donray Williams is a player-coach Engineering Manager at Justworks, leading frontend for onboarding and billing. Portfolio, projects, and experience.",

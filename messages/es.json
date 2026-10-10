@@ -389,7 +389,8 @@
     "captionWithLink": "Histórico, de las <link>analíticas públicas</link> de {source}.",
     "pageViews": "Visitas",
     "title": "Estadísticas en vivo",
-    "uniqueVisitors": "Visitantes únicos"
+    "uniqueVisitors": "Visitantes únicos",
+    "signups": "Registros"
   },
   "metadata": {
     "description": "Donray Williams es un Gerente de ingeniería jugador-entrenador en Justworks, liderando el frontend de onboarding y facturación. Portafolio, proyectos y experiencia.",

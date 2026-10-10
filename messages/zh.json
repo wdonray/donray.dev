@@ -389,7 +389,8 @@
     "captionWithLink": "全部时间，数据来自 {source} 的<link>公开分析</link>。",
     "pageViews": "页面浏览量",
     "title": "实时数据",
-    "uniqueVisitors": "独立访客"
+    "uniqueVisitors": "独立访客",
+    "signups": "注册用户"
   },
   "metadata": {
     "description": "Donray Williams 是 Justworks 的 player-coach 型工程经理，带领前端团队负责用户引导和账单。作品集、项目与工作经历。",
