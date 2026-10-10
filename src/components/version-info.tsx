@@ -185,7 +185,9 @@ export default function VersionInfo({
   }, [te]);
 
   useEffect(() => {
-    const id = setInterval(() => setNow(Date.now()), TICK_INTERVAL_MS);
+    /* v8 ignore next 2: trivial timing-dependent tick callback */
+    const tick = () => setNow(Date.now());
+    const id = setInterval(tick, TICK_INTERVAL_MS);
     return () => clearInterval(id);
   }, []);
 
