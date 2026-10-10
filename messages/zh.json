@@ -178,11 +178,7 @@
               "title": "前端工程师"
             }
           ],
-          "skills": [
-            "Vue.js",
-            "JavaScript",
-            "TypeScript"
-          ],
+          "skills": ["Vue.js", "JavaScript", "TypeScript"],
           "type": "全职"
         },
         {
@@ -198,14 +194,7 @@
               "title": "前端工程师"
             }
           ],
-          "skills": [
-            "React.js",
-            "Vue.js",
-            "CMS",
-            "JavaScript",
-            "CSS",
-            "HTML"
-          ],
+          "skills": ["React.js", "Vue.js", "CMS", "JavaScript", "CSS", "HTML"],
           "type": "全职"
         },
         {
@@ -237,10 +226,7 @@
               "title": "游戏开发者"
             }
           ],
-          "skills": [
-            "C#",
-            "Unity Game Engine"
-          ],
+          "skills": ["C#", "Unity Game Engine"],
           "type": "自由职业"
         },
         {
@@ -252,11 +238,7 @@
               "title": "VR 开发实习生"
             }
           ],
-          "skills": [
-            "Unity Game Engine",
-            "C#",
-            "VR 开发"
-          ],
+          "skills": ["Unity Game Engine", "C#", "VR 开发"],
           "type": "合同制"
         },
         {
@@ -268,11 +250,7 @@
               "title": "游戏编程夏令营讲师"
             }
           ],
-          "skills": [
-            "Unity Game Engine",
-            "C#",
-            "教学"
-          ],
+          "skills": ["Unity Game Engine", "C#", "教学"],
           "type": "合同制"
         }
       ],
@@ -804,9 +782,7 @@
         "title": "第三方链接"
       },
       {
-        "body": [
-          "这些条款受新泽西州法律管辖，不考虑其法律冲突原则。"
-        ],
+        "body": ["这些条款受新泽西州法律管辖，不考虑其法律冲突原则。"],
         "title": "适用法律"
       },
       {

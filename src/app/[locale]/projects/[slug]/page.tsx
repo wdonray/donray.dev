@@ -39,8 +39,11 @@ export async function generateMetadata({
   const alternates = localeAlternates(url, locale);
   const ogImage = project.screenshot ?? project.image;
   const imageAlt =
-    (project.screenshot ? t(`${slug}.screenshotAlt`) : t(`${slug}.imageAlt`)) ||
-    title;
+    (project.screenshot
+      ? t(`${slug}.screenshotAlt`)
+      : project.image
+        ? t(`${slug}.imageAlt`)
+        : undefined) || title;
   return {
     title,
     description,
