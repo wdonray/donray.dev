@@ -40,9 +40,23 @@ function discoverRoutes(): string[] {
 
   walk(appDir, "");
 
+  // Expand dynamic [locale] routes to the actual supported locales.
+  // English uses unprefixed URLs; es/zh/tl use their prefix.
+  const LOCALES = ["", "/es", "/zh", "/tl"];
+  const localeExpanded: string[] = [];
+  for (const route of routes) {
+    if (!route.includes("[locale]")) {
+      localeExpanded.push(route);
+      continue;
+    }
+    for (const prefix of LOCALES) {
+      localeExpanded.push(route.replace("/[locale]", prefix) || "/");
+    }
+  }
+
   // Expand dynamic [slug] routes from their data sources.
   const expanded: string[] = [];
-  for (const route of routes) {
+  for (const route of localeExpanded) {
     if (!route.includes("__SLUG__")) {
       expanded.push(route);
       continue;
