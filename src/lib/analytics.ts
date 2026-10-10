@@ -44,7 +44,8 @@ import {
  *
  * V2 keys exist because the original UNIQUES sets were polluted with bot
  * hashes before engagement gating. Page-view history (TOTAL, DAY#) is
- * untouched; unique-visitor counts start clean from the V2 cutover.
+ * untouched. Dashboard reads sum V1 and V2 uniques so historical counts
+ * are preserved; new engaged visitors accumulate in V2 only.
  */
 
 // Re-export library pure functions so existing imports keep working.
@@ -300,22 +301,31 @@ export async function getAnalyticsSummary(
         : 0;
   };
 
-  let siteUniques = 0;
+  // V1 holds pre-cutover history, V2 holds post-cutover engaged uniques.
+  // Sum both so the dashboard keeps showing historical counts.
+  let siteUniquesV1 = 0;
+  let siteUniquesV2 = 0;
 
   for (const item of items) {
     const pk = item.pk as string | undefined;
     const sk = item.sk as string | undefined;
-    if (pk === SITE_UNIQUES_PK && sk === UNIQUES_SK_V2) {
-      siteUniques = countUniques(item);
-      continue;
+    if (pk === SITE_UNIQUES_PK) {
+      if (sk === "UNIQUES") {
+        siteUniquesV1 = countUniques(item);
+        continue;
+      }
+      if (sk === UNIQUES_SK_V2) {
+        siteUniquesV2 = countUniques(item);
+        continue;
+      }
     }
     if (!pk?.startsWith("PAGE#")) continue;
     const path = (item.path as string) ?? pk.slice("PAGE#".length);
     const stat = ensure(path);
     if (sk === "TOTAL") {
       stat.totalViews = (item.views as number) ?? 0;
-    } else if (sk === UNIQUES_SK_V2) {
-      stat.uniques = countUniques(item);
+    } else if (sk === "UNIQUES" || sk === UNIQUES_SK_V2) {
+      stat.uniques += countUniques(item);
     } else if (sk?.startsWith("DAY#")) {
       const day = sk.slice("DAY#".length);
       if (day >= cutoffDay) {
@@ -351,7 +361,7 @@ export async function getAnalyticsSummary(
   return {
     pages,
     totalViews,
-    totalUniques: siteUniques,
+    totalUniques: siteUniquesV1 + siteUniquesV2,
     dailyTotals: [...dailyTotals.values()].sort(compareDays),
     fetchedAt: now.toISOString(),
   };
@@ -373,24 +383,36 @@ export async function getPageTotalViews(path: string): Promise<number | null> {
 }
 
 /**
- * Engaged unique visitors for a page: the size of its V2 visitor set.
- * Only humans who scrolled are counted; a visitor who returns any number
- * of times still counts once.
+ * True unique visitors for a page: the size of its persistent visitor set.
+ * Sums the V1 (pre-cutover history) and V2 (engaged-only) sets so the
+ * dashboard keeps showing historical counts. A visitor who returns any
+ * number of times still counts once per set.
  */
 export async function getPageUniqueViews(path: string): Promise<number | null> {
   const config = getConfig();
   if (!config) return null;
   const client = getClient(config);
-  const res = await client.send(
-    new GetCommand({
-      TableName: config.table,
-      Key: { pk: pkFor(path), sk: UNIQUES_SK_V2 },
-    }),
-  );
-  const item = res.Item as { visitors?: string[] | Set<string> } | undefined;
-  const visitors = item?.visitors;
-  if (!visitors) return 0;
-  return Array.isArray(visitors) ? visitors.length : visitors.size;
+  const countVisitors = (item: unknown): number => {
+    const visitors = (item as { visitors?: string[] | Set<string> } | undefined)
+      ?.visitors;
+    if (!visitors) return 0;
+    return Array.isArray(visitors) ? visitors.length : visitors.size;
+  };
+  const [v1, v2] = await Promise.all([
+    client.send(
+      new GetCommand({
+        TableName: config.table,
+        Key: { pk: pkFor(path), sk: "UNIQUES" },
+      }),
+    ),
+    client.send(
+      new GetCommand({
+        TableName: config.table,
+        Key: { pk: pkFor(path), sk: UNIQUES_SK_V2 },
+      }),
+    ),
+  ]);
+  return countVisitors(v1.Item) + countVisitors(v2.Item);
 }
 
 /* ------------------------------------------------------------------ */

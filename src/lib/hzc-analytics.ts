@@ -15,7 +15,9 @@ import { SITE_UNIQUES_PK, UNIQUES_SK_V2 } from "@wdonray/analytics-core/server";
  *
  * Data model matches src/lib/analytics.ts:
  * - pk = "PAGE#<path>", sk = "TOTAL"      -> all-time views per page
- * - pk = "SITE", sk = "UNIQUES_V2"         -> site-wide engaged unique visitors
+ * - pk = "SITE", sk = "UNIQUES"           -> site-wide true unique visitors (V1, history)
+ * - pk = "SITE", sk = "UNIQUES_V2"        -> site-wide engaged unique visitors (V2)
+ * Reads sum V1 + V2 so historical counts are preserved.
  */
 
 const TABLE_ENV = "HZC_ANALYTICS_TABLE";
@@ -107,9 +109,14 @@ export async function getHzcStats(
     for (const item of (res.Items ?? []) as Record<string, unknown>[]) {
       const pk = item.pk as string | undefined;
       const sk = item.sk as string | undefined;
-      if (pk === SITE_UNIQUES_PK && sk === UNIQUES_SK_V2) {
+      // V1 holds pre-cutover history, V2 holds post-cutover engaged
+      // uniques. Sum both so the dashboard keeps historical counts.
+      if (
+        pk === SITE_UNIQUES_PK &&
+        (sk === "UNIQUES" || sk === UNIQUES_SK_V2)
+      ) {
         const visitors = item.visitors as string[] | Set<string> | undefined;
-        uniqueVisitors = Array.isArray(visitors)
+        uniqueVisitors += Array.isArray(visitors)
           ? visitors.length
           : visitors instanceof Set
             ? visitors.size
