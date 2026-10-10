@@ -121,7 +121,10 @@
             {
               "description": "Player-coach leading frontend for onboarding and billing (team of 3). Shipped the member onboarding flow used by 6,800+ people across 1,365 companies in 30 days.",
               "current": true,
-              "link": { "href": "/principles", "label": "How I lead" },
+              "link": {
+                "href": "/principles",
+                "label": "How I lead"
+              },
               "period": "Jun 2026 – Present",
               "title": "Engineering Manager"
             },
@@ -130,7 +133,10 @@
               "period": "Dec 2023 – Jun 2026",
               "title": "Senior Software Engineer"
             },
-            { "period": "Mar 2023 – Dec 2023", "title": "Software Engineer" }
+            {
+              "period": "Mar 2023 – Dec 2023",
+              "title": "Software Engineer"
+            }
           ],
           "skills": [
             "Team Leadership",
@@ -167,9 +173,16 @@
           "company": "Leaflink",
           "location": "New York, United States",
           "positions": [
-            { "period": "Apr 2022 – Dec 2022", "title": "Frontend Engineer" }
+            {
+              "period": "Apr 2022 – Dec 2022",
+              "title": "Frontend Engineer"
+            }
           ],
-          "skills": ["Vue.js", "JavaScript", "TypeScript"],
+          "skills": [
+            "Vue.js",
+            "JavaScript",
+            "TypeScript"
+          ],
           "type": "Full-time"
         },
         {
@@ -180,16 +193,29 @@
               "period": "Jan 2021 – Apr 2022",
               "title": "Frontend Engineer II"
             },
-            { "period": "Nov 2020 – Jan 2021", "title": "Frontend Engineer" }
+            {
+              "period": "Nov 2020 – Jan 2021",
+              "title": "Frontend Engineer"
+            }
           ],
-          "skills": ["React.js", "Vue.js", "CMS", "JavaScript", "CSS", "HTML"],
+          "skills": [
+            "React.js",
+            "Vue.js",
+            "CMS",
+            "JavaScript",
+            "CSS",
+            "HTML"
+          ],
           "type": "Full-time"
         },
         {
           "company": "Gemvision Corporation",
           "location": "Lafayette, Louisiana Area",
           "positions": [
-            { "period": "Jan 2020 – Apr 2020", "title": "DevOps Engineer I" }
+            {
+              "period": "Jan 2020 – Apr 2020",
+              "title": "DevOps Engineer I"
+            }
           ],
           "skills": [
             "AWS",
@@ -206,9 +232,15 @@
           "company": "Buh! Gaming",
           "location": "Remote",
           "positions": [
-            { "period": "Jun 2018 – Jun 2019", "title": "Game Developer" }
+            {
+              "period": "Jun 2018 – Jun 2019",
+              "title": "Game Developer"
+            }
           ],
-          "skills": ["C#", "Unity Game Engine"],
+          "skills": [
+            "C#",
+            "Unity Game Engine"
+          ],
           "type": "Freelance"
         },
         {
@@ -220,7 +252,11 @@
               "title": "VR Development Intern"
             }
           ],
-          "skills": ["Unity Game Engine", "C#", "VR Development"],
+          "skills": [
+            "Unity Game Engine",
+            "C#",
+            "VR Development"
+          ],
           "type": "Contract"
         },
         {
@@ -232,7 +268,11 @@
               "title": "Game Programmer Summer Camp Instructor"
             }
           ],
-          "skills": ["Unity Game Engine", "C#", "Teaching"],
+          "skills": [
+            "Unity Game Engine",
+            "C#",
+            "Teaching"
+          ],
           "type": "Contract"
         }
       ],
@@ -379,7 +419,9 @@
     "siteName": "donray.dev",
     "title": "Donray Williams | Engineering Manager | Frontend Leadership, NYC Metro"
   },
-  "modeToggle": { "label": "Toggle theme" },
+  "modeToggle": {
+    "label": "Toggle theme"
+  },
   "pageViewsByPage": {
     "description": "All time, most viewed first",
     "path": "Page",
@@ -720,7 +762,9 @@
       "title": "pico.domains"
     }
   },
-  "tableOfContents": { "title": "On this page" },
+  "tableOfContents": {
+    "title": "On this page"
+  },
   "terms": {
     "description": "The terms for using donray.dev: content ownership, acceptable use, and disclaimers.",
     "effectiveDate": "October 10, 2026",
@@ -791,10 +835,22 @@
       },
       {
         "items": [
-          { "name": "TypeScript", "note": "Default for all frontend work." },
-          { "name": "JavaScript", "note": "Where it all started." },
-          { "name": "Ruby", "note": "Rails backend work at Justworks." },
-          { "name": "Go", "note": "Tooling and services." }
+          {
+            "name": "TypeScript",
+            "note": "Default for all frontend work."
+          },
+          {
+            "name": "JavaScript",
+            "note": "Where it all started."
+          },
+          {
+            "name": "Ruby",
+            "note": "Rails backend work at Justworks."
+          },
+          {
+            "name": "Go",
+            "note": "Tooling and services."
+          }
         ],
         "title": "Languages"
       },
@@ -804,31 +860,52 @@
             "name": "Vue",
             "note": "Primary framework: Justworks and this site."
           },
-          { "name": "Vite", "note": "Build tooling." },
-          { "name": "Vitest", "note": "Unit testing." },
+          {
+            "name": "Vite",
+            "note": "Build tooling."
+          },
+          {
+            "name": "Vitest",
+            "note": "Unit testing."
+          },
           {
             "name": "Playwright",
             "note": "E2E testing, including accessibility scans."
           },
-          { "name": "Tailwind CSS", "note": "Styling for this site." }
+          {
+            "name": "Tailwind CSS",
+            "note": "Styling for this site."
+          }
         ],
         "title": "Frontend"
       },
       {
         "items": [
-          { "name": "Ruby on Rails", "note": "API work." },
+          {
+            "name": "Ruby on Rails",
+            "note": "API work."
+          },
           {
             "name": "Node.js",
             "note": "Scripts, tooling, and this site's runtime."
           },
-          { "name": "MySQL", "note": "Relational data." },
-          { "name": "DynamoDB", "note": "Powers this site's public analytics." }
+          {
+            "name": "MySQL",
+            "note": "Relational data."
+          },
+          {
+            "name": "DynamoDB",
+            "note": "Powers this site's public analytics."
+          }
         ],
         "title": "Backend & data"
       },
       {
         "items": [
-          { "name": "AWS", "note": "Amplify for hosting, S3 for assets." },
+          {
+            "name": "AWS",
+            "note": "Amplify for hosting, S3 for assets."
+          },
           {
             "name": "GitHub Actions",
             "note": "CI for this site and side projects."
@@ -855,7 +932,9 @@
     "message": "A new version is available. Reload to get the latest.",
     "reload": "Reload"
   },
-  "viewCount": { "label": "{count, plural, one {# view} other {# views}}" },
+  "viewCount": {
+    "label": "{count, plural, one {# view} other {# views}}"
+  },
   "errorToast": {
     "dismissNotification": "Dismiss notification",
     "networkError": "Couldn't reach the server. Check your connection and try again.",

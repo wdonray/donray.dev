@@ -37,7 +37,8 @@
     "tracked": "Visitas rastreadas",
     "trackedDescription": "Cargas reales de páginas, medidas desde octubre de 2026.",
     "uniqueVisitors": "Visitantes únicos"
-  },  "blog": {
+  },
+  "blog": {
     "backToBlog": "Volver al blog",
     "description": "Notas sobre gestión de ingeniería, arquitectura frontend y desarrollo web.",
     "englishOnly": "Los artículos están escritos en inglés.",
@@ -77,31 +78,32 @@
     "toggleMenu": "Alternar menú",
     "viewSection": "Ver la sección {label}",
     "visitProfile": "Visitar el perfil de {name}"
-  },  "home": {
+  },
+  "home": {
     "conversations": {
       "intro": "Estoy feliz en Justworks. No busco un nuevo puesto, pero siempre estoy dispuesto a tener buenas conversaciones con colegas, aprendices y organizadores de conferencias. Vivo en el área metropolitana de NYC (ET) y trabajo en modalidad híbrida.",
-      "items": [
-        {
+      "items": {
+        "0": {
           "description": "Hablar de trabajo con otros gerentes de ingeniería: la vida de jugador-entrenador, liderazgo frontend, formar ingenieros.",
           "title": "Cafés con EMs"
         },
-        {
+        "1": {
           "description": "Ayudar a desarrolladores a subir de nivel en Vue, TypeScript y desarrollo a escala.",
           "title": "Mentoría frontend"
         },
-        {
+        "2": {
           "description": "Charlas sobre flujos de onboarding, UX de facturación y liderar equipos frontend como jugador-entrenador.",
           "title": "Charlas en conferencias"
         },
-        {
+        "3": {
           "description": "Conversaciones sobre gestión de ingeniería, arquitectura frontend y lanzar productos reales.",
           "title": "Invitado en pódcasts"
         },
-        {
+        "4": {
           "description": "Comparar notas con otros EMs sobre contratación, salud del equipo y mantenerse técnico mientras se gestiona.",
           "title": "Conversaciones entre colegas"
         }
-      ],
+      },
       "sayHello": "Escríbeme",
       "sayHelloDescription": "La forma más rápida de contactarme es por correo. Leo todo.",
       "title": "Abierto a conversar"
@@ -111,157 +113,198 @@
       "current": "Actual",
       "earlierLabel": "Experiencia profesional anterior",
       "hideEarlier": "Ocultar experiencia anterior",
-      "jobs": [
-        {
+      "jobs": {
+        "0": {
           "company": "Justworks",
           "location": "Manhattan, Nueva York, Estados Unidos",
-          "positions": [
-            {
+          "positions": {
+            "0": {
               "description": "Jugador-entrenador liderando el frontend de onboarding y facturación (equipo de 3). Lancé el flujo de onboarding de miembros usado por más de 6,800 personas en 1,365 empresas en 30 días.",
               "current": true,
-              "link": { "href": "/principles", "label": "Cómo lidero" },
+              "link": {
+                "href": "/principles",
+                "label": "Cómo lidero"
+              },
               "period": "jun 2026 – actualidad",
               "title": "Gerente de ingeniería"
             },
-            {
+            "1": {
               "description": "Operé como líder técnico y gerente de facto de dos ingenieros; ambos se transfirieron formalmente a mi equipo cuando fui promovido a Gerente de ingeniería.",
               "period": "dic 2023 – jun 2026",
               "title": "Ingeniero de software senior"
             },
-            { "period": "mar 2023 – dic 2023", "title": "Ingeniero de software" }
-          ],
-          "skills": [
-            "Liderazgo de equipos",
-            "Vue.js",
-            "JavaScript",
-            "Ingeniería de librerías internas",
-            "Pruebas unitarias",
-            "Pruebas E2E",
-            "Diseño responsivo",
-            "Mentoría"
-          ],
+            "2": {
+              "period": "mar 2023 – dic 2023",
+              "title": "Ingeniero de software"
+            }
+          },
+          "skills": {
+            "0": "Liderazgo de equipos",
+            "1": "Vue.js",
+            "2": "JavaScript",
+            "3": "Ingeniería de librerías internas",
+            "4": "Pruebas unitarias",
+            "5": "Pruebas E2E",
+            "6": "Diseño responsivo",
+            "7": "Mentoría"
+          },
           "type": "Tiempo completo"
         },
-        {
+        "1": {
           "company": "Cyclei",
           "location": "Área de la Bahía de San Francisco",
-          "positions": [
-            {
+          "positions": {
+            "0": {
               "period": "jul 2023 – ago 2025",
               "title": "Ingeniero frontend fundador"
             }
-          ],
-          "skills": [
-            "Vue.js",
-            "JavaScript",
-            "TypeScript",
-            "CSS",
-            "HTML",
-            "Diseño responsivo"
-          ],
+          },
+          "skills": {
+            "0": "Vue.js",
+            "1": "JavaScript",
+            "2": "TypeScript",
+            "3": "CSS",
+            "4": "HTML",
+            "5": "Diseño responsivo"
+          },
           "type": "Freelance"
         },
-        {
+        "2": {
           "company": "Leaflink",
           "location": "Nueva York, Estados Unidos",
-          "positions": [
-            { "period": "abr 2022 – dic 2022", "title": "Ingeniero frontend" }
-          ],
-          "skills": ["Vue.js", "JavaScript", "TypeScript"],
+          "positions": {
+            "0": {
+              "period": "abr 2022 – dic 2022",
+              "title": "Ingeniero frontend"
+            }
+          },
+          "skills": {
+            "0": "Vue.js",
+            "1": "JavaScript",
+            "2": "TypeScript"
+          },
           "type": "Tiempo completo"
         },
-        {
+        "3": {
           "company": "Stuller, Inc.",
           "location": "Lafayette, Luisiana, Estados Unidos",
-          "positions": [
-            {
+          "positions": {
+            "0": {
               "period": "ene 2021 – abr 2022",
               "title": "Ingeniero frontend II"
             },
-            { "period": "nov 2020 – ene 2021", "title": "Ingeniero frontend" }
-          ],
-          "skills": ["React.js", "Vue.js", "CMS", "JavaScript", "CSS", "HTML"],
+            "1": {
+              "period": "nov 2020 – ene 2021",
+              "title": "Ingeniero frontend"
+            }
+          },
+          "skills": {
+            "0": "React.js",
+            "1": "Vue.js",
+            "2": "CMS",
+            "3": "JavaScript",
+            "4": "CSS",
+            "5": "HTML"
+          },
           "type": "Tiempo completo"
         },
-        {
+        "4": {
           "company": "Gemvision Corporation",
           "location": "Área de Lafayette, Luisiana",
-          "positions": [
-            { "period": "ene 2020 – abr 2020", "title": "Ingeniero DevOps I" }
-          ],
-          "skills": [
-            "AWS",
-            "AWS Lambda",
-            "React.js",
-            "Redux.js",
-            "JavaScript",
-            "TypeScript",
-            "Serverless"
-          ],
+          "positions": {
+            "0": {
+              "period": "ene 2020 – abr 2020",
+              "title": "Ingeniero DevOps I"
+            }
+          },
+          "skills": {
+            "0": "AWS",
+            "1": "AWS Lambda",
+            "2": "React.js",
+            "3": "Redux.js",
+            "4": "JavaScript",
+            "5": "TypeScript",
+            "6": "Serverless"
+          },
           "type": "Tiempo completo"
         },
-        {
+        "5": {
           "company": "Buh! Gaming",
           "location": "Remoto",
-          "positions": [
-            { "period": "jun 2018 – jun 2019", "title": "Desarrollador de videojuegos" }
-          ],
-          "skills": ["C#", "Unity Game Engine"],
+          "positions": {
+            "0": {
+              "period": "jun 2018 – jun 2019",
+              "title": "Desarrollador de videojuegos"
+            }
+          },
+          "skills": {
+            "0": "C#",
+            "1": "Unity Game Engine"
+          },
           "type": "Freelance"
         },
-        {
+        "6": {
           "company": "TANTRUM Lab",
           "location": "Área de Lafayette, Luisiana",
-          "positions": [
-            {
+          "positions": {
+            "0": {
               "period": "oct 2018 – dic 2018",
               "title": "Pasante de desarrollo VR"
             }
-          ],
-          "skills": ["Unity Game Engine", "C#", "Desarrollo VR"],
+          },
+          "skills": {
+            "0": "Unity Game Engine",
+            "1": "C#",
+            "2": "Desarrollo VR"
+          },
           "type": "Contrato"
         },
-        {
+        "7": {
           "company": "Academy of Interactive Entertainment (AIE)",
           "location": "Área de Lafayette, Luisiana",
-          "positions": [
-            {
+          "positions": {
+            "0": {
               "period": "jun 2017 – jul 2017",
               "title": "Instructor de campamento de verano de programación de videojuegos"
             }
-          ],
-          "skills": ["Unity Game Engine", "C#", "Enseñanza"],
+          },
+          "skills": {
+            "0": "Unity Game Engine",
+            "1": "C#",
+            "2": "Enseñanza"
+          },
           "type": "Contrato"
         }
-      ],
+      },
       "rolesAt": "Puestos en {company}",
       "technologiesAt": "Tecnologías usadas en {company}",
       "timelineLabel": "Cronología de experiencia profesional",
       "title": "Experiencia",
       "viewEarlier": "Ver experiencia anterior"
-    },    "faq": {
-      "items": [
-        {
+    },
+    "faq": {
+      "items": {
+        "0": {
           "answer": "Soy un Gerente de ingeniería jugador-entrenador que lidera un equipo de 3 personas. Soy dueño del frontend de todo lo relacionado con onboarding, de miembros y empresas, además de facturación. Defino la dirección técnica, reviso el código del equipo y sigo escribiendo código de producción yo mismo.",
           "question": "¿Qué haces en Justworks?"
         },
-        {
+        "1": {
           "answer": "No. Estoy feliz en Justworks y no busco un nuevo puesto. Estoy abierto a conversaciones: cafés con EMs, mentoría frontend, charlas en conferencias e invitaciones a pódcasts.",
           "question": "¿Estás abierto a nuevos puestos?"
         },
-        {
+        "2": {
           "answer": "Más de 7 años desarrollando para la web, empezando en Stuller en Luisiana antes de mudarme al norte: Leaflink, Cyclei (ingeniero frontend fundador) y Justworks, donde crecí de Ingeniero de software a Senior y luego a Gerente de ingeniería. Como senior construí la librería tipada de fetch de toda la organización y las librerías compartidas de configuración frontend, y ayudé a mover el tráfico de clientes de aproximadamente la mitad a aproximadamente tres cuartos hacia la nueva app. Mi stack principal es Vue, TypeScript y Ruby on Rails, con Go, Node.js, Vitest, Playwright y GitHub Actions en rotación regular. Muy cómodo con herramientas de IA: Cursor y Claude Code son mis herramientas diarias, y desplegué la revisión de PRs con Claude en toda nuestra organización frontend.",
           "question": "¿Cuál es tu experiencia técnica?"
         },
-        {
+        "3": {
           "answer": "Vivo en Nueva Jersey y trabajo desde la ciudad de Nueva York (hora del Este), en modalidad híbrida.",
           "question": "¿Dónde vives?"
         },
-        {
+        "4": {
           "answer": "Correo: donrayxwilliams@gmail.com. Leo todo.",
           "question": "¿Cuál es la forma más rápida de contactarte?"
         }
-      ],
+      },
       "title": "Preguntas frecuentes"
     },
     "hero": {
@@ -286,79 +329,80 @@
       "visitSite": "Visitar sitio"
     },
     "skills": {
-      "groups": [
-        {
+      "groups": {
+        "0": {
           "category": "Desarrollo frontend",
-          "items": [
-            "Vue 3",
-            "TypeScript",
-            "JavaScript",
-            "Vite",
-            "Vue Router",
-            "Vue I18n",
-            "Storybook"
-          ]
+          "items": {
+            "0": "Vue 3",
+            "1": "TypeScript",
+            "2": "JavaScript",
+            "3": "Vite",
+            "4": "Vue Router",
+            "5": "Vue I18n",
+            "6": "Storybook"
+          }
         },
-        {
+        "1": {
           "category": "Backend y APIs",
-          "items": [
-            "Go",
-            "REST APIs",
-            "OpenAPI",
-            "Node.js",
-            "Ruby",
-            "Rails",
-            "MySQL"
-          ]
+          "items": {
+            "0": "Go",
+            "1": "REST APIs",
+            "2": "OpenAPI",
+            "3": "Node.js",
+            "4": "Ruby",
+            "5": "Rails",
+            "6": "MySQL"
+          }
         },
-        {
+        "2": {
           "category": "Pruebas y calidad",
-          "items": [
-            "Vitest",
-            "Playwright",
-            "Testing Library",
-            "Pruebas unitarias",
-            "Pruebas E2E",
-            "Automatización de pruebas"
-          ]
+          "items": {
+            "0": "Vitest",
+            "1": "Playwright",
+            "2": "Testing Library",
+            "3": "Pruebas unitarias",
+            "4": "Pruebas E2E",
+            "5": "Automatización de pruebas"
+          }
         },
-        {
+        "3": {
           "category": "Plataforma y DevOps",
-          "items": [
-            "GitHub Actions",
-            "Datadog",
-            "AWS S3",
-            "CI/CD",
-            "Git",
-            "Gestión de paquetes"
-          ]
+          "items": {
+            "0": "GitHub Actions",
+            "1": "Datadog",
+            "2": "AWS S3",
+            "3": "CI/CD",
+            "4": "Git",
+            "5": "Gestión de paquetes"
+          }
         },
-        {
+        "4": {
           "category": "UI y estándares web",
-          "items": [
-            "Tailwind CSS",
-            "CSS/SASS",
-            "HTML5",
-            "Diseño responsivo",
-            "Accesibilidad",
-            "Librerías de componentes"
-          ]
+          "items": {
+            "0": "Tailwind CSS",
+            "1": "CSS/SASS",
+            "2": "HTML5",
+            "3": "Diseño responsivo",
+            "4": "Accesibilidad",
+            "5": "Librerías de componentes"
+          }
         },
-        {
+        "5": {
           "category": "Liderazgo y oficio",
-          "items": [
-            "Liderazgo de equipos",
-            "Mentoría",
-            "Diseño de arquitectura",
-            "Revisión de código",
-            "Redacción técnica"
-          ]
+          "items": {
+            "0": "Liderazgo de equipos",
+            "1": "Mentoría",
+            "2": "Diseño de arquitectura",
+            "3": "Revisión de código",
+            "4": "Redacción técnica"
+          }
         }
-      ],
+      },
       "skillsLabel": "Habilidades de {category}",
       "title": "Habilidades y experiencia"
     }
-  },  "languageSwitcher": {
+  },
+  "languageSwitcher": {
     "chooseLanguage": "Elige un idioma",
     "label": "Idioma"
   },
@@ -375,7 +419,9 @@
     "siteName": "donray.dev",
     "title": "Donray Williams | Gerente de ingeniería | Liderazgo frontend, NYC Metro"
   },
-  "modeToggle": { "label": "Cambiar tema" },
+  "modeToggle": {
+    "label": "Cambiar tema"
+  },
   "pageViewsByPage": {
     "description": "Histórico, más vistas primero",
     "path": "Página",
@@ -387,110 +433,112 @@
   "principles": {
     "description": "Los principios de gestión de Donray Williams: las reglas con las que opera como gerente de ingeniería, aprendidas liderando un equipo como jugador-entrenador.",
     "intro": "Soy gerente de ingeniería en Justworks. Lidero un equipo de tres como jugador-entrenador: soy dueño del frontend de onboarding y facturación, sigo escribiendo código y sigo revisando el código del equipo. Estas son las reglas con las que realmente opero. Cada una me costó aprenderla.",
-    "items": [
-      {
-        "body": [
-          "Le doy al equipo metas concretas, buena documentación y tickets bien formados. Después el trabajo es suyo. Ordeno el sprint y nombro lo que se va a retrasar antes de empezar, para que el retraso sea un plan y no una sorpresa.",
-          "Cuando un lanzamiento está listo, el ingeniero que lo construyó lo ejecuta, no yo. Mi trabajo es despejar el camino. El suyo es recorrerlo."
-        ],
+    "items": {
+      "0": {
+        "body": {
+          "0": "Le doy al equipo metas concretas, buena documentación y tickets bien formados. Después el trabajo es suyo. Ordeno el sprint y nombro lo que se va a retrasar antes de empezar, para que el retraso sea un plan y no una sorpresa.",
+          "1": "Cuando un lanzamiento está listo, el ingeniero que lo construyó lo ejecuta, no yo. Mi trabajo es despejar el camino. El suyo es recorrerlo."
+        },
         "title": "Marco el camino; ellos son dueños de la ejecución"
       },
-      {
-        "body": [
-          "Soy jugador-entrenador, y lo tomo literalmente. Llevo mis propios arreglos pequeños en todo el stack, los documento siempre igual, y cuando algo se rompe en producción me meto: pequeño, quirúrgico, rápido. Después devuelvo el cierre al equipo.",
-          "Seguir en el código mantiene mis revisiones honestas y mis estimaciones reales."
-        ],
+      "1": {
+        "body": {
+          "0": "Soy jugador-entrenador, y lo tomo literalmente. Llevo mis propios arreglos pequeños en todo el stack, los documento siempre igual, y cuando algo se rompe en producción me meto: pequeño, quirúrgico, rápido. Después devuelvo el cierre al equipo.",
+          "1": "Seguir en el código mantiene mis revisiones honestas y mis estimaciones reales."
+        },
         "title": "Sigo entregando"
       },
-      {
-        "body": [
-          "La retroalimentación llega en días, basada en el comportamiento real y el archivo real, registrada cuando ocurre para que nada dependa de mi memoria a la hora de la evaluación. Los elogios viajan. Las críticas no tienen audiencia.",
-          "Si tengo que dejar el mismo comentario dos veces, la tercera es una conversación directa, no otro comentario."
-        ],
+      "2": {
+        "body": {
+          "0": "La retroalimentación llega en días, basada en el comportamiento real y el archivo real, registrada cuando ocurre para que nada dependa de mi memoria a la hora de la evaluación. Los elogios viajan. Las críticas no tienen audiencia.",
+          "1": "Si tengo que dejar el mismo comentario dos veces, la tercera es una conversación directa, no otro comentario."
+        },
         "title": "Retroalimentación rápida, específica y privada cuando duele"
       },
-      {
-        "body": [
-          "El buen trabajo que nadie vio es como si no hubiera pasado cuando se deciden las calificaciones. Así que pongo a mis reportes en el escenario: ellos presentan sus propios lanzamientos, se les nombra en los lanzamientos, y les enseño qué cuenta para el siguiente nivel.",
-          "Si no sé que pasó, no puedo defenderlo."
-        ],
+      "3": {
+        "body": {
+          "0": "El buen trabajo que nadie vio es como si no hubiera pasado cuando se deciden las calificaciones. Así que pongo a mis reportes en el escenario: ellos presentan sus propios lanzamientos, se les nombra en los lanzamientos, y les enseño qué cuenta para el siguiente nivel.",
+          "1": "Si no sé que pasó, no puedo defenderlo."
+        },
         "title": "Hago visible su trabajo para poder defenderlo"
       },
-      {
-        "body": [
-          "Un punto de control diario corto dentro de un día ya empezado. Viernes asíncrono. Los bloqueos se reportan en el momento en que aparecen, no se guardan para el standup.",
-          "Cuando una épica se desborda, recorto alcance para proteger una línea de meta en lugar de seguir todo tarde."
-        ],
+      "4": {
+        "body": {
+          "0": "Un punto de control diario corto dentro de un día ya empezado. Viernes asíncrono. Los bloqueos se reportan en el momento en que aparecen, no se guardan para el standup.",
+          "1": "Cuando una épica se desborda, recorto alcance para proteger una línea de meta en lugar de seguir todo tarde."
+        },
         "title": "El ritmo protege el enfoque; la ceremonia no"
       },
-      {
-        "body": [
-          "La palanca para crecer es una tarea de estiramiento con una definición clara de terminado: una épica multi-stack para quien demuestra responsabilidad más amplia, responsabilidad de lanzamiento de punta a punta para quien está listo para exceder, un módulo propio para quien es nuevo y necesita demostrar el nivel.",
-          "Yo defino el piso. Ellos lo estiman y lo ejecutan."
-        ],
+      "5": {
+        "body": {
+          "0": "La palanca para crecer es una tarea de estiramiento con una definición clara de terminado: una épica multi-stack para quien demuestra responsabilidad más amplia, responsabilidad de lanzamiento de punta a punta para quien está listo para exceder, un módulo propio para quien es nuevo y necesita demostrar el nivel.",
+          "1": "Yo defino el piso. Ellos lo estiman y lo ejecutan."
+        },
         "title": "La gente crece con trabajo más grande, no con más consejos"
       }
-    ],
+    },
     "lookingFor": "Lo que busco",
     "lookingForBody": "Quiero equipos donde la responsabilidad sea real, el trabajo importe para el negocio y se confíe a los ingenieros problemas difíciles. Si eso suena como tu equipo, <link>hablemos</link>.",
     "title": "Cómo lidero"
-  },  "privacy": {
+  },
+  "privacy": {
     "description": "Cómo donray.dev maneja tus datos: qué se recopila, qué no, y tus derechos.",
     "effectiveDate": "10 de octubre de 2026",
     "intro": "Vigente desde el {date}. Esta página explica qué recopila donray.dev, qué no recopila y tus derechos. Para preguntas, escribe a <link>{email}</link>.",
-    "sections": [
-      {
-        "body": [
-          "donray.dev ejecuta sus propias analíticas de primera parte. Cuando cargas una página, el sitio registra la ruta de la página, la hora de la visita y un hash SHA-256 con sal de tu dirección IP combinada con la cadena del agente de usuario de tu navegador. Ese hash es cómo se cuentan los visitantes únicos: permite reconocer a un visitante que regresa sin almacenar nunca quién es.",
-          "Eso es todo. No hay cuentas de usuario, ni inicio de sesión, ni comentarios, ni boletín, ni formularios de contacto, ni comercio electrónico. Hacer clic en un enlace de correo abre tu propio cliente de correo; el sitio no recopila nada de esa interacción."
-        ],
+    "sections": {
+      "0": {
+        "body": {
+          "0": "donray.dev ejecuta sus propias analíticas de primera parte. Cuando cargas una página, el sitio registra la ruta de la página, la hora de la visita y un hash SHA-256 con sal de tu dirección IP combinada con la cadena del agente de usuario de tu navegador. Ese hash es cómo se cuentan los visitantes únicos: permite reconocer a un visitante que regresa sin almacenar nunca quién es.",
+          "1": "Eso es todo. No hay cuentas de usuario, ni inicio de sesión, ni comentarios, ni boletín, ni formularios de contacto, ni comercio electrónico. Hacer clic en un enlace de correo abre tu propio cliente de correo; el sitio no recopila nada de esa interacción."
+        },
         "title": "Qué recopila este sitio"
       },
-      {
-        "body": [
-          "No se establecen cookies para analíticas ni seguimiento. La aplicación no almacena direcciones IP. No se recopilan nombres, correos electrónicos ni otros datos personales a través del sitio. Las analíticas no se pueden revertir para identificarte: un hash con sal es una huella unidireccional, y la sal nunca se publica."
-        ],
+      "1": {
+        "body": {
+          "0": "No se establecen cookies para analíticas ni seguimiento. La aplicación no almacena direcciones IP. No se recopilan nombres, correos electrónicos ni otros datos personales a través del sitio. Las analíticas no se pueden revertir para identificarte: un hash con sal es una huella unidireccional, y la sal nunca se publica."
+        },
         "title": "Qué no recopila este sitio"
       },
-      {
-        "body": [
-          "Las analíticas existen por una razón: entender la audiencia. Los conteos alimentan el panel público en /analytics, que muestra el total de visitas y visitantes únicos por página. Nada se recopila para publicidad, y nada se vende ni se comparte con corredores de datos."
-        ],
+      "2": {
+        "body": {
+          "0": "Las analíticas existen por una razón: entender la audiencia. Los conteos alimentan el panel público en /analytics, que muestra el total de visitas y visitantes únicos por página. Nada se recopila para publicidad, y nada se vende ni se comparte con corredores de datos."
+        },
         "title": "Por qué se recopila"
       },
-      {
-        "body": [
-          "Los hashes de visitantes se conservan permanentemente. Eso es lo que hace honesto el conteo único: un visitante que regresa un año después sigue contando una vez, porque su hash sigue en el conjunto. Los totales de visitas también se conservan permanentemente. Si quieres que tu hash se elimine del conjunto, contáctame al correo de abajo y eliminaré lo que se pueda identificar; nota que como los hashes no se pueden revertir, la eliminación funciona mejor cuando puedes describir el momento aproximado y las páginas de tus visitas."
-        ],
+      "3": {
+        "body": {
+          "0": "Los hashes de visitantes se conservan permanentemente. Eso es lo que hace honesto el conteo único: un visitante que regresa un año después sigue contando una vez, porque su hash sigue en el conjunto. Los totales de visitas también se conservan permanentemente. Si quieres que tu hash se elimine del conjunto, contáctame al correo de abajo y eliminaré lo que se pueda identificar; nota que como los hashes no se pueden revertir, la eliminación funciona mejor cuando puedes describir el momento aproximado y las páginas de tus visitas."
+        },
         "title": "Cuánto tiempo se conserva"
       },
-      {
-        "body": [
-          "El sitio está alojado en AWS Amplify con DNS a través de Amazon Route 53. Como proveedor de alojamiento y operador de DNS, Amazon puede registrar datos de solicitudes (como direcciones IP) bajo sus propias políticas de privacidad, independientemente de lo descrito aquí. Ningún otro servicio de analíticas, publicidad o seguimiento de terceros opera en este sitio."
-        ],
+      "4": {
+        "body": {
+          "0": "El sitio está alojado en AWS Amplify con DNS a través de Amazon Route 53. Como proveedor de alojamiento y operador de DNS, Amazon puede registrar datos de solicitudes (como direcciones IP) bajo sus propias políticas de privacidad, independientemente de lo descrito aquí. Ningún otro servicio de analíticas, publicidad o seguimiento de terceros opera en este sitio."
+        },
         "title": "Terceros"
       },
-      {
-        "body": [
-          "Si estás en la UE o el Reino Unido, tienes derechos sobre tus datos personales bajo el RGPD, incluyendo el derecho de acceso, eliminación y oposición a su procesamiento. Como las analíticas solo almacenan un hash con sal en lugar de tu dirección IP directamente, el alcance práctico de estos derechos es limitado, pero los derechos siguen aplicando. Para ejercerlos, o para cualquier pregunta de privacidad, escríbeme y responderé."
-        ],
+      "5": {
+        "body": {
+          "0": "Si estás en la UE o el Reino Unido, tienes derechos sobre tus datos personales bajo el RGPD, incluyendo el derecho de acceso, eliminación y oposición a su procesamiento. Como las analíticas solo almacenan un hash con sal en lugar de tu dirección IP directamente, el alcance práctico de estos derechos es limitado, pero los derechos siguen aplicando. Para ejercerlos, o para cualquier pregunta de privacidad, escríbeme y responderé."
+        },
         "title": "Tus derechos"
       },
-      {
-        "body": [
-          "Este sitio es un blog técnico personal y portafolio. No está dirigido a menores de 13 años, y no recopilo conscientemente datos personales de menores."
-        ],
+      "6": {
+        "body": {
+          "0": "Este sitio es un blog técnico personal y portafolio. No está dirigido a menores de 13 años, y no recopilo conscientemente datos personales de menores."
+        },
         "title": "Menores"
       },
-      {
-        "body": [
-          "Esta política puede cambiar a medida que el sitio evoluciona. Cuando lo haga, se actualizará la fecha de vigencia en la parte superior de esta página. Los cambios significativos también se notarán en el sitio."
-        ],
+      "7": {
+        "body": {
+          "0": "Esta política puede cambiar a medida que el sitio evoluciona. Cuando lo haga, se actualizará la fecha de vigencia en la parte superior de esta página. Los cambios significativos también se notarán en el sitio."
+        },
         "title": "Cambios a esta política"
       }
-    ],
+    },
     "title": "Política de privacidad"
-  },  "projectPage": {
+  },
+  "projectPage": {
     "discontinued": "Descontinuado",
     "faq": "Preguntas frecuentes",
     "features": "Características",
@@ -506,164 +554,166 @@
   "projects": {
     "cyclei": {
       "description": "App web para clientes de un servicio de recogida de empaques reutilizables. Cubre el ciclo completo: registro y activación, seguimiento de bolsas, panel de impacto, billetera de recompensas con pagos y gestión de cuenta.",
-      "details": [
-        "Cyclei combina la recolección en acera de contenedores reutilizables con la recogida regular de basura. Los clientes se registran, pagan una tarifa única de activación, compran en negocios asociados que ofrecen empaques reutilizables, llenan una bolsa Cyclei y la enganchan al asa de su contenedor de reciclaje el día de la basura. Una bolsa nueva de devolución llega a su puerta, y la cuenta muestra los reutilizables devueltos más depósitos o recompensas.",
-        "Como ingeniero frontend fundador, Donray construyó la app web para clientes: registro multi-paso con validación de dirección e intenciones de configuración de Stripe, un panel con rastreador de impacto que cuenta los contenedores de un solo uso evitados y una tarjeta de saldo de billetera, seguimiento de bolsas en estados recolectada, clasificada y perdida, pago con cupones y facturas, pagos de billetera con estados pendiente, pagado y fallido, y gestión de cuenta con pausa y reanudación de recogidas.",
-        "La app es Vue 3.5 con Vite 7 y TypeScript, usando Apollo Client GraphQL contra un backend Django, formularios vee-validate con una librería propia de componentes de entrada, y una librería publicada de componentes Vue para el sistema de UI. Pruebas unitarias con Vitest y compuertas ESLint/Stylelint corren en CI. El servicio ha sido descontinuado."
-      ],
-      "faq": [
-        {
+      "details": {
+        "0": "Cyclei combina la recolección en acera de contenedores reutilizables con la recogida regular de basura. Los clientes se registran, pagan una tarifa única de activación, compran en negocios asociados que ofrecen empaques reutilizables, llenan una bolsa Cyclei y la enganchan al asa de su contenedor de reciclaje el día de la basura. Una bolsa nueva de devolución llega a su puerta, y la cuenta muestra los reutilizables devueltos más depósitos o recompensas.",
+        "1": "Como ingeniero frontend fundador, Donray construyó la app web para clientes: registro multi-paso con validación de dirección e intenciones de configuración de Stripe, un panel con rastreador de impacto que cuenta los contenedores de un solo uso evitados y una tarjeta de saldo de billetera, seguimiento de bolsas en estados recolectada, clasificada y perdida, pago con cupones y facturas, pagos de billetera con estados pendiente, pagado y fallido, y gestión de cuenta con pausa y reanudación de recogidas.",
+        "2": "La app es Vue 3.5 con Vite 7 y TypeScript, usando Apollo Client GraphQL contra un backend Django, formularios vee-validate con una librería propia de componentes de entrada, y una librería publicada de componentes Vue para el sistema de UI. Pruebas unitarias con Vitest y compuertas ESLint/Stylelint corren en CI. El servicio ha sido descontinuado."
+      },
+      "faq": {
+        "0": {
           "answer": "Los clientes se registraban para la recolección en acera, pagaban una tarifa única de activación, compraban en negocios asociados que ofrecían empaques reutilizables, llenaban una bolsa Cyclei y la enganchaban al asa de su contenedor de reciclaje el día de la basura. Después una bolsa nueva de devolución llegaba a su puerta.",
           "question": "¿Cómo funcionaba el servicio de recogida de Cyclei?"
         },
-        {
+        "1": {
           "answer": "El panel mostraba un conteo continuo de contenedores de un solo uso evitados, junto con un saldo de billetera que reflejaba los depósitos y recompensas ganados por los contenedores devueltos.",
           "question": "¿Cómo seguían los clientes su impacto ambiental?"
         },
-        {
+        "2": {
           "answer": "Sí. La sección de pagos permitía a los usuarios solicitar pagos de su saldo de billetera a un destino elegido, con estados de solicitud pendiente, pagado o fallido.",
           "question": "¿Podían los clientes retirar sus recompensas?"
         },
-        {
+        "3": {
           "answer": "Vue 3 y Vite con TypeScript, GraphQL vía Apollo Client, Stripe para pagos, formularios vee-validate y una librería publicada de componentes Vue, con pruebas unitarias Vitest y compuertas ESLint/Stylelint.",
           "question": "¿Con qué se construyó la app?"
         },
-        {
+        "4": {
           "answer": "No, el servicio ha sido descontinuado.",
           "question": "¿Cyclei sigue operando?"
         }
-      ],
-      "features": [
-        "Registro multi-paso: correo, validación de dirección, confirmación, pago con Stripe",
-        "Panel con rastreador de impacto (contenedores de un solo uso evitados) y saldo de billetera",
-        "Seguimiento de bolsas en estados recolectada, clasificada, perdida, asignada y entregada",
-        "Pago con tarifas de activación, códigos de cupón y facturas",
-        "Pagos de billetera con estados pendiente, pagado y fallido",
-        "Gestión de cuenta: configuración, direcciones, pausa y reanudación de recogidas",
-        "Sección de administración con gestión de rutas y escaneo de bolsas con código QR"
-      ],
+      },
+      "features": {
+        "0": "Registro multi-paso: correo, validación de dirección, confirmación, pago con Stripe",
+        "1": "Panel con rastreador de impacto (contenedores de un solo uso evitados) y saldo de billetera",
+        "2": "Seguimiento de bolsas en estados recolectada, clasificada, perdida, asignada y entregada",
+        "3": "Pago con tarifas de activación, códigos de cupón y facturas",
+        "4": "Pagos de billetera con estados pendiente, pagado y fallido",
+        "5": "Gestión de cuenta: configuración, direcciones, pausa y reanudación de recogidas",
+        "6": "Sección de administración con gestión de rutas y escaneo de bolsas con código QR"
+      },
       "imageAlt": "Logo de Cyclei",
       "role": "Ingeniero frontend fundador",
       "screenshotAlt": "Captura del panel de cliente de Cyclei mostrando el rastreador de impacto, la tarjeta de saldo de billetera y las pestañas de seguimiento de bolsas",
       "subtitle": "Servicio de recogida de empaques reutilizables",
       "title": "Cyclei"
-    },    "donray-dev": {
+    },
+    "donray-dev": {
       "description": "Sitio personal de portafolio y blog. Next.js estático con un panel de analíticas público y respetuoso con la privacidad, accesibilidad como compuerta de CI y una capa completa de descubrimiento para visitantes humanos y motores de IA.",
-      "details": [
-        "Este sitio. Next.js 16 estático con App Router, React 19 y TypeScript, estilizado con Tailwind CSS v4 y shadcn/ui, animado con Framer Motion, alojado en AWS Amplify. Las secciones de proyectos, experiencia y blog se renderizan desde MDX con resaltado de sintaxis, enlaces de ancla en encabezados, tabla de contenidos automática y estimaciones de tiempo de lectura.",
-        "Las analíticas son públicas y respetuosas con la privacidad: un endpoint /api/track con límite de tasa y un panel /analytics respaldado por DynamoDB cuentan una carga de página por página por sesión de navegación, filtran bots y estiman visitantes únicos diarios con un hash SHA-256 con sal de IP, agente de usuario y día. Las IPs nunca se almacenan, no hay cookies, y el panel divulga su metodología en lugar de presentar estimaciones como cifras exactas.",
-        "La accesibilidad es una compuerta de CI en lugar de una aspiración: cada página se escanea con axe-core contra WCAG 2.2 AA en cada pull request, y la fusión se bloquea hasta que el escaneo pasa. El pipeline de lanzamientos incrementa versiones automáticamente y despliega a través de Amplify en cada lanzamiento, y una capa de descubrimiento de sitemap, robots.txt, JSON-LD de Persona y FAQPage, tarjetas Open Graph y llms.txt sirve tanto a motores de búsqueda como a rastreadores de IA."
-      ],
-      "faq": [
-        {
+      "details": {
+        "0": "Este sitio. Next.js 16 estático con App Router, React 19 y TypeScript, estilizado con Tailwind CSS v4 y shadcn/ui, animado con Framer Motion, alojado en AWS Amplify. Las secciones de proyectos, experiencia y blog se renderizan desde MDX con resaltado de sintaxis, enlaces de ancla en encabezados, tabla de contenidos automática y estimaciones de tiempo de lectura.",
+        "1": "Las analíticas son públicas y respetuosas con la privacidad: un endpoint /api/track con límite de tasa y un panel /analytics respaldado por DynamoDB cuentan una carga de página por página por sesión de navegación, filtran bots y estiman visitantes únicos diarios con un hash SHA-256 con sal de IP, agente de usuario y día. Las IPs nunca se almacenan, no hay cookies, y el panel divulga su metodología en lugar de presentar estimaciones como cifras exactas.",
+        "2": "La accesibilidad es una compuerta de CI en lugar de una aspiración: cada página se escanea con axe-core contra WCAG 2.2 AA en cada pull request, y la fusión se bloquea hasta que el escaneo pasa. El pipeline de lanzamientos incrementa versiones automáticamente y despliega a través de Amplify en cada lanzamiento, y una capa de descubrimiento de sitemap, robots.txt, JSON-LD de Persona y FAQPage, tarjetas Open Graph y llms.txt sirve tanto a motores de búsqueda como a rastreadores de IA."
+      },
+      "faq": {
+        "0": {
           "answer": "Next.js 16 (App Router, estático), React 19, TypeScript, Tailwind CSS v4, shadcn/ui y Framer Motion, alojado en AWS Amplify.",
           "question": "¿Con qué está construido donray.dev?"
         },
-        {
+        "1": {
           "answer": "Un endpoint /api/track con límite de tasa registra una carga de página por página por sesión de navegación, filtra bots y almacena conteos en DynamoDB. Los visitantes únicos diarios se estiman con un hash SHA-256 con sal de IP, agente de usuario y día. Las IPs nunca se almacenan y no hay cookies.",
           "question": "¿Cómo funcionan las analíticas públicas?"
         },
-        {
+        "2": {
           "answer": "Cada página se escanea con axe-core contra WCAG 2.2 AA en cada pull request, y la fusión se bloquea hasta que el escaneo pasa.",
           "question": "¿Qué verifica la compuerta de accesibilidad de CI?"
         }
-      ],
-      "features": [
-        "Secciones de proyectos, experiencia y blog renderizadas desde MDX con resaltado de código y tiempo de lectura",
-        "Panel de analíticas público con metodología divulgada y conteo único que preserva la privacidad",
-        "Escaneos de accesibilidad axe-core WCAG 2.2 AA como verificación requerida de CI en cada pull request",
-        "Capa de descubrimiento: sitemap, robots.txt, JSON-LD de Persona y FAQPage, tarjetas Open Graph, llms.txt",
-        "Incrementos de versión automatizados con despliegues de Amplify en cada lanzamiento",
-        "Endpoint de seguimiento con límite de tasa y protección contra abuso"
-      ],
+      },
+      "features": {
+        "0": "Secciones de proyectos, experiencia y blog renderizadas desde MDX con resaltado de código y tiempo de lectura",
+        "1": "Panel de analíticas público con metodología divulgada y conteo único que preserva la privacidad",
+        "2": "Escaneos de accesibilidad axe-core WCAG 2.2 AA como verificación requerida de CI en cada pull request",
+        "3": "Capa de descubrimiento: sitemap, robots.txt, JSON-LD de Persona y FAQPage, tarjetas Open Graph, llms.txt",
+        "4": "Incrementos de versión automatizados con despliegues de Amplify en cada lanzamiento",
+        "5": "Endpoint de seguimiento con límite de tasa y protección contra abuso"
+      },
       "role": "Creador",
       "subtitle": "Portafolio personal y blog",
       "title": "donray.dev"
     },
     "hide-zero-cards": {
       "description": "Herramienta interactiva de valor posicional para estudiantes de cuarto grado. Escribe cualquier número hasta mil millones y divídelo en tarjetas de dígitos arrastrables codificadas por color, con un modo dedicado para investigar lo que realmente significan los dígitos cero.",
-      "details": [
-        "Hide Zero Cards convierte cualquier número entero de 1 a mil millones en un conjunto de tarjetas arrastrables, una por dígito, cada una etiquetada con el valor real del dígito. Escribe 5,432 y obtienes tarjetas que dicen 5,000, 400, 30 y 2, codificadas por color por grupo de posición: rojos para unidades hasta centenas, amarillo para miles, verde para millones, azul para miles de millones. Arrastrar las tarjetas separa físicamente un número en sus componentes de valor posicional.",
-        "La interacción que da nombre al proyecto es el interruptor de cero. Un dígito cero se convierte en una tarjeta de marcador que dice 0,000 en lugar de una tarjeta de valor, y el botón Cero de la barra de herramientas oculta o muestra esos marcadores, enmarcando la diferencia entre no tener dígito y tener un dígito cero. Un botón de dados genera números aleatorios con un rango ajustable y un modo de enfoque en cero que sigue generando hasta que el número contiene un cero, para que la práctica ejercite deliberadamente el concepto.",
-        "Un diálogo de Formas numéricas renderiza el mismo número de cuatro maneras: Estándar, Palabra (a través de un convertidor propio de número a palabras), Unidad (5 miles, 4 centenas, 3 decenas, 2 unidades) y Expandida (5,000 + 400 + 30 + 2). Una guía dentro de la app agrega cinco actividades de aula y verificaciones de evaluación, con un diálogo de bienvenida en la primera visita y un toast de celebración cuando un estudiante construye su primer número.",
-        "Construido con Next.js 15, React 19, TypeScript y shadcn/ui. El arrastre es un hook propio sobre Pointer Events con captura de puntero en lugar de una librería de arrastrar y soltar, para que las tarjetas respondan igual a mouse, tacto y lápiz. El código fuente completo es público en GitHub."
-      ],
-      "faq": [
-        {
+      "details": {
+        "0": "Hide Zero Cards convierte cualquier número entero de 1 a mil millones en un conjunto de tarjetas arrastrables, una por dígito, cada una etiquetada con el valor real del dígito. Escribe 5,432 y obtienes tarjetas que dicen 5,000, 400, 30 y 2, codificadas por color por grupo de posición: rojos para unidades hasta centenas, amarillo para miles, verde para millones, azul para miles de millones. Arrastrar las tarjetas separa físicamente un número en sus componentes de valor posicional.",
+        "1": "La interacción que da nombre al proyecto es el interruptor de cero. Un dígito cero se convierte en una tarjeta de marcador que dice 0,000 en lugar de una tarjeta de valor, y el botón Cero de la barra de herramientas oculta o muestra esos marcadores, enmarcando la diferencia entre no tener dígito y tener un dígito cero. Un botón de dados genera números aleatorios con un rango ajustable y un modo de enfoque en cero que sigue generando hasta que el número contiene un cero, para que la práctica ejercite deliberadamente el concepto.",
+        "2": "Un diálogo de Formas numéricas renderiza el mismo número de cuatro maneras: Estándar, Palabra (a través de un convertidor propio de número a palabras), Unidad (5 miles, 4 centenas, 3 decenas, 2 unidades) y Expandida (5,000 + 400 + 30 + 2). Una guía dentro de la app agrega cinco actividades de aula y verificaciones de evaluación, con un diálogo de bienvenida en la primera visita y un toast de celebración cuando un estudiante construye su primer número.",
+        "3": "Construido con Next.js 15, React 19, TypeScript y shadcn/ui. El arrastre es un hook propio sobre Pointer Events con captura de puntero en lugar de una librería de arrastrar y soltar, para que las tarjetas respondan igual a mouse, tacto y lápiz. El código fuente completo es público en GitHub."
+      },
+      "faq": {
+        "0": {
           "answer": "Cuando un número contiene un dígito cero, como el 0 en 5,043, la app crea una tarjeta de marcador que dice 0,000 en lugar de una tarjeta de valor. El botón Cero de la barra de herramientas alterna estos marcadores, permitiendo a los estudiantes investigar la diferencia entre no tener dígito y tener un dígito cero en una posición.",
           "question": "¿Qué significa ocultar las tarjetas de cero?"
         },
-        {
+        "1": {
           "answer": "Cualquier número entero de 1 a 1,000,000,000 (mil millones), abarcando diez valores posicionales desde unidades hasta miles de millones. El generador de números aleatorios va por defecto de 1 a 1,000,000 con un máximo ajustable.",
           "question": "¿Con qué tamaño de números pueden trabajar los estudiantes?"
         },
-        {
+        "2": {
           "answer": "El diálogo de Formas numéricas muestra el mismo número de cuatro maneras: forma Estándar (5,432), forma Palabra (cinco mil cuatrocientos treinta y dos, producida por un convertidor integrado), forma Unidad (5 miles, 4 centenas, 3 decenas, 2 unidades) y forma Expandida (5,000 + 400 + 30 + 2).",
           "question": "¿Cuáles son las cuatro formas numéricas?"
         },
-        {
+        "3": {
           "answer": "El arrastre está construido sobre Pointer Events con captura de puntero en lugar de una librería de arrastrar y soltar, para que las tarjetas respondan igual a mouse, tacto y lápiz. Las tarjetas se mueven con transformaciones CSS y un orden de apilamiento calculado.",
           "question": "¿Cómo funciona la interacción de arrastre?"
         },
-        {
+        "4": {
           "answer": "Sí, el sitio está en vivo en hidezerocards.org, y el código fuente completo es público en GitHub.",
           "question": "¿Hide Zero Cards sigue disponible?"
         }
-      ],
-      "features": [
-        "Entrada de números de 1 a 1,000,000,000 con teclado numérico móvil y separadores de miles",
-        "Una tarjeta arrastrable por dígito, etiquetada con el valor real del dígito y codificada por color por grupo de posición",
-        "Tarjetas de marcador de cero con interruptor para mostrar u ocultar e investigar los dígitos cero",
-        "El botón Mezclar dispersa las tarjetas a posiciones aleatorias; Restablecer restaura el diseño ordenado",
-        "Generador de números aleatorios con rango ajustable y modo de enfoque en cero",
-        "Diálogo de Formas numéricas que muestra las formas Estándar, Palabra, Unidad y Expandida lado a lado",
-        "Guía instructiva con cinco actividades de aula y verificaciones de evaluación",
-        "Temas claro y oscuro, soporte PWA y preferencias guardadas localmente"
-      ],
+      },
+      "features": {
+        "0": "Entrada de números de 1 a 1,000,000,000 con teclado numérico móvil y separadores de miles",
+        "1": "Una tarjeta arrastrable por dígito, etiquetada con el valor real del dígito y codificada por color por grupo de posición",
+        "2": "Tarjetas de marcador de cero con interruptor para mostrar u ocultar e investigar los dígitos cero",
+        "3": "El botón Mezclar dispersa las tarjetas a posiciones aleatorias; Restablecer restaura el diseño ordenado",
+        "4": "Generador de números aleatorios con rango ajustable y modo de enfoque en cero",
+        "5": "Diálogo de Formas numéricas que muestra las formas Estándar, Palabra, Unidad y Expandida lado a lado",
+        "6": "Guía instructiva con cinco actividades de aula y verificaciones de evaluación",
+        "7": "Temas claro y oscuro, soporte PWA y preferencias guardadas localmente"
+      },
       "imageAlt": "Captura del sitio web Hide Zero Cards",
       "role": "Creador",
       "subtitle": "Herramienta de valor posicional para matemáticas de 4.º grado",
       "title": "Hide Zero Cards"
-    },    "patternspell": {
+    },
+    "patternspell": {
       "description": "Una herramienta de ortografía basada en patrones para maestros de K-3, gratis para aulas. Los maestros gestionan listas de ortografía por estudiante, organizadas por palabras, sonidos y patrones de ortografía, con un modo de pantalla grande y práctica de ortografía con texto a voz.",
-      "details": [
-        "PatternSpell es una herramienta de ortografía basada en patrones para maestros de K-3, gratis para aulas. Los maestros inician sesión con Google y gestionan listas de ortografía por estudiante, organizando palabras por sonidos y patrones de ortografía, con listas almacenadas en DynamoDB e importables o exportables como JSON.",
-        "El modo de pantalla presenta un gráfico interactivo de patrones en pantalla grande: una columna por patrón de ortografía, dimensionada por frecuencia, construido para proyectar en la pizarra inteligente del aula mientras los estudiantes deletrean. Un modo de práctica permite a los estudiantes trabajar en una lista de palabras con indicaciones de ortografía de texto a voz.",
-        "La app mantiene un panel de analíticas que muestra visitas, listas creadas, sesiones de práctica y palabras practicadas, medidas sin cookies ni direcciones IP almacenadas.",
-        "PatternSpell comenzó en agosto de 2025 como Shepherd Speller y fue renombrado en octubre de 2026 durante una reactivación, con un nuevo logo PatternMark de tres columnas. Está construido con Next.js 16, React 19, TypeScript y Tailwind CSS v4, alojado en AWS Amplify, y el código es público en GitHub."
-      ],
-      "faq": [
-        {
+      "details": {
+        "0": "PatternSpell es una herramienta de ortografía basada en patrones para maestros de K-3, gratis para aulas. Los maestros inician sesión con Google y gestionan listas de ortografía por estudiante, organizando palabras por sonidos y patrones de ortografía, con listas almacenadas en DynamoDB e importables o exportables como JSON.",
+        "1": "El modo de pantalla presenta un gráfico interactivo de patrones en pantalla grande: una columna por patrón de ortografía, dimensionada por frecuencia, construido para proyectar en la pizarra inteligente del aula mientras los estudiantes deletrean. Un modo de práctica permite a los estudiantes trabajar en una lista de palabras con indicaciones de ortografía de texto a voz.",
+        "2": "La app mantiene un panel de analíticas que muestra visitas, listas creadas, sesiones de práctica y palabras practicadas, medidas sin cookies ni direcciones IP almacenadas.",
+        "3": "PatternSpell comenzó en agosto de 2025 como Shepherd Speller y fue renombrado en octubre de 2026 durante una reactivación, con un nuevo logo PatternMark de tres columnas. Está construido con Next.js 16, React 19, TypeScript y Tailwind CSS v4, alojado en AWS Amplify, y el código es público en GitHub."
+      },
+      "faq": {
+        "0": {
           "answer": "No. Se lanzó como Shepherd Speller en agosto de 2025 y fue renombrado PatternSpell en octubre de 2026, con un nuevo logo PatternMark de tres columnas que reemplaza la marca original del árbol.",
           "question": "¿PatternSpell siempre se llamó así?"
         },
-        {
+        "1": {
           "answer": "En lugar de un árbol de ortografía, PatternSpell organiza las palabras en una columna por patrón de ortografía, con columnas dimensionadas por frecuencia. El modo de pantalla proyecta este gráfico lo suficientemente grande para que todo el aula lo lea desde la pizarra inteligente.",
           "question": "¿Qué es el gráfico de patrones?"
         },
-        {
+        "2": {
           "answer": "Los estudiantes eligen una de las listas de palabras del maestro y practican deletrear cada palabra con indicaciones de texto a voz, avanzando en la lista a su propio ritmo.",
           "question": "¿Cómo funciona el modo de práctica?"
         },
-        {
+        "3": {
           "answer": "Sí, es gratis para aulas.",
           "question": "¿PatternSpell es gratis?"
         },
-        {
+        "4": {
           "answer": "Sí, el sitio está en vivo en patternspell.org, y el código fuente completo es público en GitHub.",
           "question": "¿PatternSpell sigue disponible?"
         }
-      ],
-      "features": [
-        "Panel de maestro para gestionar listas de ortografía por estudiante: palabras, sonidos y patrones de ortografía",
-        "Gráfico interactivo de patrones con una columna por patrón de ortografía, dimensionada por frecuencia",
-        "Modo de pantalla grande para proyectar el gráfico en la pizarra inteligente del aula",
-        "Modo de práctica de ortografía con indicaciones de texto a voz",
-        "Importación y exportación JSON de listas de palabras",
-        "Inicio de sesión con Google OAuth para maestros",
-        "Panel de analíticas con estadísticas de uso",
-        "Temas claro y oscuro"
-      ],
+      },
+      "features": {
+        "0": "Panel de maestro para gestionar listas de ortografía por estudiante: palabras, sonidos y patrones de ortografía",
+        "1": "Gráfico interactivo de patrones con una columna por patrón de ortografía, dimensionada por frecuencia",
+        "2": "Modo de pantalla grande para proyectar el gráfico en la pizarra inteligente del aula",
+        "3": "Modo de práctica de ortografía con indicaciones de texto a voz",
+        "4": "Importación y exportación JSON de listas de palabras",
+        "5": "Inicio de sesión con Google OAuth para maestros",
+        "6": "Panel de analíticas con estadísticas de uso",
+        "7": "Temas claro y oscuro"
+      },
       "imageAlt": "Logo de PatternSpell: tres columnas de patrones (PatternMark)",
       "role": "Creador",
       "subtitle": "Herramienta de ortografía basada en patrones para maestros de K-3",
@@ -671,166 +721,203 @@
     },
     "pico-domains": {
       "description": "Buscador gratis de nombres de dominio ultracortos. Selecciona dominios concisos disponibles en 18 categorías de TLD y deriva a los compradores a mercados confiables.",
-      "details": [
-        "pico.domains es un buscador gratis de nombres de dominio ultracortos, no un registrador. Rastrea cientos de millones de dominios considerados de alto valor y fáciles de recordar, selecciona los disponibles y enlaza a los compradores a mercados. El servicio es gratis, monetizado a través de comisiones de afiliado sobre el tráfico de registradores. Fue construido por un equipo de dos personas, con Donray en desarrollo frontend.",
-        "La búsqueda comienza con un prefijo de hasta cuatro caracteres y se refina por longitud del dominio de segundo nivel, una de 18 categorías de TLD (tecnología, comercio, país y región, y más), longitud del TLD, TLDs específicos, solo palabras del diccionario inglés y disponibilidad. Los resultados se ordenan por dominio, longitud del SLD, precio y duración del registro, con 25 resultados por página y URLs enlazables que llevan etiquetas canónicas y metadatos SEO por búsqueda.",
-        "Cada resultado enlaza a Dynadot con un ID de referido, manteniendo el lado comercial con el registrador. Dieciocho páginas de destino por categoría de TLD llevan cada una un titular único, descripción larga e ícono. La app es instalable como PWA con caché en tiempo de ejecución de respuestas de API, e incluye un panel de filtros colapsable con columnas de tabla simplificadas para pantallas pequeñas.",
-        "Construido con Nuxt 3, Vue 3 y TypeScript estricto contra una API respaldada por Elasticsearch, con caché del lado del cliente basada en la firma completa de la consulta y librerías internas compartidas de componentes. El servicio ha sido descontinuado."
-      ],
-      "faq": [
-        {
+      "details": {
+        "0": "pico.domains es un buscador gratis de nombres de dominio ultracortos, no un registrador. Rastrea cientos de millones de dominios considerados de alto valor y fáciles de recordar, selecciona los disponibles y enlaza a los compradores a mercados. El servicio es gratis, monetizado a través de comisiones de afiliado sobre el tráfico de registradores. Fue construido por un equipo de dos personas, con Donray en desarrollo frontend.",
+        "1": "La búsqueda comienza con un prefijo de hasta cuatro caracteres y se refina por longitud del dominio de segundo nivel, una de 18 categorías de TLD (tecnología, comercio, país y región, y más), longitud del TLD, TLDs específicos, solo palabras del diccionario inglés y disponibilidad. Los resultados se ordenan por dominio, longitud del SLD, precio y duración del registro, con 25 resultados por página y URLs enlazables que llevan etiquetas canónicas y metadatos SEO por búsqueda.",
+        "2": "Cada resultado enlaza a Dynadot con un ID de referido, manteniendo el lado comercial con el registrador. Dieciocho páginas de destino por categoría de TLD llevan cada una un titular único, descripción larga e ícono. La app es instalable como PWA con caché en tiempo de ejecución de respuestas de API, e incluye un panel de filtros colapsable con columnas de tabla simplificadas para pantallas pequeñas.",
+        "3": "Construido con Nuxt 3, Vue 3 y TypeScript estricto contra una API respaldada por Elasticsearch, con caché del lado del cliente basada en la firma completa de la consulta y librerías internas compartidas de componentes. El servicio ha sido descontinuado."
+      },
+      "faq": {
+        "0": {
           "answer": "Un buscador gratis de nombres de dominio ultracortos (cuatro caracteres o menos antes del punto). No es un registrador: selecciona dominios cortos disponibles y enlaza a los compradores a mercados.",
           "question": "¿Qué es pico.domains?"
         },
-        {
+        "1": {
           "answer": "Escribiendo un prefijo de hasta cuatro caracteres, y luego refinando por longitud del dominio de segundo nivel, una de 18 categorías de TLD, longitud del TLD, TLDs específicos, solo palabras del diccionario inglés y disponibilidad. Los resultados se ordenan por dominio, longitud, precio o duración del registro.",
           "question": "¿Cómo se puede buscar?"
         },
-        {
+        "2": {
           "answer": "A través de un modelo de afiliado: los enlaces de resultados van a Dynadot con IDs de referido, y el servicio gana una comisión sobre el tráfico de registradores.",
           "question": "¿Cómo es gratis?"
         },
-        {
+        "3": {
           "answer": "No, el servicio ha sido descontinuado.",
           "question": "¿pico.domains sigue disponible?"
         }
-      ],
-      "features": [
-        "Búsqueda de dominio de segundo nivel limitada a 4 caracteres, por defecto 2 o menos",
-        "Filtros: prefijo y longitud del SLD, 18 categorías de TLD, longitud del TLD, selector múltiple de TLD, interruptor de solo diccionario inglés, interruptor de disponibilidad",
-        "Tabla de resultados ordenable (dominio, longitud del SLD, precio, duración del registro) con paginación",
-        "Derivación a mercados enlazando cada resultado a Dynadot con seguimiento de referidos",
-        "18 páginas de destino por categoría de TLD, cada una con titular, descripción e ícono únicos",
-        "Búsquedas enlazables con URLs canónicas y títulos y descripciones SEO por búsqueda",
-        "PWA instalable con caché en tiempo de ejecución de respuestas de API",
-        "Diseño responsivo con panel de filtros colapsable para pantallas pequeñas"
-      ],
+      },
+      "features": {
+        "0": "Búsqueda de dominio de segundo nivel limitada a 4 caracteres, por defecto 2 o menos",
+        "1": "Filtros: prefijo y longitud del SLD, 18 categorías de TLD, longitud del TLD, selector múltiple de TLD, interruptor de solo diccionario inglés, interruptor de disponibilidad",
+        "2": "Tabla de resultados ordenable (dominio, longitud del SLD, precio, duración del registro) con paginación",
+        "3": "Derivación a mercados enlazando cada resultado a Dynadot con seguimiento de referidos",
+        "4": "18 páginas de destino por categoría de TLD, cada una con titular, descripción e ícono únicos",
+        "5": "Búsquedas enlazables con URLs canónicas y títulos y descripciones SEO por búsqueda",
+        "6": "PWA instalable con caché en tiempo de ejecución de respuestas de API",
+        "7": "Diseño responsivo con panel de filtros colapsable para pantallas pequeñas"
+      },
       "imageAlt": "Logo de pico.domains",
       "role": "Desarrollador frontend",
       "screenshotAlt": "Captura de la interfaz de búsqueda de pico.domains con filtros de dominio y una tabla de resultados de nombres de dominio cortos",
       "subtitle": "Buscador de dominios ultracortos",
       "title": "pico.domains"
     }
-  },  "tableOfContents": { "title": "En esta página" },
+  },
+  "tableOfContents": {
+    "title": "En esta página"
+  },
   "terms": {
     "description": "Los términos para usar donray.dev: propiedad del contenido, uso aceptable y descargos de responsabilidad.",
     "effectiveDate": "10 de octubre de 2026",
     "intro": "Vigente desde el {date}. Al usar donray.dev aceptas estos términos. Para preguntas, escribe a <link>{email}</link>.",
-    "sections": [
-      {
-        "body": [
-          "Todo en donray.dev (texto, ejemplos de código, imágenes) está escrito o creado por Donray Williams salvo que se indique lo contrario. Puedes citar extractos breves con atribución y un enlace de vuelta; para algo más, pregunta primero."
-        ],
+    "sections": {
+      "0": {
+        "body": {
+          "0": "Todo en donray.dev (texto, ejemplos de código, imágenes) está escrito o creado por Donray Williams salvo que se indique lo contrario. Puedes citar extractos breves con atribución y un enlace de vuelta; para algo más, pregunta primero."
+        },
         "title": "Propiedad del contenido"
       },
-      {
-        "body": [
-          "Usa el sitio con normalidad y nos llevaremos bien. Específicamente, no abuses del endpoint público de analíticas (/api/track) ni de ninguna otra parte del sitio: no infles conteos de visitas o visitantes, no hagas scraping a un ritmo que degrade el servicio, no intentes interrumpir, hacer ingeniería inversa ni obtener acceso no autorizado al sitio o su infraestructura. El acceso automatizado que respete los límites de tasa del sitio y no distorsione las estadísticas públicas está bien; cualquier cosa diseñada para manipular los números no lo está.",
-          "Si encuentras un problema de seguridad, prefiero enterarme por ti que descubrirlo por un incidente. Contáctame al correo de abajo."
-        ],
+      "1": {
+        "body": {
+          "0": "Usa el sitio con normalidad y nos llevaremos bien. Específicamente, no abuses del endpoint público de analíticas (/api/track) ni de ninguna otra parte del sitio: no infles conteos de visitas o visitantes, no hagas scraping a un ritmo que degrade el servicio, no intentes interrumpir, hacer ingeniería inversa ni obtener acceso no autorizado al sitio o su infraestructura. El acceso automatizado que respete los límites de tasa del sitio y no distorsione las estadísticas públicas está bien; cualquier cosa diseñada para manipular los números no lo está.",
+          "1": "Si encuentras un problema de seguridad, prefiero enterarme por ti que descubrirlo por un incidente. Contáctame al correo de abajo."
+        },
         "title": "Uso aceptable"
       },
-      {
-        "body": [
-          "El contenido aquí es opinión y experiencia personal, escrito para ser útil, no para ser consejo. Los artículos sobre ingeniería, gestión y carreras reflejan lo que me funcionó en mi contexto; tu contexto es distinto. Nada en este sitio es consejo profesional, legal, financiero o médico.",
-          "El sitio se provee tal cual, sin garantías de ningún tipo. Trabajo para mantener el contenido preciso y el sitio disponible, pero no garantizo exactitud, integridad ni tiempo de actividad."
-        ],
+      "2": {
+        "body": {
+          "0": "El contenido aquí es opinión y experiencia personal, escrito para ser útil, no para ser consejo. Los artículos sobre ingeniería, gestión y carreras reflejan lo que me funcionó en mi contexto; tu contexto es distinto. Nada en este sitio es consejo profesional, legal, financiero o médico.",
+          "1": "El sitio se provee tal cual, sin garantías de ningún tipo. Trabajo para mantener el contenido preciso y el sitio disponible, pero no garantizo exactitud, integridad ni tiempo de actividad."
+        },
         "title": "Descargos de responsabilidad"
       },
-      {
-        "body": [
-          "En la máxima medida permitida por la ley, Donray Williams no es responsable de ningún daño derivado de tu uso de este sitio o tu confianza en su contenido, ya sea directo, indirecto, incidental o consecuente. Si no estás de acuerdo con estos términos, tu remedio es dejar de usar el sitio."
-        ],
+      "3": {
+        "body": {
+          "0": "En la máxima medida permitida por la ley, Donray Williams no es responsable de ningún daño derivado de tu uso de este sitio o tu confianza en su contenido, ya sea directo, indirecto, incidental o consecuente. Si no estás de acuerdo con estos términos, tu remedio es dejar de usar el sitio."
+        },
         "title": "Limitación de responsabilidad"
       },
-      {
-        "body": [
-          "El sitio enlaza a sitios externos (GitHub, LinkedIn, demos de proyectos y otros). No soy responsable del contenido, las prácticas de privacidad ni la disponibilidad de sitios externos."
-        ],
+      "4": {
+        "body": {
+          "0": "El sitio enlaza a sitios externos (GitHub, LinkedIn, demos de proyectos y otros). No soy responsable del contenido, las prácticas de privacidad ni la disponibilidad de sitios externos."
+        },
         "title": "Enlaces de terceros"
       },
-      {
-        "body": [
-          "Estos términos se rigen por las leyes del Estado de Nueva Jersey, sin considerar sus principios de conflicto de leyes."
-        ],
+      "5": {
+        "body": {
+          "0": "Estos términos se rigen por las leyes del Estado de Nueva Jersey, sin considerar sus principios de conflicto de leyes."
+        },
         "title": "Ley aplicable"
       },
-      {
-        "body": [
-          "Estos términos pueden cambiar a medida que el sitio evoluciona. Cuando lo hagan, se actualizará la fecha de vigencia en la parte superior de esta página. El uso continuado del sitio después de que los cambios entren en vigor constituye aceptación de los términos actualizados."
-        ],
+      "6": {
+        "body": {
+          "0": "Estos términos pueden cambiar a medida que el sitio evoluciona. Cuando lo hagan, se actualizará la fecha de vigencia en la parte superior de esta página. El uso continuado del sitio después de que los cambios entren en vigor constituye aceptación de los términos actualizados."
+        },
         "title": "Cambios a estos términos"
       }
-    ],
+    },
     "title": "Términos de uso"
   },
   "uses": {
     "description": "Las herramientas que usa Donray Williams para construir: editores, lenguajes, frameworks e infraestructura.",
-    "groups": [
-      {
-        "items": [
-          {
+    "groups": {
+      "0": {
+        "items": {
+          "0": {
             "name": "Cursor",
             "note": "Mi herramienta diaria para escribir código con asistencia de IA."
           },
-          {
+          "1": {
             "name": "Claude Code",
             "note": "Codificación agéntica para refactorizaciones grandes y trabajo multi-archivo."
           }
-        ],
+        },
         "title": "Editores e IA"
       },
-      {
-        "items": [
-          { "name": "TypeScript", "note": "Por defecto para todo el trabajo frontend." },
-          { "name": "JavaScript", "note": "Donde todo empezó." },
-          { "name": "Ruby", "note": "Trabajo backend con Rails en Justworks." },
-          { "name": "Go", "note": "Herramientas y servicios." }
-        ],
+      "1": {
+        "items": {
+          "0": {
+            "name": "TypeScript",
+            "note": "Por defecto para todo el trabajo frontend."
+          },
+          "1": {
+            "name": "JavaScript",
+            "note": "Donde todo empezó."
+          },
+          "2": {
+            "name": "Ruby",
+            "note": "Trabajo backend con Rails en Justworks."
+          },
+          "3": {
+            "name": "Go",
+            "note": "Herramientas y servicios."
+          }
+        },
         "title": "Lenguajes"
       },
-      {
-        "items": [
-          {
+      "2": {
+        "items": {
+          "0": {
             "name": "Vue",
             "note": "Framework principal: Justworks y este sitio."
           },
-          { "name": "Vite", "note": "Herramientas de compilación." },
-          { "name": "Vitest", "note": "Pruebas unitarias." },
-          {
+          "1": {
+            "name": "Vite",
+            "note": "Herramientas de compilación."
+          },
+          "2": {
+            "name": "Vitest",
+            "note": "Pruebas unitarias."
+          },
+          "3": {
             "name": "Playwright",
             "note": "Pruebas E2E, incluyendo escaneos de accesibilidad."
           },
-          { "name": "Tailwind CSS", "note": "Estilos para este sitio." }
-        ],
+          "4": {
+            "name": "Tailwind CSS",
+            "note": "Estilos para este sitio."
+          }
+        },
         "title": "Frontend"
       },
-      {
-        "items": [
-          { "name": "Ruby on Rails", "note": "Trabajo de API." },
-          {
+      "3": {
+        "items": {
+          "0": {
+            "name": "Ruby on Rails",
+            "note": "Trabajo de API."
+          },
+          "1": {
             "name": "Node.js",
             "note": "Scripts, herramientas y el runtime de este sitio."
           },
-          { "name": "MySQL", "note": "Datos relacionales." },
-          { "name": "DynamoDB", "note": "Impulsa las analíticas públicas de este sitio." }
-        ],
+          "2": {
+            "name": "MySQL",
+            "note": "Datos relacionales."
+          },
+          "3": {
+            "name": "DynamoDB",
+            "note": "Impulsa las analíticas públicas de este sitio."
+          }
+        },
         "title": "Backend y datos"
       },
-      {
-        "items": [
-          { "name": "AWS", "note": "Amplify para alojamiento, S3 para recursos." },
-          {
+      "4": {
+        "items": {
+          "0": {
+            "name": "AWS",
+            "note": "Amplify para alojamiento, S3 para recursos."
+          },
+          "1": {
             "name": "GitHub Actions",
             "note": "CI para este sitio y proyectos personales."
           }
-        ],
+        },
         "title": "Infraestructura"
       }
-    ],
+    },
     "title": "Herramientas",
     "intro": "Las herramientas que uso para crear y lanzar software."
-  },  "version": {
+  },
+  "version": {
     "title": "Versión",
     "description": "Cada despliegue de donray.dev, del más reciente al más antiguo.",
     "live": "En vivo",
@@ -845,7 +932,9 @@
     "message": "Hay una nueva versión disponible. Recarga para obtener la última.",
     "reload": "Recargar"
   },
-  "viewCount": { "label": "{count, plural, one {# vista} other {# vistas}}" },
+  "viewCount": {
+    "label": "{count, plural, one {# vista} other {# vistas}}"
+  },
   "errorToast": {
     "dismissNotification": "Descartar notificación",
     "networkError": "No se pudo contactar el servidor. Revisa tu conexión e inténtalo de nuevo.",
