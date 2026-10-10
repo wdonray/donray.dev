@@ -54,9 +54,7 @@ test.describe("internationalization", () => {
 
   test("language switcher navigates between locales", async ({ page }) => {
     await page.goto("/");
-    await page
-      .getByRole("button", { name: "Choose a language" })
-      .click();
+    await page.getByRole("button", { name: "Choose a language" }).click();
     await page.getByRole("menuitem", { name: "Español" }).click();
     await expect(page).toHaveURL("/es");
     await expect(
