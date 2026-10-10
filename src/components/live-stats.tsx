@@ -31,8 +31,8 @@ export function LiveStats({
   endpoint: string;
   /** e.g. "hidezerocards.org's" — possessive name used in the caption. */
   sourceName: string;
-  /** Link to the site's full analytics dashboard. */
-  sourceHref: string;
+  /** Link to the site's public analytics dashboard, when one exists. */
+  sourceHref?: string;
   /** Whether the dashboard link points off-site. */
   external?: boolean;
 }) {
@@ -96,17 +96,23 @@ export function LiveStats({
         </div>
       </div>
       <p className="mt-3 text-sm text-muted-foreground">
-        All time, from {sourceName}{" "}
-        <a
-          href={sourceHref}
-          {...(external
-            ? { target: "_blank", rel: "noopener noreferrer" }
-            : {})}
-          className="text-primary underline underline-offset-4 hover:opacity-80"
-        >
-          public analytics
-        </a>
-        .
+        {sourceHref ? (
+          <>
+            All time, from {sourceName}{" "}
+            <a
+              href={sourceHref}
+              {...(external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
+              className="text-primary underline underline-offset-4 hover:opacity-80"
+            >
+              public analytics
+            </a>
+            .
+          </>
+        ) : (
+          <>All time, from {sourceName}.</>
+        )}
       </p>
     </section>
   );

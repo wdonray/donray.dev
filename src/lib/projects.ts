@@ -212,7 +212,7 @@ export const PROJECTS: ProjectDetail[] = [
     details: [
       "PatternSpell is a pattern-based spelling toolkit for K-3 teachers, free for classrooms. Teachers sign in with Google and manage spelling lists per student, organizing words by sounds and spelling patterns, with lists stored in DynamoDB and importable or exportable as JSON.",
       "The display mode presents an interactive pattern chart on the big screen: one column per spelling pattern, sized by frequency, built to project on a classroom smartboard while students spell. A practice mode lets students work through a word list with text-to-speech spelling prompts.",
-      "The app keeps a public analytics dashboard showing page views, lists created, practice sessions, and words practiced, measured without cookies or stored IP addresses.",
+      "The app keeps an analytics dashboard showing page views, lists created, practice sessions, and words practiced, measured without cookies or stored IP addresses.",
       "PatternSpell began in August 2025 as Shepherd Speller and was renamed in October 2026 during an active revival, with a new three-column PatternMark logo. It is built with Next.js 16, React 19, TypeScript, and Tailwind CSS v4, hosted on AWS Amplify, and the source is public on GitHub.",
     ],
     features: [
@@ -222,7 +222,7 @@ export const PROJECTS: ProjectDetail[] = [
       "Spelling practice mode with text-to-speech prompts",
       "JSON import and export for word lists",
       "Google OAuth sign-in for teachers",
-      "Public analytics dashboard with usage statistics",
+      "Analytics dashboard with usage statistics",
       "Light and dark themes",
     ],
     faq: [
