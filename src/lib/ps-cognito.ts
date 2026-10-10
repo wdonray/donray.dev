@@ -5,11 +5,12 @@ import {
 } from "@aws-sdk/client-cognito-identity-provider";
 
 /**
- * Read-only access to PatternSpell's Cognito user pool for signup counts.
+ * Read-only access to PatternSpell's Cognito user pool for user counts.
  *
  * The pool ('patternspell-users', us-east-1) is the source of truth for
- * signups: it holds both email/password and Google OAuth users. Counting
- * via ListUsers (paginated) gives the all-time signup total.
+ * users: it holds both email/password and Google OAuth users. Counting
+ * via ListUsers (paginated) gives the current number of user profiles
+ * in the pool.
  *
  * The pool ID comes from PS_COGNITO_USER_POOL_ID; region and credentials
  * are shared with donray.dev's analytics config (ANALYTICS_AWS_*). The
@@ -63,16 +64,21 @@ export function __resetPsCognitoClientForTests(): void {
 // Signups change slowly; the API route also sets edge caching.
 const CACHE_TTL_MS = 5 * 60 * 1000;
 let cached: { count: number; at: number } | null = null;
+// In-flight request shared across concurrent callers to avoid Cognito
+// throttling when several visitors hit a cold cache at once.
+let inFlight: Promise<number | null> | null = null;
 
 /** For tests: clear the signup count cache. */
 export function __resetPsSignupCacheForTests(): void {
   cached = null;
+  inFlight = null;
 }
 
 /**
- * All-time PatternSpell signup count (all users in the Cognito pool).
+ * Current PatternSpell user count (profiles in the Cognito pool).
  * Returns null when the pool is not configured (local dev / CI).
- * Results are cached in memory for 5 minutes.
+ * Results are cached in memory for 5 minutes. Concurrent callers share
+ * a single in-flight request.
  */
 export async function getPsSignupCount(
   now: number = Date.now(),
@@ -80,6 +86,18 @@ export async function getPsSignupCount(
   if (cached && now - cached.at < CACHE_TTL_MS) {
     return cached.count;
   }
+  if (inFlight) {
+    return inFlight;
+  }
+  inFlight = fetchCount(now);
+  try {
+    return await inFlight;
+  } finally {
+    inFlight = null;
+  }
+}
+
+async function fetchCount(now: number): Promise<number | null> {
   const config = getPsCognitoConfig();
   if (!config) return null;
   const cognito = getClient(config);
