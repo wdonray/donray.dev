@@ -7,42 +7,19 @@ import { Badge } from "@/components/ui/badge";
 import { fadeInUp, fadeInUpWithDelay } from "@/lib/animations";
 import { reportError } from "@/lib/report-error";
 import { getErrorMessageKey, toastError } from "@/lib/error-toast";
+import {
+  POLL_INTERVAL_MS,
+  RELEASES_URL,
+  compareVersions,
+  fetchReleases,
+  formatCheckedAgo,
+  formatDate,
+  timeAgo,
+  type Release,
+} from "@/lib/version";
 
-export const RELEASES_API =
-  "https://api.github.com/repos/wdonray/donray.dev/releases?per_page=5";
-export const RELEASES_URL = "https://github.com/wdonray/donray.dev/releases";
-
-/** How often the page silently re-checks GitHub for new releases. */
-export const POLL_INTERVAL_MS = 120_000;
 /** How often the relative timestamps ("3h ago") re-render. */
 const TICK_INTERVAL_MS = 15_000;
-
-export interface Release {
-  version: string;
-  url: string;
-  publishedAt: string | null;
-  summary: string | null;
-}
-
-interface GitHubReleasePayload {
-  tag_name?: unknown;
-  html_url?: unknown;
-  published_at?: unknown;
-  body?: unknown;
-}
-
-/** Parse a semver-ish string ("v0.4.19" / "0.4.19") into comparable parts. */
-export function parseVersion(value: string): number[] {
-  return value
-    .replace(/^v/i, "")
-    .split(".")
-    .map((part) => parseInt(part, 10) || 0);
-}
-
-/** Returns 1 if a > b, -1 if a < b, 0 if equal. */
-export function compareVersions(a: string, b: string): number {
-  const pa = parseVersion(a);
-  const pb = parseVersion(b);
   const length = Math.max(pa.length, pb.length);
   for (let i = 0; i < length; i++) {
     const diff = (pa[i] ?? 0) - (pb[i] ?? 0);
@@ -121,18 +98,6 @@ export function toRelease(data: GitHubReleasePayload): Release {
       typeof data.published_at === "string" ? data.published_at : null,
     summary: summarizeRelease(typeof data.body === "string" ? data.body : null),
   };
-}
-
-/** Fetch the most recent releases from the GitHub API. */
-export async function fetchReleases(): Promise<Release[]> {
-  const res = await fetch(RELEASES_API, {
-    headers: { Accept: "application/vnd.github+json" },
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`GitHub responded ${res.status}`);
-  const data: unknown = await res.json();
-  if (!Array.isArray(data)) throw new Error("Unexpected GitHub response");
-  return data.map((item) => toRelease((item ?? {}) as GitHubReleasePayload));
 }
 
 export default function VersionInfo({
