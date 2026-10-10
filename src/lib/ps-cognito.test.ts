@@ -106,6 +106,23 @@ describe("getPsSignupCount", () => {
     expect(await getPsSignupCount()).toBe(0);
   });
 
+  it("shares an in-flight request across concurrent callers", async () => {
+    let resolveSend!: (value: unknown) => void;
+    const send = mockCognito(
+      () =>
+        new Promise((resolve) => {
+          resolveSend = resolve;
+        }),
+    );
+    const p1 = getPsSignupCount();
+    const p2 = getPsSignupCount();
+    resolveSend({ Users: [{ Username: "a" }] });
+    expect(await p1).toBe(1);
+    expect(await p2).toBe(1);
+    // Only one Cognito request was made for both callers.
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
   it("caches the count for 5 minutes", async () => {
     const send = mockCognito(async () => ({ Users: [{ Username: "a" }] }));
     expect(await getPsSignupCount(1000)).toBe(1);
