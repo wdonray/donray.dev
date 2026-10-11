@@ -7,8 +7,7 @@ import { describe, expect, it, vi, afterEach, beforeEach } from "vitest";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
 vi.mock("@aws-sdk/lib-dynamodb", async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import("@aws-sdk/lib-dynamodb")>();
+  const actual = await importOriginal<typeof import("@aws-sdk/lib-dynamodb")>();
   return { ...actual, DynamoDBDocumentClient: { from: vi.fn() } };
 });
 
