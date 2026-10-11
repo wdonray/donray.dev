@@ -1,26 +1,20 @@
 import { describe, expect, it, vi, afterEach, beforeEach } from "vitest";
 
 /* ------------------------------------------------------------------ */
-/* Cognito-backed signup count, with a mocked identity provider client.*/
+/* DynamoDB-backed signup count, with a mocked document client.        */
 /* ------------------------------------------------------------------ */
 
-import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider";
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-vi.mock("@aws-sdk/client-cognito-identity-provider", async (importOriginal) => {
+vi.mock("@aws-sdk/lib-dynamodb", async (importOriginal) => {
   const actual =
-    await importOriginal<
-      typeof import("@aws-sdk/client-cognito-identity-provider")
-    >();
-  return { ...actual, CognitoIdentityProviderClient: vi.fn() };
+    await importOriginal<typeof import("@aws-sdk/lib-dynamodb")>();
+  return { ...actual, DynamoDBDocumentClient: { from: vi.fn() } };
 });
 
-function mockCognito(sendImpl: (cmd: unknown) => Promise<unknown>) {
+function mockDynamoDb(sendImpl: (cmd: unknown) => Promise<unknown>) {
   const send = vi.fn(sendImpl);
-  vi.mocked(CognitoIdentityProviderClient).mockImplementation(function (
-    this: unknown,
-  ) {
-    return { send };
-  } as never);
+  vi.mocked(DynamoDBDocumentClient.from).mockReturnValue({ send } as never);
   return send;
 }
 
@@ -32,7 +26,6 @@ import {
 } from "./ps-cognito";
 
 const ENV = {
-  PS_COGNITO_USER_POOL_ID: "us-east-1_abc123",
   ANALYTICS_AWS_REGION: "us-east-1",
   ANALYTICS_AWS_ACCESS_KEY_ID: "key",
   ANALYTICS_AWS_SECRET_ACCESS_KEY: "secret",
@@ -53,18 +46,18 @@ afterEach(() => {
 });
 
 describe("getPsCognitoConfig", () => {
-  it("returns the pool ID plus shared region and credentials", () => {
+  it("returns the table plus shared region and credentials", () => {
     expect(getPsCognitoConfig()).toEqual({
-      userPoolId: "us-east-1_abc123",
+      table: "c-shepherd-users",
       region: "us-east-1",
       accessKeyId: "key",
       secretAccessKey: "secret",
     });
   });
 
-  it("returns null when the pool ID is not configured", () => {
-    vi.stubEnv("PS_COGNITO_USER_POOL_ID", "");
-    expect(getPsCognitoConfig()).toBeNull();
+  it("honors a custom table name", () => {
+    vi.stubEnv("PS_USERS_TABLE", "custom-table");
+    expect(getPsCognitoConfig()?.table).toBe("custom-table");
   });
 
   it("returns null when credentials are not configured", () => {
@@ -74,41 +67,38 @@ describe("getPsCognitoConfig", () => {
 });
 
 describe("getPsSignupCount", () => {
-  it("returns null when the pool is not configured", async () => {
-    vi.stubEnv("PS_COGNITO_USER_POOL_ID", "");
+  it("returns null when not configured", async () => {
+    vi.stubEnv("ANALYTICS_AWS_ACCESS_KEY_ID", "");
     expect(await getPsSignupCount()).toBeNull();
   });
 
-  it("counts users across paginated ListUsers responses", async () => {
-    const send = mockCognito(async (cmd: unknown) => {
-      const token = (cmd as { input: { PaginationToken?: string } }).input
-        .PaginationToken;
-      if (!token) {
-        return {
-          Users: [{ Username: "a" }, { Username: "b" }],
-          PaginationToken: "next",
-        };
-      }
-      return { Users: [{ Username: "c" }] };
-    });
+  it("counts users via Scan", async () => {
+    const send = mockDynamoDb(async () => ({ Count: 2 }));
+    expect(await getPsSignupCount()).toBe(2);
+    expect(send).toHaveBeenCalledTimes(1);
+  });
 
-    expect(await getPsSignupCount()).toBe(3);
+  it("paginates through Scan results", async () => {
+    const send = mockDynamoDb(async (cmd: unknown) => {
+      const token = (cmd as { input: { ExclusiveStartKey?: unknown } }).input
+        .ExclusiveStartKey;
+      if (!token) {
+        return { Count: 60, LastEvaluatedKey: { PK: "x" } };
+      }
+      return { Count: 5 };
+    });
+    expect(await getPsSignupCount()).toBe(65);
     expect(send).toHaveBeenCalledTimes(2);
   });
 
-  it("returns 0 for an empty pool", async () => {
-    mockCognito(async () => ({ Users: [] }));
-    expect(await getPsSignupCount()).toBe(0);
-  });
-
-  it("treats a missing Users field as zero", async () => {
-    mockCognito(async () => ({}));
+  it("returns 0 for an empty table", async () => {
+    mockDynamoDb(async () => ({ Count: 0 }));
     expect(await getPsSignupCount()).toBe(0);
   });
 
   it("shares an in-flight request across concurrent callers", async () => {
     let resolveSend!: (value: unknown) => void;
-    const send = mockCognito(
+    const send = mockDynamoDb(
       () =>
         new Promise((resolve) => {
           resolveSend = resolve;
@@ -116,19 +106,17 @@ describe("getPsSignupCount", () => {
     );
     const p1 = getPsSignupCount();
     const p2 = getPsSignupCount();
-    resolveSend({ Users: [{ Username: "a" }] });
+    resolveSend({ Count: 1 });
     expect(await p1).toBe(1);
     expect(await p2).toBe(1);
-    // Only one Cognito request was made for both callers.
     expect(send).toHaveBeenCalledTimes(1);
   });
 
   it("caches the count for 5 minutes", async () => {
-    const send = mockCognito(async () => ({ Users: [{ Username: "a" }] }));
+    const send = mockDynamoDb(async () => ({ Count: 1 }));
     expect(await getPsSignupCount(1000)).toBe(1);
     expect(await getPsSignupCount(1000 + 4 * 60 * 1000)).toBe(1);
     expect(send).toHaveBeenCalledTimes(1);
-    // After the TTL, it fetches again.
     expect(await getPsSignupCount(1000 + 6 * 60 * 1000)).toBe(1);
     expect(send).toHaveBeenCalledTimes(2);
   });
