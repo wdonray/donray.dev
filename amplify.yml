@@ -11,6 +11,7 @@ frontend:
         # .env.production so Next.js inlines it into the server bundle.
         # See https://docs.aws.amazon.com/amplify/latest/userguide/ssr-environment-variables.html
         - env | grep -e ANALYTICS_ >> .env.production || true
+        - env | grep -e PS_COGNITO_ >> .env.production || true
         - npm run build
   artifacts:
     baseDirectory: .next
