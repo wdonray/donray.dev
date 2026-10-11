@@ -3,11 +3,8 @@ import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { version } from "../../../../package.json";
-import VersionInfo, {
-  RELEASES_API,
-  toRelease,
-  type Release,
-} from "@/components/version-info";
+import VersionInfo from "@/components/version-info";
+import { RELEASES_API, toRelease, type Release } from "@/lib/version";
 import { reportError } from "@/lib/report-error";
 import { routing, isAppLocale } from "@/i18n/routing";
 import { localeAlternates } from "@/i18n/metadata";

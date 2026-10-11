@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import { toastError } from "@/lib/error-toast";
-import VersionInfo, {
+import VersionInfo from "./version-info";
+import {
   POLL_INTERVAL_MS,
   compareVersions,
   fetchReleases,
@@ -12,7 +13,7 @@ import VersionInfo, {
   timeAgo,
   toRelease,
   type Release,
-} from "./version-info";
+} from "@/lib/version";
 
 vi.mock("@/lib/error-toast", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/error-toast")>();
