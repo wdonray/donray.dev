@@ -117,9 +117,10 @@ async function fetchCount(now: number): Promise<number | null> {
       }),
     );
     count += res.Count ?? 0;
-    exclusiveStartKey = res.LastEvaluatedKey as
-      | Record<string, unknown>
-      | undefined;
+    const key = res.LastEvaluatedKey as Record<string, unknown> | undefined;
+    // DynamoDB can return an empty object for LastEvaluatedKey; {} is truthy
+    // in JS, so check for actual entries to avoid a wasted extra scan.
+    exclusiveStartKey = key && Object.keys(key).length > 0 ? key : undefined;
   } while (exclusiveStartKey);
 
   cached = { count, at: now };
