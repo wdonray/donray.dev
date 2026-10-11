@@ -90,6 +90,16 @@ describe("getPsSignupCount", () => {
     expect(send).toHaveBeenCalledTimes(2);
   });
 
+  it("treats an empty LastEvaluatedKey object as end of pagination", async () => {
+    const send = mockDynamoDb(async () => ({
+      Count: 3,
+      LastEvaluatedKey: {},
+    }));
+    expect(await getPsSignupCount()).toBe(3);
+    // Empty object should not trigger another Scan.
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
   it("returns 0 for an empty table", async () => {
     mockDynamoDb(async () => ({ Count: 0 }));
     expect(await getPsSignupCount()).toBe(0);
