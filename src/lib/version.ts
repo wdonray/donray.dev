@@ -57,9 +57,12 @@ export function summarizeRelease(body: string | null): string | null {
   return summary ? summary : null;
 }
 
-export function formatDate(value: string | null): string | null {
+export function formatDate(
+  value: string | null,
+  locale: string,
+): string | null {
   if (!value) return null;
-  return new Date(value).toLocaleDateString("en-US", {
+  return new Date(value).toLocaleDateString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -67,25 +70,38 @@ export function formatDate(value: string | null): string | null {
 }
 
 /**
- * Relative age ("just now", "3h ago", "2d ago"). Returns null for null input
- * or ages past a week, where the absolute date is enough.
+ * Relative age ("now", "3 hours ago", "2 days ago" in the active locale).
+ * Returns null for null input or ages past a week, where the absolute
+ * date is enough.
  */
-export function timeAgo(iso: string | null, now: number): string | null {
+export function timeAgo(
+  iso: string | null,
+  now: number,
+  locale: string,
+): string | null {
   if (!iso) return null;
   const seconds = Math.max(0, Math.floor((now - Date.parse(iso)) / 1000));
-  if (seconds < 60) return "just now";
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+  if (seconds < 60) return rtf.format(0, "second");
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 60) return rtf.format(-minutes, "minute");
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return rtf.format(-hours, "hour");
   const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
+  if (days < 7) return rtf.format(-days, "day");
   return null;
 }
 
 /** Relative age for the "updated …" line; never blank. */
-export function formatCheckedAgo(lastChecked: number, now: number): string {
-  return timeAgo(new Date(lastChecked).toISOString(), now) ?? "just now";
+export function formatCheckedAgo(
+  lastChecked: number,
+  now: number,
+  locale: string,
+): string {
+  return (
+    timeAgo(new Date(lastChecked).toISOString(), now, locale) ??
+    new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(0, "second")
+  );
 }
 
 /** Normalize one GitHub release payload into a Release. */
