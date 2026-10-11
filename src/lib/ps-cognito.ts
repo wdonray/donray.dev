@@ -3,6 +3,7 @@ import {
   ListUsersCommand,
   type CognitoIdentityProviderClientConfig,
 } from "@aws-sdk/client-cognito-identity-provider";
+import { captureMessage } from "@sentry/nextjs";
 
 /**
  * Read-only access to PatternSpell's Cognito user pool for user counts.
@@ -99,7 +100,15 @@ export async function getPsSignupCount(
 
 async function fetchCount(now: number): Promise<number | null> {
   const config = getPsCognitoConfig();
-  if (!config) return null;
+  if (!config) {
+    // Fail visibly in production: a missing env var silently returns null,
+    // which took a full debugging session to diagnose. Warn via Sentry so
+    // the next missing-var incident is obvious.
+    if (process.env.NODE_ENV === "production") {
+      captureMessage("ps-cognito: missing env config", "warning");
+    }
+    return null;
+  }
   const cognito = getClient(config);
 
   // ListUsers caps at 60 per page; paginate to count the whole pool.
