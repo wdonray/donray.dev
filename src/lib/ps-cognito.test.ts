@@ -14,10 +14,6 @@ vi.mock("@aws-sdk/client-cognito-identity-provider", async (importOriginal) => {
   return { ...actual, CognitoIdentityProviderClient: vi.fn() };
 });
 
-vi.mock("@sentry/nextjs", () => ({
-  captureMessage: vi.fn(),
-}));
-
 function mockCognito(sendImpl: (cmd: unknown) => Promise<unknown>) {
   const send = vi.fn(sendImpl);
   vi.mocked(CognitoIdentityProviderClient).mockImplementation(function (
