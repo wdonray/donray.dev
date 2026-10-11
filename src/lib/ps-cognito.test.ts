@@ -100,6 +100,11 @@ describe("getPsSignupCount", () => {
     expect(send).toHaveBeenCalledTimes(1);
   });
 
+  it("treats a missing Count as zero", async () => {
+    mockDynamoDb(async () => ({}));
+    expect(await getPsSignupCount()).toBe(0);
+  });
+
   it("returns 0 for an empty table", async () => {
     mockDynamoDb(async () => ({ Count: 0 }));
     expect(await getPsSignupCount()).toBe(0);
