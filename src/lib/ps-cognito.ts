@@ -1,70 +1,73 @@
 import {
-  CognitoIdentityProviderClient,
-  ListUsersCommand,
-  type CognitoIdentityProviderClientConfig,
-} from "@aws-sdk/client-cognito-identity-provider";
+  DynamoDBClient,
+  type DynamoDBClientConfig,
+} from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
 
 /**
- * Read-only access to PatternSpell's Cognito user pool for user counts.
+ * Read-only access to PatternSpell's user count for the project page.
  *
- * The pool ('patternspell-users', us-east-1) is the source of truth for
- * users: it holds both email/password and Google OAuth users. Counting
- * via ListUsers (paginated) gives the current number of user profiles
- * in the pool.
+ * PatternSpell stores user profiles in DynamoDB (table `c-shepherd-users`),
+ * not in Cognito — the Cognito pools are auth-only and empty. Counting
+ * via Scan gives the current number of registered users.
  *
- * The pool ID comes from PS_COGNITO_USER_POOL_ID; region and credentials
- * are shared with donray.dev's analytics config (ANALYTICS_AWS_*). The
- * analytics IAM user needs cognito-idp:ListUsers on the PatternSpell pool.
+ * The table name comes from PS_USERS_TABLE (defaults to `c-shepherd-users`);
+ * region and credentials are shared with donray.dev's analytics config
+ * (ANALYTICS_AWS_*). The analytics IAM user needs dynamodb:Scan on the
+ * PatternSpell users table.
  */
 
-const POOL_ENV = "PS_COGNITO_USER_POOL_ID";
+const TABLE_ENV = "PS_USERS_TABLE";
+const DEFAULT_TABLE = "c-shepherd-users";
 const REGION_ENV = "ANALYTICS_AWS_REGION";
 const KEY_ENV = "ANALYTICS_AWS_ACCESS_KEY_ID";
 const SECRET_ENV = "ANALYTICS_AWS_SECRET_ACCESS_KEY";
 
-interface PsCognitoConfig {
-  userPoolId: string;
+interface PsUsersConfig {
+  table: string;
   region: string;
   accessKeyId: string;
   secretAccessKey: string;
 }
 
-export function getPsCognitoConfig(): PsCognitoConfig | null {
-  const userPoolId = process.env[POOL_ENV];
+export function getPsUsersConfig(): PsUsersConfig | null {
+  const table = process.env[TABLE_ENV] || DEFAULT_TABLE;
   const region = process.env[REGION_ENV];
   const accessKeyId = process.env[KEY_ENV];
   const secretAccessKey = process.env[SECRET_ENV];
-  if (!userPoolId || !region || !accessKeyId || !secretAccessKey) {
+  if (!region || !accessKeyId || !secretAccessKey) {
     return null;
   }
-  return { userPoolId, region, accessKeyId, secretAccessKey };
+  return { table, region, accessKeyId, secretAccessKey };
 }
 
-let client: CognitoIdentityProviderClient | null = null;
+let docClient: DynamoDBDocumentClient | null = null;
 
-function getClient(config: PsCognitoConfig): CognitoIdentityProviderClient {
-  if (!client) {
-    const clientConfig: CognitoIdentityProviderClientConfig = {
+function getClient(config: PsUsersConfig): DynamoDBDocumentClient {
+  if (!docClient) {
+    const clientConfig: DynamoDBClientConfig = {
       region: config.region,
       credentials: {
         accessKeyId: config.accessKeyId,
         secretAccessKey: config.secretAccessKey,
       },
     };
-    client = new CognitoIdentityProviderClient(clientConfig);
+    docClient = DynamoDBDocumentClient.from(new DynamoDBClient(clientConfig), {
+      marshallOptions: { removeUndefinedValues: true },
+    });
   }
-  return client;
+  return docClient;
 }
 
 /** For tests: reset the cached client. */
-export function __resetPsCognitoClientForTests(): void {
-  client = null;
+export function __resetPsUsersClientForTests(): void {
+  docClient = null;
 }
 
 // Signups change slowly; the API route also sets edge caching.
 const CACHE_TTL_MS = 5 * 60 * 1000;
 let cached: { count: number; at: number } | null = null;
-// In-flight request shared across concurrent callers to avoid Cognito
+// In-flight request shared across concurrent callers to avoid DynamoDB
 // throttling when several visitors hit a cold cache at once.
 let inFlight: Promise<number | null> | null = null;
 
@@ -75,8 +78,8 @@ export function __resetPsSignupCacheForTests(): void {
 }
 
 /**
- * Current PatternSpell user count (profiles in the Cognito pool).
- * Returns null when the pool is not configured (local dev / CI).
+ * Current PatternSpell user count (profiles in the DynamoDB users table).
+ * Returns null when not configured (local dev / CI).
  * Results are cached in memory for 5 minutes. Concurrent callers share
  * a single in-flight request.
  */
@@ -98,25 +101,32 @@ export async function getPsSignupCount(
 }
 
 async function fetchCount(now: number): Promise<number | null> {
-  const config = getPsCognitoConfig();
+  const config = getPsUsersConfig();
   if (!config) return null;
-  const cognito = getClient(config);
+  const client = getClient(config);
 
-  // ListUsers caps at 60 per page; paginate to count the whole pool.
+  // The users table is tiny; a Scan with Select=COUNT is fine.
   let count = 0;
-  let paginationToken: string | undefined;
+  let exclusiveStartKey: Record<string, unknown> | undefined;
   do {
-    const res = await cognito.send(
-      new ListUsersCommand({
-        UserPoolId: config.userPoolId,
-        Limit: 60,
-        PaginationToken: paginationToken,
+    const res = await client.send(
+      new ScanCommand({
+        TableName: config.table,
+        Select: "COUNT",
+        ExclusiveStartKey: exclusiveStartKey,
       }),
     );
-    count += res.Users?.length ?? 0;
-    paginationToken = res.PaginationToken;
-  } while (paginationToken);
+    count += res.Count ?? 0;
+    const key = res.LastEvaluatedKey as Record<string, unknown> | undefined;
+    // DynamoDB can return an empty object for LastEvaluatedKey; {} is truthy
+    // in JS, so check for actual entries to avoid a wasted extra scan.
+    exclusiveStartKey = key && Object.keys(key).length > 0 ? key : undefined;
+  } while (exclusiveStartKey);
 
   cached = { count, at: now };
   return count;
 }
+
+// Back-compat aliases for the Cognito-era names used in tests.
+export const getPsCognitoConfig = getPsUsersConfig;
+export const __resetPsCognitoClientForTests = __resetPsUsersClientForTests;
