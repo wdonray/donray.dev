@@ -28,8 +28,10 @@ jobs:
     steps:
       - name: Check for API key
         id: keycheck
+        env:
+          MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
         run: |
-          if [ -z "${{ secrets.MODEL_API_KEY }}"; then
+          if [ -z "$MODEL_API_KEY" ]; then
             echo "MODEL_API_KEY secret not set; skipping gracefully."
             echo "skip=true" >> $GITHUB_OUTPUT
           fi
@@ -59,8 +61,8 @@ jobs:
           # the issue timeline instead. Each one triggered a responder run
           # that did work: the job-level `if` only passes for his comments
           # while the needs-donray label is present.
-          COMMENT_RUNS=$(gh api "repos/${{ github.repository }}/issues/$PR_NUMBER/timeline" --paginate --jq '
-            [ .[] | select(.event == "commented" or .event == "labeled" or .event == "unlabeled") ]
+          COMMENT_RUNS=$(gh api "repos/${{ github.repository }}/issues/$PR_NUMBER/timeline" --paginate | jq -s '
+            [ add[] | select(.event == "commented" or .event == "labeled" or .event == "unlabeled") ]
             | sort_by(.created_at)
             | reduce .[] as $e ({labeled: false, count: 0};
                 if ($e.event == "labeled" or $e.event == "unlabeled") and $e.label.name == "needs-donray"
