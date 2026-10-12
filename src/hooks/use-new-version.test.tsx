@@ -6,6 +6,11 @@ import {
   fetchDeployedVersion,
   useNewVersionAvailable,
 } from "./use-new-version";
+import { reportError } from "@/lib/report-error";
+
+vi.mock("@/lib/report-error", () => ({
+  reportError: vi.fn(),
+}));
 
 function TestHarness() {
   const available = useNewVersionAvailable();
@@ -83,6 +88,32 @@ describe("fetchDeployedVersion", () => {
   it("returns null when the request fails", async () => {
     mockFetchVersions([new Error("offline")]);
     await expect(fetchDeployedVersion()).resolves.toBeNull();
+  });
+
+  it("does not report a fetch network failure to Sentry", async () => {
+    vi.mocked(reportError).mockClear();
+    // Safari's network error; Chrome says "Failed to fetch".
+    mockFetchVersions([new TypeError("Load failed")]);
+    await expect(fetchDeployedVersion()).resolves.toBeNull();
+    expect(reportError).not.toHaveBeenCalled();
+  });
+
+  it("still reports a malformed payload error to Sentry", async () => {
+    vi.mocked(reportError).mockClear();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({
+        ok: true,
+        json: async () => {
+          throw new SyntaxError("Unexpected token");
+        },
+      })),
+    );
+    await expect(fetchDeployedVersion()).resolves.toBeNull();
+    expect(reportError).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(reportError).mock.calls[0][1]).toMatchObject({
+      location: "use-new-version.fetchDeployedVersion",
+    });
   });
 
   it("aborts a hung request and returns null", async () => {

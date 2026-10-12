@@ -35,7 +35,15 @@ export async function fetchDeployedVersion(): Promise<string | null> {
     const version = (data as VersionPayload).version;
     return typeof version === "string" ? version : null;
   } catch (error) {
-    reportError(error, { location: "use-new-version.fetchDeployedVersion" });
+    // Network failures (offline, flaky Wi-Fi, ad blockers) are expected on a
+    // background poll: the poll just skips, silently. fetch() rejects with a
+    // TypeError for these ("Load failed" in Safari, "Failed to fetch" in
+    // Chrome), so they are never reported to Sentry. Anything else (e.g. a
+    // SyntaxError from a malformed /api/version payload) is a real problem
+    // and is still reported.
+    if (!(error instanceof TypeError)) {
+      reportError(error, { location: "use-new-version.fetchDeployedVersion" });
+    }
     return null;
   } finally {
     clearTimeout(timeout);
