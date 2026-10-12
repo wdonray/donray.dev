@@ -83,6 +83,12 @@ jobs:
                 then .count += 1
                 else . end)
             | .count')
+          # The triggering comment is already in the timeline but represents
+          # pending work, not a completed responder run. Exclude it so
+          # Donray's answer is processed instead of tripping the guard.
+          if [ "${{ github.event_name }}" = "issue_comment" ] && [ "$COMMENT_RUNS" -gt 0 ]; then
+            COMMENT_RUNS=$((COMMENT_RUNS - 1))
+          fi
           COUNT=$((REVIEW_RUNS + COMMENT_RUNS))
           if [ "$COUNT" -ge 3 ]; then
             echo "Responder already ran $COUNT times on this PR without fully resolving all threads; flagging for Donray."
