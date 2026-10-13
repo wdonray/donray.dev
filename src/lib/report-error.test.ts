@@ -61,6 +61,18 @@ describe("reportError", () => {
     expect(mockCaptureException).not.toHaveBeenCalled();
   });
 
+  it("ignores TimeoutError DOMExceptions from AbortSignal.timeout()", () => {
+    reportError(
+      new DOMException(
+        "The operation was aborted due to timeout",
+        "TimeoutError",
+      ),
+    );
+
+    expect(mockWithScope).not.toHaveBeenCalled();
+    expect(mockCaptureException).not.toHaveBeenCalled();
+  });
+
   it("reports non-abort DOMExceptions wrapped as Errors", () => {
     const error = new DOMException("Not found.", "NotFoundError");
     reportError(error, { location: "Somewhere" });
