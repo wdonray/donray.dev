@@ -20,7 +20,14 @@ export function reportError(
   options: ReportErrorOptions = {},
 ): void {
   // Aborted requests are benign user/system behavior, not errors.
-  if (error instanceof DOMException && error.name === "AbortError") return;
+  // TimeoutError is included: AbortSignal.timeout() rejects with it when a
+  // fetch takes too long, which is the same transient network slowness the
+  // AbortError guard exists for.
+  if (
+    error instanceof DOMException &&
+    (error.name === "AbortError" || error.name === "TimeoutError")
+  )
+    return;
   const err = error instanceof Error ? error : new Error(String(error));
   Sentry.withScope((scope) => {
     if (options.location) scope.setTag("location", options.location);
