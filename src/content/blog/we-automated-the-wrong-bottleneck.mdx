@@ -1,0 +1,81 @@
+---
+title: "30% More Code, Zero More Shipped: What I Learned Reviewing 422 PRs"
+date: "2026-10-12"
+excerpt: "A Harvard study of 718 firms found AI coding agents produce 30% more code with no increase in shipped software. I'm downstream of that flood. Here's what the numbers miss, and what actually decides what ships."
+faq:
+  - q: "Are you saying AI coding tools are useless?"
+    a: "No. They're excellent at the part that was never the bottleneck: turning a clear decision into code. I use them daily. The mistake is believing that making the easy part faster makes the whole system faster."
+  - q: "Does this apply to junior engineers?"
+    a: "It's sharper for juniors, in both directions. An agent is a great tutor when a senior is watching, and a great way to build bad habits when no one is. The juniors who thrive will be the ones who learn judgment, not the ones who learn prompting."
+  - q: "How should teams measure engineers now?"
+    a: "Stop counting output. PRs, commits, and lines of code now measure agent usage more than engineering. Measure outcomes: issues resolved, incidents avoided, and the quality of the decisions in the PRs that do ship."
+  - q: "When do you personally reach for the agent?"
+    a: "When I can describe the shape of the solution in two sentences. Scaffolding, boilerplate, migrations with a clear pattern, tests for logic I already understand. If I can't describe it, I think first and prompt second."
+  - q: "Is AI-generated code just lower quality?"
+    a: "Not exactly. It's average quality at high volume, which is a specific kind of problem: it looks right, passes a skim, and fails on the second question. The failure mode isn't sloppiness, it's confidence without understanding."
+  - q: "What about the next breakthrough tool that changes everything?"
+    a: "It might come. But every generation of tooling has automated the typing, from compilers to autocomplete to agents, and the bottleneck keeps moving to judgment. I'd bet on that pattern holding."
+---
+
+AI coding agents write about 30% more code, and teams ship nothing more for it. I know because I'm downstream of the flood: I've reviewed 422 pull requests since June. Writing was never the bottleneck. Deciding what to write was. That part didn't get faster, and no agent can do it for you.
+
+## The numbers nobody argues with
+
+Economists Fiona Chen and James Stratton at Harvard analyzed roughly 300 million work events across 718 firms, from 2021 through March 2026, using engineering data from Jellyfish (first reported by Ars Technica). After teams adopted coding agents in the Claude Code, Cursor, and Devin class, here is what moved and what didn't:
+
+| Metric | Change after agent adoption |
+|---|---|
+| Lines of code | +30% (about 1,500 extra lines per developer per month) |
+| Commits | +20% |
+| Pull requests opened | +23% |
+| Time from PR open to merge | +49% |
+| PRs sent back for changes | Nearly doubled |
+| Comments per pull request | +35% |
+| Engineers pulled into review work | +14% |
+| Issues and epics resolved | No statistically significant change |
+
+Read the two halves of that table against each other. Everything tied to producing code went up. Everything tied to finishing work stayed flat. The study's own estimate rules out an output gain above 12%. Review didn't just stay the bottleneck; it absorbed the entire gain. PRs take half again as long to merge, nearly twice as many get sent back, and 14% more engineers got drafted into review duty.
+
+The industry keeps quoting the top half of the table. The bottom half is the story.
+
+## Code was never the bottleneck
+
+Writing code was perhaps a fifth of the work. The rest is deciding what to build, what good looks like, and what to reject. None of that got faster, because none of it was ever typing.
+
+I'll confess something most people in my position won't: I regularly burn an hour watching an agent spin on a hard problem before admitting I have to think it through myself. The pattern is always the same. The problem is fuzzy, so I prompt vaguely. The agent produces something confident and wrong. I correct it. It produces something confident and differently wrong. Three iterations in, I've spent more time than the problem deserved and I finally do what I should have done at the start: sit down, think, and write the thing.
+
+The agent is a tool that cannot think. That sentence sounds obvious until you watch how people actually use it. They hand it the thinking, not the typing. They ask it what to build, not how to build it. And then they're surprised when the output needs three rounds of review to become shippable, which is exactly what the Harvard data shows happening at scale: revision rates nearly doubling, comments per PR up 35%.
+
+Here's the part nobody wants to say: the churn is the tell. When you find yourself on iteration four with an agent, the problem was never that the agent is slow. It's that you hadn't thought yet, and you were using the agent to avoid thinking.
+
+## What the flood looks like from the review queue
+
+From 422 reviews, the pattern is consistent. The PRs that sail through are the ones where the human did the thinking before prompting. The ones that churn are the ones where the agent did the deciding.
+
+You can tell within about thirty seconds which kind you're looking at. The churned ones have a vague PR description, because the author can't summarize a decision they didn't make. The tests test the implementation rather than the behavior, because the agent wrote tests for the code it wrote, not for the problem. The diff is larger than the change required, because nobody told the agent what not to touch. Each of these is a thinking failure wearing a code costume.
+
+The ones that fly through look different. Small diffs. A description that states the decision, not just the change. Tests that would catch the actual bug. The author clearly knew what they wanted before they prompted, and used the agent the way you'd use a fast junior: clear instructions, tight scope, and a review at the end that actually reviews.
+
+I work on payroll software, where a bad merge moves real money. That concentrates the mind. But the principle holds everywhere: the review queue is where thinking goes to be verified, and no amount of generation speed changes what verification costs.
+
+## The engineers pulling ahead
+
+Not the fastest prompters. The ones with product sense and care for the person using the thing, because judgment is the scarce resource and the market just repriced it.
+
+Think about what actually got cheaper this year. Boilerplate, scaffolding, migrations, the fiftieth CRUD endpoint. What got more expensive: knowing which endpoint shouldn't exist. Knowing that the UX flow has a dead end the requirements didn't mention. Knowing that the "simple" refactor breaks an assumption three services rely on. Every one of those is a thinking task, and thinking is the one input agents can't supply.
+
+This is why the "AI will replace engineers" debate keeps missing. It frames the job as writing code, and asks whether machines write code better. But writing code was never the job. The job was always deciding what the code should do, and that job just became a larger share of the work. The engineers who thrive in this age won't be the ones who generate the most. They'll be the ones with the strongest sense of what shouldn't be built, which is a product instinct, not a typing skill.
+
+If your professional identity is "I write code fast," this is an uncomfortable paragraph. I mean it as good news: the part of the work that requires a human got more valuable, not less.
+
+## What to do Monday morning
+
+My rule: if I can't describe the shape of the solution in two sentences, the agent doesn't get the task. Thinking first, agent second, and I review its output the way I'd review anyone's: with attention, not trust.
+
+In practice this means the agent gets scaffolding, boilerplate, migrations with a clear pattern, and tests for logic I already understand. It does not get ambiguous problems, product decisions, or anything where I'd have to explain the requirements for longer than it would take to just think. The two-sentence test is the whole heuristic. If I can say what I want crisply, the agent is a multiplier. If I can't, prompting is procrastination with extra steps.
+
+For teams, the implications are concrete. Stop counting PRs and commits; those metrics now measure agent usage, not engineering. Put your best judgment where the bottleneck actually is: review. And be honest about the churn: if your engineers are on iteration four with an agent, the problem isn't the tool. They haven't thought yet.
+
+Code was never the bottleneck. Judgment was. Now everyone can see it.
+
+Before your next prompt, write the two sentences.
